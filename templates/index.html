@@ -1,0 +1,122 @@
+{% load static i18n %}
+<!DOCTYPE html>
+<html :class="{ 'theme-dark': dark }" x-data="data()" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta name="description" content="Show Off Your Tech Stack">
+  <meta property="og:url" content="https://git-rainbow.com">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Git Rainbow">
+  <meta property="og:description" content="Show Off Your Tech Stack">
+  <meta property="og:image" content="https://git-rainbow.com/static/img/thumbnail.png">
+  <!-- Twitter-->
+  <meta property="twitter:card" content="summary">
+  <meta property="twitter:title" content="Git Rainbow">
+  <meta property="twitter:description" content="Show Off Your Tech Stack">
+  <meta property="twitter:url" content="https://git-rainbow.com">
+  <!-- Search Engine Tags-->
+  <meta itemprop="name" content="Git Rainbow">
+  <meta itemprop="description" content="Show Off Your Tech Stack">
+  <meta itemprop="image" content="{% static "img/thumbnail.png" %}">
+  <title>Git Rainbow</title>
+  <!-- Favicons -->
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+  <!-- Vendor CSS Files -->
+  <link href="{% static "vendor/aos/aos.css" %}" rel="stylesheet">
+  <link href="{% static "vendor/bootstrap/css/bootstrap.min.css" %}" rel="stylesheet">
+  <link href="{% static "vendor/bootstrap-icons/bootstrap-icons.css" %}" rel="stylesheet">
+  <link href="{% static "vendor/glightbox/css/glightbox.min.css" %}" rel="stylesheet">
+  <link href="{% static "vendor/remixicon/remixicon.css" %}" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css"/>
+  <link href="https://fonts.googleapis.com/css?family=Russo One" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link href="{% static "css/style.css" %}" rel="stylesheet">
+</head>
+{% csrf_token %}
+{% get_current_language as LANGUAGE_CODE %}
+<style>
+  *{
+      font-family: "Noto Sans CJK KR";
+  }
+</style>
+<body>
+  <!-- ======= Header ======= -->
+  <header id="header" class="header fixed-top">
+    <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
+      <a class="text-black" style="font-family: 'Russo One';font-size: 1.5rem" href="/">Git Rainbow</a>
+      <a class="nav-link scrollto" style="color: #013289; font-weight: 700;" href="/">Sign in with Github</a>
+    </div>
+    <nav id="navbar" class="navbar">
+      <i class="bi bi-list mobile-nav-toggle"></i>
+    </nav>
+  </header>
+  <!-- End Header -->
+
+  <section id="hero" class="hero d-flex align-items-center" style="height: 100%">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6 d-flex flex-column justify-content-center" style="white-space: nowrap">
+          <h1 data-aos="fade-up">Show Off<br><span style="font-family: 'Noto Sans'">Your Tech Stack</span></h1>
+          <h2 data-aos="fade-up" data-aos-delay="400" class="fw-light">Just input GitHub ID<br>and analyze your skills and experience.</h2>
+        </div>
+        <div class="w-50 relative" data-aos="zoom-out" data-aos-delay="200">
+          <img src="{% static "img/new_ko/input_git_id_ko.gif" %}" data-aos="zoom-out" data-aos-delay="800" class="box-shadow gif" style="position:relative;z-index: 99;top: 10px;right: 100px">
+          <img src="{% static "img/new_ko/tech_stack_ko.png" %}" data-aos="zoom-out" data-aos-delay="1000" class="relative box-shadow" style="z-index: -100">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= Footer ======= -->
+  <footer id="footer" class="footer">
+    <div class="footer-top">
+      <div class="container">
+        <div class="row gy-4">
+          <div class="col-lg-5 col-md-12 footer-info">
+            <a href="/" class="logo d-flex align-items-center">
+              <span style="font-family: 'Russo One';font-size: 1.7rem">Git Rainbow</span>
+            </a>
+            <p>Show Off Your Tech Stack</p>
+            <div class="social-links mt-3">
+              <a href="https://github.com/git-rainbow" class="github"><i class="bi bi-github"></i></a>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
+            <h4>Contact Us</h4>
+            <strong>Email: </strong>linuxgeek@linuxgeek.io<br>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="copyright">
+        &copy; Copyright <strong><span>LinuxGeek inc.</span></strong>. All Rights Reserved
+      </div>
+    </div>
+  </footer>
+  <!-- End Footer -->
+
+  <!-- Vendor JS Files -->
+  <script src="{% static "vendor/purecounter/purecounter_vanilla.js" %}"></script>
+  <script src="{% static "vendor/aos/aos.js" %}"></script>
+  <script src="{% static "vendor/bootstrap/js/bootstrap.bundle.min.js" %}"></script>
+  <script src="{% static "vendor/glightbox/js/glightbox.min.js" %}"></script>
+  <script src="{% static "vendor/swiper/swiper-bundle.min.js" %}"></script>
+  <script src="{% static "vendor/isotope-layout/isotope.pkgd.min.js" %}"></script>
+  <script src="{% static "vendor/php-email-form/validate.js" %}"></script>
+  <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer=""></script>
+  <script src="{% static 'js/init-alpine.js' %}"></script>
+  <script src="{% static 'js/focus-trap.js' %}" defer=""></script>
+  <!-- Template Main JS File -->
+  <script src="{% static "js/main.js" %}"></script>
+</body>
+</html>
