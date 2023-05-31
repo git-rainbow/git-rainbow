@@ -1,0 +1,13 @@
+{% if request.user.is_authenticated %}
+  <div style="display:flex;">
+    {% with request.user.githubuser_set.first as login_user %}
+      <div style="margin-right: 30px; display: flex; align-items:center; text-align: center; justify-content: center;">
+        <img src="{{login_user.avatar_url}}" alt="avatar" style="width:20px; height:20px; margin-right: 5px; margin-top: 3px;">
+        <span style="font-weight: 600;">{{login_user.github_id}}</span>
+      </div>
+    {% endwith %}
+    <a class="nav-link scrollto" style="color: #013289; font-weight: 700;" href="/logout">Logout</a>
+  </div>
+{% else %}
+  <a href="/login/github" class="nav-link scrollto" style="color: #013289; font-weight: 700;">Sign in with Github</button>
+{% endif %}
