@@ -19,4 +19,5 @@ from apps.developer import views
 
 urlpatterns = [
     path('', views.main_page),
+    path('<str:github_id>', views.loading_page),
 ]

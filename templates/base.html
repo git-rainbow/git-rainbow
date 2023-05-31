@@ -1,0 +1,51 @@
+{% load static %}
+<!DOCTYPE html>
+<html :class="{ 'theme-dark': dark }" x-data="data()" lang="en">
+<head>
+  <script src="https://kit.fontawesome.com/58a19156e1.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-R1N5FJ048H"></script>
+  <link type="text/css" rel="stylesheet" charset="UTF-8" href="https://translate.googleapis.com/translate_static/css/translateelement.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.12.0/moment.min.js" charset="utf-8"></script>
+  <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+  <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer=""></script>
+  <script src="{% static 'js/init-alpine.js' %}"></script>
+  <script src="{% static "js/file_stat.js" %}"></script>
+  <script src="{% static "js/company.js" %}"></script>
+  <script src="{% static 'js/focus-trap.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/calendar-heatmap.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/profile_calendar.js' %}"></script>
+  <script type="text/javascript" src="{% static "js/whatsgog.js" %}"></script>
+  <script type="text/javascript" src="{% static "js/whatsgog_utils.js" %}"></script>
+  <script type="text/javascript" src="{% static "js/tech_stack.js" %}"></script>
+  <script type="text/javascript" src="{% static "js/profile_chart.js" %}"></script>
+  <script type="text/javascript" src="{% static "js/profile.js" %}"></script>
+  <script type="text/javascript" src="{% static "js/edit_profile.js" %}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css?family=Russo One" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Secular+One&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+  <link rel="stylesheet" href="{% static 'vendor/aos/aos.css' %}">
+  <link rel="stylesheet" href="{% static 'vendor/glightbox/css/glightbox.min.css' %}">
+  <link rel="stylesheet" href="{% static 'vendor/remixicon/remixicon.css' %}">
+  <link rel="stylesheet" href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'css/tailwind.output.css' %}">
+  <link rel="stylesheet" href="{% static 'css/profile.output.css' %}">
+  <link rel="stylesheet" href="{% static 'css/tech_stack.output.css' %}">
+  <link rel="stylesheet" href="{% static 'css/company_view.css' %}">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"></script>
+</head>
+<body>
+{% include 'header.html' %}
+{% block content %}
+{% endblock %}
+{% include 'footer.html' %}
+</body>
+</html>

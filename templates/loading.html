@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div id = 'under_header' class="flex items-center p-6 bg-gray-50 w-full h-full" style="min-height: 90vh">
+  <div class="flex-1 max-w-4xl mx-auto overflow-hidden bg-white rounded-lg shadow-xl tech_stack">
+    <div class="flex-1 max-w-4xl px-10 mx-auto bg-white rounded-lg shadow-xl tech_stack">
+      <div class="flex flex-col flex-1">
+        <div class="flex flex-row py-4">
+          <strong style="font-size:25px;">Developer Analysis</strong>
+        </div>
+        <span class="text-sm text-center mx-auto tech_stack" ;>
+          <main class="mb-auto mt-auto text-center">
+            <div class="spinner-border" style="width:5rem;height:5rem" role="status"></div>
+            <p class="text-red-600">The initial analysis may take more than 1 hour.</p>
+            <div class="grid mt-3 mb-8 mx-auto sm:px-4">
+              <div class="grid md:grid-rows-3">
+                <button onclick="go_back()"
+                        class="mt-2 px-4 mr-3 py-2 font-medium leading-5 text-center transition-colors duration-150 border border-transparent"
+                        style="background-color: #A4C2F4;border-radius: 50px;">
+                  Go Back
+                </button>
+              </div>
+            </div>
+          </main>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
