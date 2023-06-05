@@ -35,11 +35,13 @@ def loading_page(request, github_id):
     if github_data['status'] == 'fail' or github_data['result'] == 'no user':
         return JsonResponse({'status': 'fail', 'reason': github_data['result']})
 
+    github_data = github_data['result']
     github_user = GithubUser.objects.create(
         github_id=github_id,
-        email=github_data['result']['email'],
-        avatar_url= github_data['result']['avatar_url'],
-        bio=github_data['result']['bio'],
+        name=github_data['name'],
+        email=github_data['email'],
+        avatar_url= github_data['avatar_url'],
+        bio=github_data['bio'],
     )
 
     user_data = {"github_id": github_id, "after": "", "tech_stack": True}

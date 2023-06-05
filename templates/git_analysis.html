@@ -8,11 +8,11 @@
           <img src="{{github_user.avatar_url}}" class="profile mr-6 profile-image">
         <div class="flex flex-col my-auto">
           {% if github_user.name  %}
-            <span class="font-bold text-lg my-auto" id="user_name">{{ github_user.name }}</span>
+            <span class="font-bold my-auto" style="font-size: 24px;" id="user_name">{{ github_user.name }}</span>
           {% endif %}
-          <span class="text-gray-500 text-lg my-auto" id="user_github_id">{{ github_user.github_id }}</span>
+          <span class="text-gray-500 my-auto" style="font-size: 20px;" id="user_github_id">{{ github_user.github_id }}</span>
           {% if github_user.bio %}
-            <span class="text-gray-500 my-auto" id="user_bio">{{ github_user.bio }}</span>
+            <span class="mt-3" style="font-size: 16px;" id="user_bio">{{ github_user.bio }}</span>
           {% endif %}
         </div>
       </div>
