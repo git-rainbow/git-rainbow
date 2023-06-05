@@ -53,7 +53,7 @@ function analyze_developer(github_id) {
 }
 
 function _analyze_developer(github_id) {
-    var waiting = false;
+    var waiting = true;
     $.ajaxSetup({
         beforeSend: function (xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -62,7 +62,7 @@ function _analyze_developer(github_id) {
         }
     });
     $.ajax({
-        url: check_lang_code() + '/tech-stack'
+        url: '/analysis'
         ,method: 'POST'
         ,data:
             {
@@ -70,24 +70,18 @@ function _analyze_developer(github_id) {
             }
         ,async: false
         ,success: function (data) {
-            if (data.status == 200) {
-                $(".tech_stack").attr('class',"w-full")
-                $(".show").attr('style','display:none')
-                $("main").html(data.content);
+            if (data.status == 'ready' || data.status == 'complete') {
                 waiting = false;
-            } else {
-                if (data.status == 102) {
-                    waiting = true;
-                } else {
-                    $("main").attr('class', "h-full overflow-y-auto");
-                    $("main").html(data);
-                    waiting = false;
-                }
+                $("#under_header").html(data.content);
+                show_profile_calendar(data.calendar_data)
+            } else if(data.status == 'fail') {
+                waiting = false;
+                alert('status:fail');
             }
         },
         error: function (data) {
-            if (data.status == 404) {
-            }
+            waiting = false;
+            alert("error occured");
         }
     });
     return waiting;

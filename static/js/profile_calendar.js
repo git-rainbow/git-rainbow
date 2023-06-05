@@ -173,7 +173,7 @@ function profile_calendar() {
              const newContent = document.createElement("div");
              newContent.innerHTML = `${dateStr} <br> ${commit_detail}`;
              tooltip.appendChild(newContent);
-             document.querySelector("main").appendChild(tooltip);
+             document.querySelector("#under_header").appendChild(tooltip);
              tooltip.setAttribute(
                  "style",
                  `position:absolute;
