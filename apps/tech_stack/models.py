@@ -2,6 +2,13 @@ from django.db import models
 
 
 class GithubUser(models.Model):
+    """
+    status types
+      requested: Backend sets status to 'requested' before requesting core API
+      progress: Core sets status to 'progress' when received analyzing api request
+      ready: Core sets status to 'ready' when analyzing devloper finished
+      fail: Core sets status to 'fail' when analyzing devloper failed
+    """
     user = models.ForeignKey('users.User', on_delete=models.SET_NULL, null=True)
     github_id = models.CharField(max_length=100, primary_key=True)
     name = models.CharField(max_length=260, null=True)
