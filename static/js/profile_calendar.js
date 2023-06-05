@@ -355,6 +355,7 @@ function fill_color(counts) {
         'TypeScript': `rgba(25,118,210,${opacity})`,
         'Postgresql': `rgba(2,119,189,${opacity})`,
         'iOS': `rgba(255,109,0,${opacity})`,
+        'PHP': `rgba(191,173,243,${opacity})`,
     }
     return colors[name]
     }

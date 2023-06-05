@@ -22,4 +22,5 @@ git_calendar_colors = {
     'TypeScript': '#1976D2',
     'Postgresql': '#0277BD',
     'iOS': '#FF6D00',
+    'PHP': '#BFADF3',
 }
