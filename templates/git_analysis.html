@@ -18,9 +18,10 @@
       </div>
     </div>
   </div>
-  <span class="font-bold" style="font-size:20px; font-family: 'Noto Sans KR';float: left">Tech Stack<g class="ml-3" style="font-weight: normal;">in the last year</g></span>
-  <div class="w-full mb-8 md:w-full scroll">
-    <div class="flex-1 md:w-full w-full h-full mx-auto overflow-hidden bg-white rounded-lg shadow-xs p-6">
+  <div class="w-full mb-8 md:w-full scroll" style="max-width:1100px">
+    <span class="font-bold mb-2" style="font-size:20px; font-family: 'Noto Sans KR';float: left">Tech Stack<g class="ml-3" style="font-weight: normal;">in the last year</g></span>
+
+    <div class="flex-1 md:w-full w-full h-full overflow-hidden bg-white rounded-lg shadow-xs p-6">
       <div class="flex w-full mb-3 scroll-x">
         {% for tech_data in calendar_tech_data %}
           <div class="mr-3">
@@ -45,7 +46,7 @@
         {% endfor %}
       </div>
       <!--Git grass(start)-->
-      <div class="git-table p-4 w-full bg-white rounded-lg shadow-xs overflow-x-auto" style="overflow: hidden !important;direction: rtl; min-height: 238px;"></div>
+      <div class="git-table shadow-xs" style="max-width:1010px;max-height:170px">
       <!--Git grass(end)-->
     </div>
   </div>

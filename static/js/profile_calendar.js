@@ -19,7 +19,7 @@ function profile_calendar() {
     var colorRange = ['#c6e48b', '#196127'];
     var tooltipEnabled = true;
     var tooltipUnit = 'line';
-    var legendEnabled = true;
+    var legendEnabled = false;
     var onClick = null;
     var weekStart = 0; //0 for Sunday, 1 for Monday
     var locale = {
@@ -141,7 +141,6 @@ function profile_calendar() {
             .attr('class', 'calendar-heatmap')
             .attr('height', height)
             .style('padding', '20px')
-            .attr('class', 'mx-auto')
 
         dayRects = svg.selectAll('.day-cell')
           .data(dateRange);  //  array of days for the last yr
