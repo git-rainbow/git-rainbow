@@ -8,6 +8,8 @@ from apps.tech_stack.utils import make_tech_card_data, make_calendar_data
 from config.local_settings import token_list
 from utils.core_func.core_func import core_repo_list
 from utils.github_api import request_github_profile
+from utils.git_analysis.calendar import git_calendar_colors
+from utils.github_calendar.github_calendar import generate_github_calendar
 
 
 def main_page(request):
@@ -73,3 +75,25 @@ def analyze_page(request):
         request
     )
     return JsonResponse({"content": content, **json_data})
+
+
+def git_rainbow_svg(request, github_id):
+    today = timezone.now()
+    tech_files = TechStackFile.objects.filter(github_id_id=github_id, author_date__range=[today - relativedelta(years=1), today])
+    tech_card_data = make_tech_card_data(tech_files)
+    calendar_data = make_calendar_data(tech_files)
+
+    status, svg_inner_html = generate_github_calendar(calendar_data)
+    if status == False:
+        return JsonResponse({"status":"fail"})
+
+    index = 0
+    for tech_data in tech_card_data:
+        tech_data['index'] = index
+        index += 1
+    tech_card_width = 126.25
+    return render(request, 'git_rainbow_svg.html', { 'github_id': github_id,
+                                                      'tech_card_data': tech_card_data,
+                                                      'tech_card_width': tech_card_width,
+                                                      'github_calendar_svg': svg_inner_html[0]},
+                  content_type='image/svg+xml')
