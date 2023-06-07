@@ -1,0 +1,9 @@
+{
+  "name": "my-awesome-package",
+  "version": "0.0.1",
+  "dependencies": {
+    "d3": "^3.5.17",
+    "jsdom": "^22.1.0",
+    "moment": "^2.29.4"
+  }
+}

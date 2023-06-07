@@ -6,6 +6,9 @@ static/css/tailwind.output.css
 static/css/tech_stack.output.css
 static/css/profile.output.css
 
+### NodeJS ###
+node_modules/
+package-lock.json
 
 ### Django ###
 *.log
