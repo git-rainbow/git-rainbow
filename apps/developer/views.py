@@ -19,9 +19,8 @@ def main_page(request):
 
 
 def loading_page(request, github_id):
-    github_user = GithubUser.objects.filter(github_id=github_id).first()
     context = {'github_id': github_id}
-    if github_user and request.GET.get('update') != 'true':
+    if GithubUser.objects.filter(github_id=github_id).exists and request.GET.get('update') != 'true':
         return render(request, 'loading.html', context)
 
     for index in range(len(token_list)):

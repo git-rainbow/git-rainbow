@@ -43,19 +43,19 @@ def github_callback(request):
     if not github_id:
         return JsonResponse({"response":"no github_id"})
 
-    user = User.objects.filter(github_id=github_id).first()
-    if not user:
-        user = User.objects.create(github_id=github_id, password=make_password(None))
+    user, _ = User.objects.get_or_create(github_id=github_id, defaults={'password': make_password(None)})
     auth.login(request, user)
 
-    github_user, created = GithubUser.objects.get_or_create(github_id=github_id)
-    if created or github_user.user is None:
-        github_user.user = user
-    github_user.name=profile_json.get("name")
-    github_user.email=profile_json.get("email")
-    github_user.avatar_url=profile_json.get("avatar_url")
-    github_user.bio=profile_json.get("bio")
-    github_user.save()
+    GithubUser.objects.update_or_create(
+        github_id=github_id,
+        defaults={
+            'user_id': user.id,
+            'name': profile_json.get("name"),
+            'email': profile_json.get("email"),
+            'avatar_url': profile_json.get("avatar_url"),
+            'bio':profile_json.get("bio")
+        }
+    )
     return redirect('/')
 
 
