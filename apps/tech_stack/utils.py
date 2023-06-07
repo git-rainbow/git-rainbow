@@ -6,7 +6,7 @@ from utils.git_analysis.calendar import git_calendar_colors
 
 
 def make_tech_card_data(tech_stack_files):
-    tech_name_list = tech_stack_files.exclude(tech_type='Data').distinct().values_list('tech_name', flat=True)
+    tech_name_list = tech_stack_files.exclude(tech_type__in = ['Data', 'Other']).distinct().values_list('tech_name', flat=True)
     tech_data = {tech: 0 for tech in tech_name_list}
     total_line = 0
     for file in tech_stack_files:
