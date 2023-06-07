@@ -21,7 +21,7 @@ def main_page(request):
 def loading_page(request, github_id):
     github_user = GithubUser.objects.filter(github_id=github_id).first()
     context = {'github_id': github_id}
-    if github_user:
+    if github_user and request.GET.get('update') != 'true':
         return render(request, 'loading.html', context)
 
     for index in range(len(token_list)):
@@ -36,17 +36,13 @@ def loading_page(request, github_id):
         return JsonResponse({'status': 'fail', 'reason': github_data['result']})
 
     github_data = github_data['result']
-    github_user = GithubUser.objects.create(
+
+    GithubUser.objects.update_or_create(
         github_id=github_id,
-        name=github_data['name'],
-        email=github_data['email'],
-        avatar_url= github_data['avatar_url'],
-        bio=github_data['bio'],
+        defaults={**github_data, 'status':'requested'}
     )
 
     user_data = {"github_id": github_id, "after": "", "tech_stack": True}
-    github_user.status = 'requested'
-    github_user.save()
     core_repo_list(user_data)
     return render(request, 'loading.html', context)
 
