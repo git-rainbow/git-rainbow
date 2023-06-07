@@ -8,6 +8,8 @@ from config.local_settings import GH_ID, GH_SECRET, GH_AUTHORIZE_URL, GH_OATH_AP
 from .models import User
 from apps.tech_stack.models import GithubUser
 
+from utils.core_func.core_func import core_repo_list
+
 
 def github_login(request):
     return redirect(GH_AUTHORIZE_URL)
@@ -46,17 +48,21 @@ def github_callback(request):
     user, _ = User.objects.get_or_create(github_id=github_id, defaults={'password': make_password(None)})
     auth.login(request, user)
 
-    GithubUser.objects.update_or_create(
+    github_user, created = GithubUser.objects.update_or_create(
         github_id=github_id,
         defaults={
             'user_id': user.id,
             'name': profile_json.get("name"),
             'email': profile_json.get("email"),
             'avatar_url': profile_json.get("avatar_url"),
-            'bio':profile_json.get("bio")
+            'bio': profile_json.get("bio"),
         }
     )
-    return redirect('/')
+    if created:
+        github_user.status = 'requested'
+        github_user.save()
+        core_repo_list({"github_id": github_id, "after": "", "tech_stack": True})
+    return redirect(f'/{github_id}')
 
 
 def logout(request):
