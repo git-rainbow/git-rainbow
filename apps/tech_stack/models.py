@@ -7,6 +7,7 @@ class GithubUser(models.Model):
       requested: Backend sets status to 'requested' before requesting core API
       progress: Core sets status to 'progress' when received analyzing api request
       ready: Core sets status to 'ready' when analyzing devloper finished
+      completed: Backend sets status to 'completed' when saved analysis data in tech_stack_analysis_data table
       fail: Core sets status to 'fail' when analyzing devloper failed
     """
     user = models.ForeignKey('users.User', on_delete=models.SET_NULL, null=True)
@@ -77,3 +78,9 @@ class Commit(models.Model):
     commit_hash = models.CharField(max_length=50)
     commit_message = models.TextField()
     repo_url = models.CharField(max_length=250, null=True)
+
+
+class AnalysisData(models.Model):
+    github_user = models.OneToOneField('GithubUser', on_delete=models.CASCADE)
+    tech_card_data = models.TextField(null=True)
+    git_calendar_data = models.TextField(null=True)
