@@ -2,10 +2,13 @@
 <header class="header header-scrolled">
   <div class="container-fluid container flex align-items-center justify-content-between">
     <a class="text-black" style="font-family: 'Russo One';font-size: 1.5rem" href="/">Git Rainbow</a>
+    <div style="display: flex; margin: 0 auto;">
+      <input id="input_github_id" class="header-button" style="padding-left: 3px; border: 1px solid gray; border-radius: 2px; width: 70%; margin-right: 3px; min-width: 80px;" onkeyup="analyze_github_user()" placeholder="Github ID">
+      <button class="header-button" style="background-color: #A4C2F4; width: 30%; min-width: 60px; text-align: center;" onclick="analyze_github_user()">Search</button>
+    </div>
     {% include 'toggle_login.html' %}
   </div>
-    <nav id="navbar" class="navbar">
-      <i class="bi bi-list mobile-nav-toggle"></i>
-    </nav>
-  </div>
+  <nav id="navbar" class="navbar">
+    <i class="bi bi-list mobile-nav-toggle"></i>
+  </nav>
 </header>

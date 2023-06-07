@@ -527,3 +527,16 @@ function request_tech_analyze(){
         alert("선택된 기술이 없습니다.");
     }
 }
+
+function analyze_github_user(){
+    if (event.type !== "click" && event.key !== 'Enter'){
+        return;
+    }
+    let github_id = document.querySelector('#input_github_id').value
+    const white_space_regex = new RegExp(/\s+/);
+    if (white_space_regex.test(github_id) || github_id == '') {
+        alert('Please check Github ID');
+        return;
+    }
+    window.location.href = `/${github_id}`;
+}

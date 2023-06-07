@@ -2763,3 +2763,7 @@ section {
         width: 100% !important;
     }
 }
+
+.header-button {
+  all: initial;
+}
