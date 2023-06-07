@@ -62,15 +62,12 @@
 
   <section id="hero" class="hero d-flex align-items-center" style="height: 100%">
     <div class="container">
-      <div class="row">
+      <div style="display: flex; flex-wrap: wrap;">
         <div class="col-lg-6 d-flex flex-column justify-content-center" style="white-space: nowrap">
           <h1 data-aos="fade-up">Show Off<br><span style="font-family: 'Noto Sans'">Your Tech Stack</span></h1>
           <h2 data-aos="fade-up" data-aos-delay="400" class="fw-light">Just input GitHub ID<br>and analyze your skills and experience.</h2>
         </div>
-        <div class="w-50 relative" data-aos="zoom-out" data-aos-delay="200">
-          <img src="{% static "img/new_ko/input_git_id_ko.gif" %}" data-aos="zoom-out" data-aos-delay="800" class="box-shadow gif" style="position:relative;z-index: 99;top: 10px;right: 100px">
-          <img src="{% static "img/new_ko/tech_stack_ko.png" %}" data-aos="zoom-out" data-aos-delay="1000" class="relative box-shadow" style="z-index: -100">
-        </div>
+        <img class="main_first_img" src="{% static "img/git_rainbow.jpg" %}" style="width: 50%;" data-aos="zoom-out" data-aos-delay="200">
       </div>
     </div>
   </section>

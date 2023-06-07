@@ -2757,3 +2757,9 @@ section {
 .rounded-full {
     border-radius: 9999px
 }
+
+@media (max-width: 992px) {
+    .main_first_img {
+        width: 100% !important;
+    }
+}
