@@ -70,7 +70,7 @@ function _analyze_developer(github_id) {
             }
         ,async: false
         ,success: function (data) {
-            if (data.status == 'ready' || data.status == 'complete') {
+            if (data.status == 'completed') {
                 waiting = false;
                 $("#under_header").html(data.content);
                 show_profile_calendar(data.calendar_data)
