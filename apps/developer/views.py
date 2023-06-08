@@ -1,9 +1,10 @@
+import json
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.template import loader
 from django.utils import timezone
 from dateutil.relativedelta import relativedelta
-from apps.tech_stack.models import GithubUser, TechStackFile
+from apps.tech_stack.models import GithubUser, TechStackFile, AnalysisData
 from apps.tech_stack.utils import make_tech_card_data, make_calendar_data
 from config.local_settings import token_list
 from utils.core_func.core_func import core_repo_list
@@ -55,14 +56,30 @@ def analyze_page(request):
     user_status = github_user.status
     if user_status == 'fail':
         return JsonResponse({"status":"fail"})
-    if user_status == 'requested' or user_status == 'progress':
+
+    elif user_status == 'requested' or user_status == 'progress':
         return JsonResponse({"status":user_status})
     
     # data for calendar
-    today = timezone.now()
-    tech_files = TechStackFile.objects.filter(github_id_id=github_id, author_date__range=[today - relativedelta(years=1), today])
-    tech_card_data = make_tech_card_data(tech_files)
-    calendar_data = make_calendar_data(tech_files)
+    elif user_status == 'ready':
+        today = timezone.now()
+        tech_files = TechStackFile.objects.filter(github_id_id=github_id, author_date__range=[today - relativedelta(years=1), today])
+        tech_card_data = make_tech_card_data(tech_files)
+        calendar_data = make_calendar_data(tech_files)
+        analysis_data, _ = AnalysisData.objects.update_or_create(
+            github_user=github_user,
+            defaults={
+                'tech_card_data': tech_card_data,
+                'git_calendar_data': calendar_data,
+            }
+        )
+        github_user.status = 'completed'
+        github_user.save()
+    else:
+    # In case user_status == 'completed'
+        analysis_data = AnalysisData.objects.get(github_user=github_user)
+        tech_card_data = json.loads(analysis_data.tech_card_data.replace("'", '"'))
+        calendar_data = json.loads(analysis_data.git_calendar_data.replace("'", '"'))
 
     context = {'github_user':github_user, 'tech_card_data': tech_card_data,}
     json_data = {
