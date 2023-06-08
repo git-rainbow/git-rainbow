@@ -1,27 +1,8 @@
 {% load static i18n %}
 <!DOCTYPE html>
 <html x-data="data()" lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <meta name="description" content="Show Off Your Tech Stack">
-  <meta property="og:url" content="https://git-rainbow.com">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Git Rainbow">
-  <meta property="og:description" content="Show Off Your Tech Stack">
-  <meta property="og:image" content="https://git-rainbow.com/static/img/thumbnail.jpg">
-  <!-- Twitter-->
-  <meta property="twitter:card" content="summary">
-  <meta property="twitter:title" content="Git Rainbow">
-  <meta property="twitter:description" content="Show Off Your Tech Stack">
-  <meta property="twitter:url" content="https://git-rainbow.com">
-  <!-- Search Engine Tags-->
-  <meta itemprop="name" content="Git Rainbow">
-  <meta itemprop="description" content="Show Off Your Tech Stack">
-  <meta itemprop="image" content="{% static "img/thumbnail.jpg" %}">
-  <title>Git Rainbow</title>
-  <!-- Favicons -->
-  <link href="{% static "favicon.ico" %}" rel="icon">
+  <head>
+    {% include 'meta.html' %}
   <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
