@@ -1,4 +1,5 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html x-data="data()" lang="en">
   <head>
@@ -49,6 +50,7 @@
 {% endblock %}
 {% include 'footer.html' %}
 </body>
+{% csrf_token %}
   <script>
    $(document).ready(function(){
      $('meta[name="viewport"]').prop('content', 'width=1080');
