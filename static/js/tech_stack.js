@@ -528,14 +528,41 @@ function request_tech_analyze(){
     }
 }
 
+function is_valid_githubuser(github_id){
+    let is_valid = false;
+    let error_message;
+    const white_space_regex = new RegExp(/\s+/);
+    if (white_space_regex.test(github_id) || github_id == '') {
+        error_message = 'Please check Github ID';
+        return {'is_valid': is_valid, 'error_message': error_message};
+    } else {
+        $.ajax({
+        url: 'https://api.github.com/users/' + github_id
+        , headers:{"Accept": "application/vnd.github+json"}
+        , method: 'GET'
+        , async: false
+        , dataType: "Json"
+        , success: function (data) {
+            if(data.type == 'User'){
+                is_valid = true;
+            } else {
+                error_message =  "Please input personal GitHub ID";
+            }}
+        , error: function (data) {
+            error_message =  "Please check your GitHub ID";
+        }});
+        return {'is_valid': is_valid, 'error_message': error_message};
+    }
+}
+
 function analyze_github_user(){
     if (event.type !== "click" && event.key !== 'Enter'){
         return;
     }
-    let github_id = document.querySelector('#input_github_id').value
-    const white_space_regex = new RegExp(/\s+/);
-    if (white_space_regex.test(github_id) || github_id == '') {
-        alert('Please check Github ID');
+    let github_id = document.querySelector('#input_github_id').value;
+    let {is_valid, error_message} = is_valid_githubuser(github_id);
+    if (!is_valid){
+        document.querySelector('#error_text').textContent = error_message;
         return;
     }
     window.location.href = `/${github_id}`;
