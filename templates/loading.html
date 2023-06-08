@@ -2,11 +2,12 @@
 {% load static %}
 {% block content %}
 <div id = 'under_header' class="flex items-center p-6 bg-gray-50 w-full h-full">
-  <div class="flex-1 max-w-4xl mx-auto overflow-hidden bg-white rounded-lg shadow-xl tech_stack">
+  <div class="flex-1 max-w-4xl mx-auto overflow-hidden bg-white rounded-lg shadow-xl tech_stack" style="margin-top:200px;margin-bottom:200px">
     <div class="flex-1 max-w-4xl px-10 mx-auto bg-white rounded-lg shadow-xl tech_stack">
       <div class="flex flex-col flex-1">
         <div class="flex flex-row py-4">
-          <strong style="font-size:25px;">Developer Analysis</strong>
+          <strong style="font-size:25px;">Analyzing &nbsp;GitHub
+            <g class="text-gray-500">{{github_id}}</g></strong>
         </div>
         <span class="text-sm text-center mx-auto tech_stack" ;>
           <main class="mb-auto mt-auto text-center">
