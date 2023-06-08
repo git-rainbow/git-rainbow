@@ -567,3 +567,16 @@ function analyze_github_user(){
     }
     window.location.href = `/${github_id}`;
 }
+
+function copy_svg_url(github_id){
+    let svg_url = new URL(window.document.location.href).origin + '/svg/' + `${github_id}`;
+    let textarea = document.createElement("textarea");
+    document.body.appendChild(textarea);
+    textarea.value = svg_url;
+    textarea.select();
+    window.navigator.clipboard.writeText(textarea.value).then(() => {
+        alert("Copied!");
+        window.open(svg_url, "_blank");
+    });
+    document.body.removeChild(textarea);
+}
