@@ -19,11 +19,12 @@ def main_page(request):
 
 def loading_page(request, github_id):
     context = {'github_id': github_id}
-    if GithubUser.objects.filter(github_id=github_id).exists() and request.GET.get('update') != 'true':
+    if GithubUser.objects.filter(github_id__iexact=github_id).exists() and request.GET.get('update') != 'true':
+        context['github_id'] = GithubUser.objects.filter(github_id__iexact=github_id).first().github_id
         return render(request, 'loading.html', context)
 
     for index in range(len(token_list)):
-        github_data = request_github_profile(github_id, token_list[index])
+        github_data, github_id = request_github_profile(github_id, token_list[index])
         if github_data['status'] == "success":
             break
 
@@ -49,7 +50,8 @@ def analyze_page(request):
     if request.method != 'POST':
         return JsonResponse({"status":"Not allowed method"})
     github_id = request.POST.get('github_id')
-    github_user = GithubUser.objects.filter(github_id=github_id).first()
+    github_user = GithubUser.objects.filter(github_id__iexact=github_id).first()
+    github_id = github_user.github_id
     if not github_user:
         return JsonResponse({"status":"no github user in DB"})
 
