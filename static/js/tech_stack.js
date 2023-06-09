@@ -580,3 +580,69 @@ function copy_svg_url(github_id){
     });
     document.body.removeChild(textarea);
 }
+
+function admin_tech_list_manage(action){
+    let tech_name_list = [];
+    if (action != 'create'){
+        let checkboxs = $("input[name=checkbox]:checked");
+        if(!$("input[name=checkbox]").is(":checked")){
+            alert('체크된 값이 없습니다.');
+            return;
+        }
+        checkboxs.each(function(i) {
+            tech_name_list.push(checkboxs[i].id);
+        });
+    }
+
+    let data = {'action': action};
+    if (action == 'create'){
+        let input_tech_name = document.querySelector(`#input_tech_name`).value;
+        let input_tech_type = document.querySelector(`#input_tech_type`).value;
+        if (!input_tech_name || !input_tech_type){
+            alert('기술명, 기술종류를 확인해주세요');
+            return;
+        }
+        data.tech_name = input_tech_name;
+        data.tech_type = input_tech_type;
+    } else if (action == 'update'){
+        let update_tech_date_list = [];
+        tech_name_list.forEach(tech_name => {
+            let tech_data = {
+                'tech_name': tech_name,
+                'tech_files_lists': document.querySelector(`#${tech_name}_tech_files_lists`).value,
+                'tech_files_keywords_lists': document.querySelector(`#${tech_name}_tech_files_keywords_lists`).value,
+                'ext_lists': document.querySelector(`#${tech_name}_ext_lists`).value,
+                'include_filter': document.querySelector(`#${tech_name}_include_filter`).value,
+                'keyword_lists': document.querySelector(`#${tech_name}_keyword_lists`).value,
+                'package_list': document.querySelector(`#${tech_name}_package_list`).value,
+                'is_special_tech_files': document.querySelector(`#${tech_name}_is_special_tech_files`).checked,
+            };
+            update_tech_date_list.push(tech_data);
+        });
+        data.update_tech_date_list = JSON.stringify(update_tech_date_list);
+    } else {
+        let delete_confirm = confirm("기술을 삭제하시겠습니까?");
+        if (delete_confirm){
+            data.delete_tech_list = JSON.stringify(tech_name_list);
+        }
+    }
+    $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+
+    $.ajax({
+        url: '/tech-list/edit'
+        ,method: 'POST'
+        ,data: data
+        ,async: false
+        ,success: function (data) {
+            if(data.status == "success"){
+                location.href = '/tech-list';
+            }
+        },
+    });
+}

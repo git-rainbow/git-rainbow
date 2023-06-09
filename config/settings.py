@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'apps.developer',
     'apps.users',
     'apps.tech_stack',
-    'mathfilters'
+    'apps.admins',
+    'mathfilters',
 ]
 
 MIDDLEWARE = [

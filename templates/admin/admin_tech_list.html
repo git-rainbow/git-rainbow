@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+  <div>
+    <div>
+      <div class="p-6">
+        <center style="font-size:20px; font-family: 'Russo One';float: left">Tech List</center>
+      </div>
+      <div class="w-full px-3 py-3 mb-8 overflow-hidden rounded-lg shadow-xs">
+        <div class="w-full overflow-x-auto">
+          <table class="mx-auto whitespace-no-wrap" style="width: 30rem">
+            <thead>
+            <tr class="text-sm font-semibold tracking-wide text-gray-500 bg-gray-50 text-center">
+              <td class="px-4 py-3"><input type="checkbox"></td>
+              <td style="padding: 10px;">No.</td>
+              <td class="px-4 py-3">
+                기술명
+                <div style="font-style: italic" class="font-medium">(tech_name)</div>
+              </td>
+              <td class="px-4 py-3">
+                기술파일 리스트
+                <div style="font-style: italic" class="font-medium">(tech_files_lists)</div>
+              </td>
+              <td class="px-4 py-3">
+                기술파일 키워드 리스트
+                <div style="font-style: italic" class="font-medium">(tech_files_keywords_lists)</div>
+              </td>
+              <td class="px-4 py-3">
+                파일 확장자
+                <div style="font-style: italic" class="font-medium">(ext_lists)</div>
+              </td>
+              <td class="px-4 py-3">
+                포함 확장자
+                <div style="font-style: italic" class="font-medium">(include_filter)</div>
+              </td>
+              <td class="px-4 py-3">
+                키워드 리스트
+                <div style="font-style: italic" class="font-medium">(keywords_lists)</div>
+              </td>
+              <td class="px-4 py-3">
+                패키지 리스트
+                <div style="font-style: italic" class="font-medium">(package_list)</div>
+              </td>
+              <td class="px-4 py-3">
+                is_special_tech_files
+                <div style="font-style: italic" class="font-medium"></div>
+              </td>
+            </tr>
+            </thead>
+            <tbody class="bg-white divide-y text-center">
+            {% for tech in tech_list %}
+              <tr class="text-gray-700 dark:text-gray-400">
+                <td class="text-sm px-4 py-3">
+                  <input name="checkbox" type="checkbox" id="{{ tech.tech_name }}">
+                </td>
+                <td class="text-sm">
+                  {{ forloop.counter }}
+                </td>
+                <td class="text-sm px-4 py-3" style="cursor: pointer">
+                  {{ tech.tech_name }}
+                </td>
+                <td class="text-sm px-4 py-3">
+                  <input id="{{ tech.tech_name }}_tech_files_lists" style="border: 2px solid #E5E5E5" placeholder="입력창"
+                         value="{{ tech.tech_files_lists }}">
+                </td>
+                <td class="text-sm px-4 py-3">
+                  <input id="{{ tech.tech_name }}_tech_files_keywords_lists"
+                         style="border: 2px solid #E5E5E5" placeholder="입력창"
+                         value="{{ tech.tech_files_keywords_lists }}">
+                </td>
+                <td class="text-sm px-4 py-3 form-input">
+                  <input id="{{ tech.tech_name }}_ext_lists" style="border: 2px solid #E5E5E5" placeholder="입력창"
+                         value="{{ tech.ext_lists }}">
+                </td>
+                <td class="text-sm px-4 py-3 form-input">
+                  <input id="{{ tech.tech_name }}_include_filter" style="border: 2px solid #E5E5E5" placeholder="입력창"
+                         value="{{ tech.include_filter }}">
+                </td>
+                <td class="text-sm px-4 py-3 form-input">
+                  <input id="{{ tech.tech_name }}_keyword_lists" style="border: 2px solid #E5E5E5" placeholder="입력창"
+                         value="{{ tech.keyword_lists }}">
+                </td>
+                <td class="text-sm px-4 py-3 form-input">
+                  <input id="{{ tech.tech_name }}_package_list"
+                         style="border: 2px solid #E5E5E5;max-width: 5rem" placeholder="입력창"
+                         value="{{ tech.package_list }}">
+                </td>
+                <td class="text-sm px-4 py-3 form-input">
+                  <input id="{{ tech.tech_name }}_is_special_tech_files" type="checkbox"
+                         {% if tech.is_special_tech_files %}checked{% endif %}>
+                </td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <button onclick=admin_tech_list_manage('update') class="ml-3 mb-4 px-4 py-3 text-sm font-medium leading-5 text-gray-700
+            transition-colors duration-150 border border-gray-300 rounded-lg dark:text-gray-400 sm:px-4 sm:py-2
+            sm:w-auto active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500
+            focus:outline-none focus:shadow-outline-gray" style="background-color: #D9EAD3">
+        저장
+      </button>
+      <button @click="openModal" class="mb-4 px-4 py-3 text-sm font-medium leading-5 text-gray-700
+            transition-colors duration-150 border border-gray-300 rounded-lg dark:text-gray-400 sm:px-4 sm:py-2
+            sm:w-auto active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500
+            focus:outline-none focus:shadow-outline-gray" style="background-color: #C9DAF8">
+        추가
+      </button>
+      <button onclick=admin_tech_list_manage('delete') class="mb-4 px-4 py-3 text-sm font-medium leading-5 text-gray-700
+            transition-colors duration-150 border border-gray-300 rounded-lg dark:text-gray-400 sm:px-4 sm:py-2
+            sm:w-auto active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500
+            focus:outline-none focus:shadow-outline-gray" style="background-color: pink">
+        삭제
+      </button>
+      <div x-show="isModalOpen"
+           class="fixed inset-0 z-30 flex items-end bg-black bg-opacity-50 sm:items-center sm:justify-center"
+           style="display: none">
+        <!-- Modal -->
+        <div x-show="isModalOpen" @click.away="closeModal" @keydown.escape="closeModal"
+             class="w-full px-6 py-4 overflow-hidden bg-white rounded-t-lg sm:rounded-lg sm:m-4 sm:max-w-xl"
+             role="dialog" id="modal2">
+          <header class="flex justify-end">
+            <button
+              class="inline-flex items-center justify-center w-6 h-6 text-gray-400 transition-colors duration-150 rounded hover: hover:text-gray-700"
+              aria-label="닫다" @click="closeModal">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" role="img" aria-hidden="true">
+                <path
+                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                  clip-rule="evenodd" fill-rule="evenodd"></path>
+              </svg>
+            </button>
+          </header>
+          <!-- Modal body -->
+          <div class="mt-4 mb-6">
+            <p class="mb-2 text-lg font-semibold text-gray-700" style="float: left">
+              기술명 입력
+            </p>
+            <input id="input_tech_name"
+                   class="w-full focus:border-purple-400 focus:outline-none focus:shadow-outline-purple form-input items-center"
+                   placeholder="기술명 (tech_name)"/>
+            <p class="mt-4 mb-2 text-lg font-semibold text-gray-700" style="float: left">
+              기술종류 입력
+            </p>
+            <input id="input_tech_type"
+                   class="w-full focus:border-purple-400 focus:outline-none focus:shadow-outline-purple form-input items-center"
+                   placeholder="기술종류 (tech_type)"/>
+          </div>
+          <button onclick="admin_tech_list_manage('create')"
+                  class="px-4 py-3 text-sm font-medium leading-5 transition-colors duration-150 border border-transparent rounded-lg sm:w-auto sm:px-4 sm:py-2 active:bg-purple-600 focus:outline-none focus:shadow-outline-purple"
+                  style="background-color: #A4C2F4">
+            추가
+          </button>
+          <button @click="closeModal" class="px-4 py-3 text-sm font-medium leading-5 text-gray-700 transition-colors
+            duration-150 border border-gray-300 rounded-lg dark:text-gray-400 sm:px-4 sm:py-2 sm:w-auto
+            active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:outline-none
+            focus:shadow-outline-gray">
+            취소
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
