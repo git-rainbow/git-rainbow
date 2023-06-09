@@ -89,7 +89,7 @@ def analyze_page(request):
         'calendar_data': calendar_data
     }
     content = loader.render_to_string(
-        'git_analysis.html',
+        'min_git_analysis.html',
         context,
         request
     )
