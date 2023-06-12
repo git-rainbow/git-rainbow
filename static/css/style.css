@@ -2767,3 +2767,8 @@ section {
 .header-button {
   all: initial;
 }
+
+.rotate-img {
+  pointer-events: none;
+  animation: animate-loading 2s linear infinite;
+}

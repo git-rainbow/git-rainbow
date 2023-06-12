@@ -17,33 +17,47 @@ def main_page(request):
     return render(request, 'index.html')
 
 
-def loading_page(request, github_id):
-    context = {'github_id': github_id}
-    if GithubUser.objects.filter(github_id__iexact=github_id).exists() and request.GET.get('update') != 'true':
-        context['github_id'] = GithubUser.objects.filter(github_id__iexact=github_id).first().github_id
-        return render(request, 'loading.html', context)
-
+def update_or_create_github_user(github_id):
     for index in range(len(token_list)):
         github_data, github_id = request_github_profile(github_id, token_list[index])
         if github_data['status'] == "success":
             break
 
         if len(token_list)-1 == index and github_data['result'] == 'token error':
-            return JsonResponse({'status': 'fail', 'reason': 'token error'})
+            return {'status': 'fail', 'reason': 'token error'}
 
     if github_data['status'] == 'fail' or github_data['result'] == 'no user':
-        return JsonResponse({'status': 'fail', 'reason': github_data['result']})
+        return {'status': 'fail', 'reason': github_data['result']}
 
     github_data = github_data['result']
-
-    GithubUser.objects.update_or_create(
-        github_id=github_id,
-        defaults={**github_data, 'status':'requested'}
-    )
-
     user_data = {"github_id": github_id, "after": "", "tech_stack": True}
     core_repo_list(user_data)
-    return render(request, 'loading.html', context)
+    github_user, created = GithubUser.objects.update_or_create(github_id=github_id, defaults={**github_data, 'status':'requested'})
+    return {'status':'success', 'github_user': github_user, 'created': created}
+
+
+def loading_page(request, github_id):
+    github_user = GithubUser.objects.filter(github_id__iexact=github_id).first()
+    analysis_data = AnalysisData.objects.filter(github_user=github_user).first()
+
+    if not github_user:
+        result = update_or_create_github_user(github_id)
+        if result.get('status') != 'success':
+            return JsonResponse(result)
+        
+    if not analysis_data:
+        return render(request, 'loading.html', {'github_id': github_id})
+
+    if request.POST.get('update') == 'true':
+        result = update_or_create_github_user(github_id)
+        if result.get('status') != 'success':
+            return JsonResponse(result)
+        return JsonResponse({"status":"analyzing"})
+
+    tech_card_data = json.loads(analysis_data.tech_card_data.replace("'", '"'))
+    calendar_data = analysis_data.git_calendar_data.replace("'", '"')
+    context = {'github_user':github_user, 'tech_card_data': tech_card_data, 'calendar_data': calendar_data}
+    return render(request, 'git_analysis.html', context)
 
 
 def analyze_page(request):
@@ -51,7 +65,6 @@ def analyze_page(request):
         return JsonResponse({"status":"Not allowed method"})
     github_id = request.POST.get('github_id')
     github_user = GithubUser.objects.filter(github_id__iexact=github_id).first()
-    github_id = github_user.github_id
     if not github_user:
         return JsonResponse({"status":"no github user in DB"})
 
@@ -65,7 +78,7 @@ def analyze_page(request):
     # data for calendar
     elif user_status == 'ready':
         today = timezone.now()
-        tech_files = TechStackFile.objects.filter(github_id_id=github_id, author_date__range=[today - relativedelta(years=1), today])
+        tech_files = TechStackFile.objects.filter(github_id=github_user, author_date__range=[today - relativedelta(years=1), today])
         tech_card_data = make_tech_card_data(tech_files)
         calendar_data = make_calendar_data(tech_files)
         analysis_data, _ = AnalysisData.objects.update_or_create(
