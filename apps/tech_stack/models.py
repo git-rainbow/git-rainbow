@@ -33,6 +33,14 @@ class AuthorEmail(models.Model):
     github_id = models.ForeignKey("GithubUser", on_delete=models.CASCADE)
 
 
+class GithubToken(models.Model):
+    TYPE_CHOICES = (('gho', 'gho'), ('ghp', 'ghp'))
+    github_id = models.ForeignKey("GithubUser", on_delete=models.CASCADE)
+    token = models.CharField(max_length=100)
+    type = models.CharField(max_length=100, choices=TYPE_CHOICES)
+    created = models.DateTimeField(auto_now_add=True)
+
+
 class TechStackFile(models.Model):
     file_name = models.TextField()
     github_id = models.ForeignKey("GithubUser", on_delete=models.CASCADE)
