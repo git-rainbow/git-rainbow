@@ -8,7 +8,7 @@
 
   <rect width="18" height="18" x="{{tech_card.index|mul:tech_card_width|add:101}}" y="{{1|sub:1|mul:107|add:17}}" fill="{{ tech_card.color }}" rx="11" ry="11"/>
 
-  <image id="mt-21-image" href="{% get_static_prefix %}img/{{tech_card.file|replace_special_char}}.png" x="{{tech_card.index|mul:tech_card_width|add:34}}" y="{{1|sub:1|mul:107|add:35}}" width="64" height="64"/>
+  <image id="mt-21-image" href="data:image/png;base64,{{tech_card.file|replace_special_char|get_tech_img_base64}}" x="{{tech_card.index|mul:tech_card_width|add:34}}" y="{{1|sub:1|mul:107|add:35}}" width="64" height="64"/>
 
   <text color="rgb(98, 91, 85)" dominant-baseline="text-after-edge" font-size="1rem" fill="rgb(98, 91, 85)" font-family="Open Sans, sans-serif">
     <tspan xml:space="preserve" x="{{tech_card.index|mul:tech_card_width|add:66}}" y="{{1|sub:1|mul:107|add:123}}" text-anchor="middle">{{ tech_card.name }}</tspan>
