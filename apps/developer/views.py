@@ -35,7 +35,7 @@ def update_or_create_github_user(github_id):
         if len(token_list)-1 == index and github_data['result'] == 'token error':
             return {'status': 'fail', 'reason': 'token error'}
 
-    if github_data['status'] == 'fail' or github_data['result'] == 'no user':
+    if github_data['status'] == 'fail' or github_data['result'] == 'There is not that user in github.':
         return {'status': 'fail', 'reason': github_data['result']}
 
     github_data = github_data['result']
@@ -48,19 +48,20 @@ def update_or_create_github_user(github_id):
 def loading_page(request, github_id):
     github_user = GithubUser.objects.filter(github_id__iexact=github_id).first()
     analysis_data = AnalysisData.objects.filter(github_user=github_user).first()
+    error_code = 400
 
     if not github_user:
         result = update_or_create_github_user(github_id)
         if result.get('status') != 'success':
-            return JsonResponse(result)
-        
+            return render(request, 'exception_page.html', {'error': error_code, 'message': result.get('reason')})
+
     if not analysis_data:
         return render(request, 'loading.html', {'github_id': github_id})
 
     if request.POST.get('update') == 'true':
         result = update_or_create_github_user(github_id)
         if result.get('status') != 'success':
-            return JsonResponse(result)
+            return render(request, 'exception_page.html', {'error': error_code, 'message': result.get('reason')})
         return JsonResponse({"status":"analyzing"})
 
     tech_card_data = json.loads(analysis_data.tech_card_data.replace("'", '"'))

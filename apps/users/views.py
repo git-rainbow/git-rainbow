@@ -20,13 +20,14 @@ def github_callback(request):
         f"https://github.com/login/oauth/access_token?client_id={GH_ID}&client_secret={GH_SECRET}&code={request.GET.get('code')}",
         headers={"Accept": "application/json"}
         )
+    error_code = 400
     if result.status_code != 200:
-        return JsonResponse({"response":" failed github login request"})
+        return render(request, 'exception_page.html', {'error': error_code, 'message': 'Failed requestng github login'})
 
     result_json = result.json()
     access_token = result_json.get("access_token")
     if not access_token:
-        return JsonResponse({"response":"no access_token"})
+        return render(request, 'exception_page.html', {'error': error_code, 'message': 'There is no access token'})
 
     profile_request = requests.get(
         GH_OATH_API_URL,
@@ -35,15 +36,16 @@ def github_callback(request):
             "Accept": "application/json"}
         )
     if profile_request.status_code != 200:
-        return JsonResponse({"response":"failed getting github profile"})
+        return render(request, 'exception_page.html', {'error': error_code, 'message': 'Failed getting github profile'})
 
     profile_json = profile_request.json()
-    if profile_json.get("message"):
-        return JsonResponse({"response":profile_json})
+    api_message = profile_json.get("message")
+    if api_message:
+        return render(request, 'exception_page.html', {'error': error_code, 'message': api_message})
 
     github_id = profile_json.get("login")
     if not github_id:
-        return JsonResponse({"response":"no github_id"})
+        return render(request, 'exception_page.html', {'error': error_code, 'message': 'There is not that github id'})
 
     user, _ = User.objects.get_or_create(github_id=github_id, defaults={'password': make_password(None)})
     auth.login(request, user)

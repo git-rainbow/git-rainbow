@@ -14,13 +14,13 @@ def request_github_profile(github_id, token):
     response_json = response.json()
     message = response_json.get('message')
     if response.status_code == 404 and message == 'Not Found':
-        return {'status': 'success', 'result': 'no user'}, github_id
+        return {'status': 'success', 'result': 'There is not that user in github.'}, github_id
 
     elif response.status_code != 200:
-        return {'status': 'fail', 'result': 'request error'}, github_id
+        return {'status': 'fail', 'result': 'Request error occured.'}, github_id
 
     elif message and 'API rate limit' in message or message == 'Bad credentials':
-        return {'status': 'fail', 'result': 'token error'}, github_id
+        return {'status': 'fail', 'result': 'API token limited.'}, github_id
     else:
         info_list = ['email', 'name', 'avatar_url', 'bio']
         data = {'status': 'success', 'result': {info: response_json.get(info) for info in info_list}}
