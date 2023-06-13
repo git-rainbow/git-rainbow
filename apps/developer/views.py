@@ -13,6 +13,15 @@ from utils.git_analysis.calendar import git_calendar_colors
 from utils.github_calendar.github_calendar import generate_github_calendar
 
 
+def exception_view(request, exception=None):
+    status = 404
+    context = {'error': status, 'message': 'Page not found. Check the address or'}
+    if exception is None:
+        status = 500
+        context = {'error': status, 'message': 'Server error'}
+    return render(request, 'exception_page.html', context, status=status)
+
+
 def main_page(request):
     return render(request, 'index.html')
 
