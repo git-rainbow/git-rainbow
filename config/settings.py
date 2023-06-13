@@ -13,7 +13,7 @@ import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-from config.local_settings import django_secret_key, POSTGRESQL
+from config.local_settings import django_secret_key, POSTGRESQL, DEBUG_CONFIG
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = django_secret_key
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = DEBUG_CONFIG
 
 ALLOWED_HOSTS = ['*']
 
