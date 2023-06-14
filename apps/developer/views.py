@@ -1,5 +1,5 @@
 import json
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.template import loader
 from django.utils import timezone
@@ -121,9 +121,17 @@ def analyze_page(request):
 
 def git_rainbow_svg(request, github_id):
     today = timezone.now()
-    tech_files = TechStackFile.objects.filter(github_id_id=github_id, author_date__range=[today - relativedelta(years=1), today])
-    tech_card_data = make_tech_card_data(tech_files)
-    calendar_data = make_calendar_data(tech_files)
+    github_user = GithubUser.objects.filter(github_id__iexact=github_id).first()
+    tech_files = TechStackFile.objects.filter(github_id=github_user, author_date__range=[today - relativedelta(years=1), today])
+    analysis_data = AnalysisData.objects.filter(github_user=github_user).first()
+    if analysis_data:
+        tech_card_data = json.loads(analysis_data.tech_card_data.replace("'", '"'))
+        calendar_data = json.loads(analysis_data.git_calendar_data.replace("'", '"'))
+    elif tech_files:
+        tech_card_data = make_tech_card_data(tech_files)
+        calendar_data = make_calendar_data(tech_files)
+    else:
+        return redirect(f'/{github_id}')
 
     status, svg_inner_html = generate_github_calendar(calendar_data)
     if status == False:
