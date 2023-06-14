@@ -1,5 +1,6 @@
 import json
 from django.shortcuts import render, redirect
+from subprocess import check_output
 from django.http import JsonResponse
 from django.template import loader
 from django.utils import timezone
@@ -100,6 +101,8 @@ def analyze_page(request):
         )
         github_user.status = 'completed'
         github_user.save()
+        thumbnail_img_cmd = f'google-chrome --headless --disable-gpu --no-sandbox --window-size=1025x365 --screenshot=static/thumbnail/thumbnail_{github_user.github_id}.jpg "https://git-rainbow.com/svg/{github_user.github_id}"'
+        check_output(thumbnail_img_cmd, shell=True)
     else:
     # In case user_status == 'completed'
         analysis_data = AnalysisData.objects.get(github_user=github_user)

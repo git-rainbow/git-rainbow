@@ -10,6 +10,8 @@ static/css/profile.output.css
 node_modules/
 package-lock.json
 
+static/thumbnail/*
+!static/thumbnail/thumbnail_.jpg
 ### Django ###
 *.log
 *.pot
