@@ -40,8 +40,8 @@ def update_or_create_github_user(github_id):
 
     github_data = github_data['result']
     user_data = {"github_id": github_id, "after": "", "tech_stack": True}
-    core_repo_list(user_data)
     github_user, created = GithubUser.objects.update_or_create(github_id=github_id, defaults={**github_data, 'status':'requested'})
+    core_repo_list(user_data)
     return {'status':'success', 'github_user': github_user, 'created': created}
 
 
