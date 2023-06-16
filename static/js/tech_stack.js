@@ -129,6 +129,31 @@ function check_analysis_updating(github_id, status){
     } 
 }
 
+function save_token(){
+    const target_user = location.pathname.replace('/', '');
+    const token = document.querySelector("#token_input").value;
+    const close_btn = document.querySelector("#close_btn");
+
+    $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+
+    $.ajax({
+        url: '/save-token',
+        method: 'POST',
+        data: {'target_user': target_user, 'token': token},
+        async: true,
+        success: function (data) {
+            alert(data.response);
+            close_btn.click();
+        }
+    });
+}
+
 function origin_stack_data_save(){
     const upper = $('#upper');
     const invisible_upper = $('#invisible_upper');

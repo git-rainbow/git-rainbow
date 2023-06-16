@@ -4,8 +4,9 @@ from subprocess import check_output
 from django.http import JsonResponse
 from django.template import loader
 from django.utils import timezone
+from django.contrib.auth.models import AnonymousUser
 from dateutil.relativedelta import relativedelta
-from apps.tech_stack.models import GithubUser, TechStackFile, AnalysisData
+from apps.tech_stack.models import GithubUser, TechStackFile, AnalysisData, GithubToken
 from apps.tech_stack.utils import make_tech_card_data, make_calendar_data
 from config.local_settings import token_list
 from utils.core_func.core_func import core_repo_list
@@ -150,3 +151,21 @@ def git_rainbow_svg(request, github_id):
                                                       'tech_card_width': tech_card_width,
                                                       'github_calendar_svg': svg_inner_html[0]},
                   content_type='image/svg+xml')
+
+
+def save_token(request):
+    if request.method != 'POST':
+        return render(request, 'exception_page.html', {'error': 405, 'message': 'Not allowed method'})
+
+    request_user = request.user
+    data = request.POST
+    target_user = data.get('target_user').lower()
+    if isinstance(request_user, AnonymousUser) or request_user.github_id.lower() != target_user:
+        return JsonResponse({"response": 'not allowed user'})
+
+    token = data.get('token')
+    _, created = GithubToken.objects.get_or_create(github_id_id = request_user.github_id, type='ghp', token=token)
+    if created:
+        return JsonResponse({"response":"Your token has saved"})
+    else:
+        return JsonResponse({"response":"That token already existed"})
