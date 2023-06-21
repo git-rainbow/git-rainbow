@@ -64,7 +64,7 @@ def loading_page(request, github_id):
     if request.POST.get('update') == 'true':
         result = update_or_create_github_user(github_id)
         if result.get('status') != 'success':
-            return render(request, 'exception_page.html', {'error': error_code, 'message': result.get('reason')})
+            return JsonResponse({"status": result.get('status'), 'reason': result.get('reason')})
         return JsonResponse({"status":"analyzing"})
 
     tech_card_data = json.loads(analysis_data.tech_card_data.replace("'", '"'))
