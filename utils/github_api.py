@@ -21,6 +21,10 @@ def request_github_profile(github_id, token):
 
     elif message and 'API rate limit' in message or message == 'Bad credentials':
         return {'status': 'fail', 'result': 'API token limited.'}, github_id
+
+    elif response_json['type'] == 'Organization':
+        return {'status': 'fail', 'result': "Organization account can't be analyzed"}, github_id
+
     else:
         info_list = ['email', 'name', 'avatar_url', 'bio']
         data = {'status': 'success', 'result': {info: response_json.get(info) for info in info_list}}

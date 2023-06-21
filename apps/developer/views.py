@@ -34,7 +34,10 @@ def update_or_create_github_user(github_id):
         if github_data['status'] == "success":
             break
 
-        if len(token_list)-1 == index and github_data['result'] == 'token error':
+        if github_data['result'] == "Organization account can't be analyzed":
+            return {'status': 'fail', 'reason': github_data['result']}
+
+        elif len(token_list)-1 == index and github_data['result'] == 'token error':
             return {'status': 'fail', 'reason': 'token error'}
 
     if github_data['status'] == 'fail' or github_data['result'] == 'There is not that user in github.':
