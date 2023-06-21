@@ -28,21 +28,23 @@ def main_page(request):
     return render(request, 'index.html')
 
 
-def update_or_create_github_user(github_id):
-    for index in range(len(token_list)):
-        github_data, github_id = request_github_profile(github_id, token_list[index])
+def update_or_create_github_user(github_id, ghp_token=None):
+    user_data = {"github_id": github_id, "after": "", "tech_stack": True}
+    if ghp_token:
+        ghp_token = ghp_token.token
+        github_data, github_id = request_github_profile(github_id, {'Authorization': f'token {ghp_token}'})
+        user_data['ghp_token'] = ghp_token
+    else:
+        for index in range(len(token_list)):
+            github_data, github_id = request_github_profile(github_id, token_list[index])
 
-        if github_data['result'] == 'API token limited.' and len(token_list) - 1 != index:
-            continue
-
-        if github_data['status'] == "fail":
-            return {'status': 'fail', 'reason': github_data['result']}
-
-        elif github_data['status'] == "success":
+            if github_data['result'] == 'API token limited.' and len(token_list) - 1 != index:
+                continue
             break
+    if github_data['status'] == "fail":
+        return {'status': 'fail', 'reason': github_data['result']}
 
     github_data = github_data['result']
-    user_data = {"github_id": github_id, "after": "", "tech_stack": True}
     github_user, created = GithubUser.objects.update_or_create(github_id=github_id, defaults={**github_data, 'status':'requested'})
     core_repo_list(user_data)
     return {'status':'success', 'github_user': github_user, 'created': created}
@@ -62,7 +64,8 @@ def loading_page(request, github_id):
         return render(request, 'loading.html', {'github_id': github_id})
 
     if request.POST.get('update') == 'true':
-        result = update_or_create_github_user(github_id)
+        ghp_token = GithubToken.objects.filter(github_id=github_user, type='ghp').order_by('created').first()
+        result = update_or_create_github_user(github_id, ghp_token)
         if result.get('status') != 'success':
             return JsonResponse({"status": result.get('status'), 'reason': result.get('reason')})
         return JsonResponse({"status":"analyzing"})
