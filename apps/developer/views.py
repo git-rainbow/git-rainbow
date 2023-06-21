@@ -31,17 +31,15 @@ def main_page(request):
 def update_or_create_github_user(github_id):
     for index in range(len(token_list)):
         github_data, github_id = request_github_profile(github_id, token_list[index])
-        if github_data['status'] == "success":
-            break
 
-        if github_data['result'] == "Organization account can't be analyzed":
+        if github_data['result'] == 'API token limited.' and len(token_list) - 1 != index:
+            continue
+
+        if github_data['status'] == "fail":
             return {'status': 'fail', 'reason': github_data['result']}
 
-        elif len(token_list)-1 == index and github_data['result'] == 'token error':
-            return {'status': 'fail', 'reason': 'token error'}
-
-    if github_data['status'] == 'fail' or github_data['result'] == 'There is not that user in github.':
-        return {'status': 'fail', 'reason': github_data['result']}
+        elif github_data['status'] == "success":
+            break
 
     github_data = github_data['result']
     user_data = {"github_id": github_id, "after": "", "tech_stack": True}
