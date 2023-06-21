@@ -49,7 +49,7 @@ def update_or_create_github_user(github_id):
 
 def loading_page(request, github_id):
     github_user = GithubUser.objects.filter(github_id__iexact=github_id).first()
-    analysis_data = AnalysisData.objects.filter(github_user=github_user).first()
+    analysis_data = AnalysisData.objects.filter(github_id=github_user).first()
     error_code = 400
 
     if not github_user:
@@ -94,7 +94,7 @@ def analyze_page(request):
         tech_card_data = make_tech_card_data(tech_files)
         calendar_data = make_calendar_data(tech_files)
         analysis_data, _ = AnalysisData.objects.update_or_create(
-            github_user=github_user,
+            github_id=github_user,
             defaults={
                 'tech_card_data': tech_card_data,
                 'git_calendar_data': calendar_data,
@@ -106,7 +106,7 @@ def analyze_page(request):
         check_output(thumbnail_img_cmd, shell=True)
     else:
     # In case user_status == 'completed'
-        analysis_data = AnalysisData.objects.get(github_user=github_user)
+        analysis_data = AnalysisData.objects.get(github_id=github_user)
         tech_card_data = json.loads(analysis_data.tech_card_data.replace("'", '"'))
         calendar_data = json.loads(analysis_data.git_calendar_data.replace("'", '"'))
 
@@ -127,7 +127,7 @@ def git_rainbow_svg(request, github_id):
     today = timezone.now()
     github_user = GithubUser.objects.filter(github_id__iexact=github_id).first()
     tech_files = TechStackFile.objects.filter(github_id=github_user, author_date__range=[today - relativedelta(years=1), today])
-    analysis_data = AnalysisData.objects.filter(github_user=github_user).first()
+    analysis_data = AnalysisData.objects.filter(github_id=github_user).first()
     if analysis_data:
         tech_card_data = json.loads(analysis_data.tech_card_data.replace("'", '"'))
         calendar_data = json.loads(analysis_data.git_calendar_data.replace("'", '"'))

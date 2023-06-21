@@ -89,6 +89,6 @@ class Commit(models.Model):
 
 
 class AnalysisData(models.Model):
-    github_user = models.OneToOneField('GithubUser', on_delete=models.CASCADE)
+    github_id = models.OneToOneField('GithubUser', on_delete=models.CASCADE)
     tech_card_data = models.TextField(null=True)
     git_calendar_data = models.TextField(null=True)
