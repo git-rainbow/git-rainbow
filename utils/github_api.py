@@ -10,7 +10,8 @@ def request_github_profile(github_id, token):
         response = requests.get(users_api_url, headers=header)
     except Exception as e:
         return {'status': 'fail', 'result': 'Wrong URL'}
-
+    limit_test = requests.get(' https://api.github.com/rate_limit', headers=header).json()
+    print(limit_test)
     response_json = response.json()
     message = response_json.get('message')
     if response.status_code == 404 and message == 'Not Found':
