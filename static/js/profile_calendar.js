@@ -256,6 +256,13 @@ function profile_calendar() {
                 .text(day);
           }
         });
+        svg.append('text')
+           .attr('class', 'text-xs')
+           .attr('text-anchor', 'middle')
+           .attr('fill','rgba(98, 91, 85, 0.6)')
+           .attr('x',925)
+           .attr('y',144)
+           .text("git-rainbow.com");
       }
 
       function pluralizedTooltipUnit (count) {
