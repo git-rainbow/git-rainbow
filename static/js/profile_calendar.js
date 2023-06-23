@@ -146,6 +146,7 @@ function profile_calendar() {
           .data(dateRange);  //  array of days for the last yr
         var enterSelection = dayRects.enter().append('rect')
           .attr('class', 'day-cell')
+          .attr('date', function(d) { return moment(d).format('YYYY-MM-DD'); })
           .attr('width', SQUARE_LENGTH)
           .attr('height', SQUARE_LENGTH)
           .attr('fill', function(d) { return fill_color(countForDate(d)); })
