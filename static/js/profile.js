@@ -40,7 +40,7 @@ function highlight_card_tech(event, tech_name) {
             if (calendar_commits[date]?.[tech_name]){
                 cell.setAttribute('opacity', 1);
             } else {
-                cell.setAttribute('opacity', 0.5);
+                cell.setAttribute('opacity', 0.2);
             }
         }
     }
