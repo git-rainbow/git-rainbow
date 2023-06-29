@@ -26,7 +26,7 @@ function _analyze_developer(github_id) {
             }
         ,async: false
         ,success: function (data) {
-            if (data.status == 'completed') {
+            if (data.status == 'success') {
                 waiting = false;
                 $("#under_header").html(data.content);
                 show_profile_calendar(data.calendar_data)
@@ -78,7 +78,7 @@ function update_analysis(github_id){
 function check_analysis_updating(github_id, status){
     if(status == 'fail') {
         alert("Analysis failed");
-    } else if (status != 'completed') {
+    } else if (status != 'success') {
         let updateBtn = document.querySelector("#update_btn");
         updateBtn.classList.add("rotate-img");
         analyze_developer(github_id);
