@@ -1,6 +1,5 @@
 import requests
 from django.shortcuts import render, redirect
-from django.http import JsonResponse
 from django.contrib import auth
 from django.contrib.auth.hashers import make_password
 from config.local_settings import GH_ID, GH_SECRET, GH_AUTHORIZE_URL, GH_OATH_API_URL

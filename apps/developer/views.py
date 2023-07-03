@@ -1,17 +1,8 @@
 import json
 from django.shortcuts import render, redirect
-from subprocess import check_output
 from django.http import JsonResponse
 from django.template import loader
-from django.utils import timezone
-from django.contrib.auth.models import AnonymousUser
-from dateutil.relativedelta import relativedelta
-from apps.tech_stack.models import GithubUser, AnalysisData
-from apps.tech_stack.utils import make_tech_card_data, make_calendar_data
-from config.local_settings import token_list
 from utils.core_func.core_func import core_repo_list
-from utils.github_api import request_github_profile
-from utils.git_analysis.calendar import git_calendar_colors
 from utils.github_calendar.github_calendar import generate_github_calendar
 
 

@@ -1,5 +1,4 @@
 from django import template
-import json
 
 from apps.tech_stack.tech_img_base64 import tech_img_base64
 
