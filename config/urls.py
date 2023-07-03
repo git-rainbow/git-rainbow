@@ -24,6 +24,5 @@ handler500 = exception_view
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('apps.users.urls')),
-    path('', include('apps.admins.urls')),
     path('', include('apps.developer.urls')),
 ]

@@ -60,29 +60,6 @@ class TechStackFile(models.Model):
     repo_url = models.CharField(max_length=260, null=True, db_index=True)
 
 
-class TechName(models.Model):
-    tech_name = models.CharField(max_length=100, unique=True)
-    tech_type = models.CharField(max_length=100, null=True)
-    ext_lists = models.CharField(max_length=200, null=True, blank=True)
-    include_filter = models.CharField(max_length=200, null=True, blank=True)
-    keyword_lists = models.TextField(null=True, blank=True)
-    package_list = models.TextField(null=True, blank=True)
-    tech_files_lists = models.TextField(null=True, blank=True)
-    tech_files_keywords_lists = models.TextField(null=True, blank=True)
-    is_special_tech_files = models.BooleanField(default=False)
-
-
-class TechDetection(models.Model):
-    github_id = models.ForeignKey("GithubUser", on_delete=models.CASCADE)
-    total_file_count = models.PositiveIntegerField()
-    tech_name = models.CharField(max_length=100)
-    tech_file_count = models.PositiveIntegerField()
-    language = models.CharField(max_length=100)
-    lang_file_count = models.PositiveIntegerField()
-    miss_file_count = models.PositiveIntegerField()
-    updated_date = models.DateTimeField(auto_now=True)
-
-
 class Commit(models.Model):
     github_id = models.ForeignKey("GithubUser", on_delete=models.CASCADE)
     name_with_owner = models.CharField(max_length=150)
