@@ -1,7 +1,11 @@
 import os
 import random
+
+import requests
 from django.db.models import Sum
 from django.db.models.functions import Trunc
+
+from config.local_settings import CORE_URL
 from utils.github_calendar_colors import github_calendar_colors
 
 
@@ -41,3 +45,10 @@ def make_calendar_data(tech_files):
         commit_data = dict(data.values_list('tech_name','lines')) if dict(data.values_list('tech_name','lines')) else 0
         calendar_data[date['date'].strftime("%Y-%m-%d")] = commit_data
     return calendar_data
+
+
+def core_repo_list(user_data):
+    core_url = CORE_URL+"/core/tech-stack"
+    data = user_data
+    response = requests.post(core_url, data=data).json()
+    return response

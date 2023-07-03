@@ -6,8 +6,7 @@ from config.local_settings import GH_ID, GH_SECRET, GH_AUTHORIZE_URL, GH_OATH_AP
 
 from .models import User
 from apps.tech_stack.models import GithubUser
-
-from utils.core_func.core_func import core_repo_list
+from apps.tech_stack.utils import core_repo_list
 
 
 def github_login(request):

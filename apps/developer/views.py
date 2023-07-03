@@ -2,7 +2,8 @@ import json
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.template import loader
-from utils.core_func.core_func import core_repo_list
+
+from apps.tech_stack.utils import core_repo_list
 from utils.github_calendar.github_calendar import generate_github_calendar
 
 
