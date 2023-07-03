@@ -20,19 +20,6 @@ class GithubUser(models.Model):
     updated_date = models.DateTimeField(auto_now=True)
 
 
-class GithubRepo(models.Model):
-    github_id = models.ForeignKey("GithubUser", on_delete=models.CASCADE)
-    updated_date = models.DateTimeField(auto_now=True)
-    repo_url = models.CharField(max_length=260)
-    branch = models.CharField(max_length=260, null=True)
-    description = models.TextField(null=True)
-
-
-class AuthorEmail(models.Model):
-    author_email = models.CharField(max_length=260)
-    github_id = models.ForeignKey("GithubUser", on_delete=models.CASCADE)
-
-
 class GithubToken(models.Model):
     TYPE_CHOICES = (('gho', 'gho'), ('ghp', 'ghp'))
     STATUS_CHOICES = (('ready', 'ready'), ('restricted', 'restricted'), ('invalid', 'invalid'), ('expired', 'expired'))
@@ -42,30 +29,6 @@ class GithubToken(models.Model):
     status = models.CharField(max_length=60, choices=STATUS_CHOICES, default='ready', db_index=True)
     reset_time = models.DateTimeField(null=True)
     created = models.DateTimeField(auto_now_add=True)
-
-
-class TechStackFile(models.Model):
-    file_name = models.TextField()
-    github_id = models.ForeignKey("GithubUser", on_delete=models.CASCADE)
-    updated_date = models.DateTimeField(auto_now=True)
-    tech_type = models.CharField(max_length=100)
-    tech_name = models.CharField(max_length=100)
-    origin_tech_name = models.CharField(max_length=100)
-    file_lang = models.CharField(max_length=50, null=True)
-    name_with_owner = models.CharField(max_length=150)
-    commit_hash = models.CharField(max_length=200, null=True)
-    author_date = models.DateTimeField(null=True)
-    lines = models.PositiveIntegerField(null=True)
-    branch = models.CharField(max_length=260, null=True)
-    repo_url = models.CharField(max_length=260, null=True, db_index=True)
-
-
-class Commit(models.Model):
-    github_id = models.ForeignKey("GithubUser", on_delete=models.CASCADE)
-    name_with_owner = models.CharField(max_length=150)
-    commit_hash = models.CharField(max_length=50)
-    commit_message = models.TextField()
-    repo_url = models.CharField(max_length=250, null=True)
 
 
 class AnalysisData(models.Model):

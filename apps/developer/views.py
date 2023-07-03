@@ -6,7 +6,7 @@ from django.template import loader
 from django.utils import timezone
 from django.contrib.auth.models import AnonymousUser
 from dateutil.relativedelta import relativedelta
-from apps.tech_stack.models import GithubUser, TechStackFile, AnalysisData, GithubToken
+from apps.tech_stack.models import GithubUser, AnalysisData, GithubToken
 from apps.tech_stack.utils import make_tech_card_data, make_calendar_data
 from config.local_settings import token_list
 from utils.core_func.core_func import core_repo_list
