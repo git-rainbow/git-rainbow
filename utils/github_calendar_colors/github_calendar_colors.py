@@ -1,4 +1,4 @@
-git_calendar_colors = {
+github_calendar_colors = {
     'Django': '#004D40',
     'React': '#80DEEA',
     'Android': '#96C362',

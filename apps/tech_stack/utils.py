@@ -2,7 +2,7 @@ import os
 import random
 from django.db.models import Sum
 from django.db.models.functions import Trunc
-from utils.git_analysis.calendar import git_calendar_colors
+from utils.github_calendar_colors import github_calendar_colors
 
 
 def make_tech_card_data(tech_stack_files):
@@ -20,7 +20,7 @@ def make_tech_card_data(tech_stack_files):
         if percent > 0:
             name_for_file = tech_name.lower()
             tech = {'name': tech_name, 'file': name_for_file,
-                    'color': git_calendar_colors.get(tech_name, 'rgba(7,141,169,1.0)'),
+                    'color': github_calendar_colors.get(tech_name, 'rgba(7,141,169,1.0)'),
                     'percent': percent}
             img_list = os.listdir('static/img')
             if (f'{name_for_file}.png') not in img_list:
