@@ -20,17 +20,6 @@ class GithubUser(models.Model):
     updated_date = models.DateTimeField(auto_now=True)
 
 
-class GithubToken(models.Model):
-    TYPE_CHOICES = (('gho', 'gho'), ('ghp', 'ghp'))
-    STATUS_CHOICES = (('ready', 'ready'), ('restricted', 'restricted'), ('invalid', 'invalid'), ('expired', 'expired'))
-    github_id = models.ForeignKey("GithubUser", on_delete=models.CASCADE)
-    token = models.CharField(max_length=100)
-    type = models.CharField(max_length=100, choices=TYPE_CHOICES)
-    status = models.CharField(max_length=60, choices=STATUS_CHOICES, default='ready', db_index=True)
-    reset_time = models.DateTimeField(null=True)
-    created = models.DateTimeField(auto_now_add=True)
-
-
 class AnalysisData(models.Model):
     github_id = models.OneToOneField('GithubUser', on_delete=models.CASCADE)
     tech_card_data = models.TextField(null=True)

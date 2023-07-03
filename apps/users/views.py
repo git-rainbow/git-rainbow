@@ -6,7 +6,7 @@ from django.contrib.auth.hashers import make_password
 from config.local_settings import GH_ID, GH_SECRET, GH_AUTHORIZE_URL, GH_OATH_API_URL
 
 from .models import User
-from apps.tech_stack.models import GithubUser, GithubToken
+from apps.tech_stack.models import GithubUser
 
 from utils.core_func.core_func import core_repo_list
 
@@ -59,12 +59,6 @@ def github_callback(request):
             'avatar_url': profile_json.get("avatar_url"),
             'bio': profile_json.get("bio"),
         }
-    )
-
-    GithubToken.objects.create(
-        github_id = github_user,
-        token = access_token,
-        type = 'gho'
     )
 
     if created:
