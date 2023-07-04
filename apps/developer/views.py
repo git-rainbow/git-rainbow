@@ -3,7 +3,10 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.template import loader
 
+from apps.tech_stack.models import GithubUser, AnalysisData
 from apps.tech_stack.utils import core_repo_list
+from config.local_settings import token_list
+from utils.github_api import request_github_profile
 from utils.github_calendar.github_calendar import generate_github_calendar
 
 
@@ -20,41 +23,78 @@ def main_page(request):
     return render(request, 'index.html')
 
 
+def update_or_create_github_user(github_id, ghp_token=None):
+    user_data = {"github_id": github_id, "tech_stack": True, 'update': True}
+    if ghp_token:
+        ghp_token = ghp_token.token
+        github_data, github_id = request_github_profile(github_id, {'Authorization': f'token {ghp_token}'})
+        user_data['ghp_token'] = ghp_token
+    else:
+        for index in range(len(token_list)):
+            github_data, github_id = request_github_profile(github_id, token_list[index])
+
+            if github_data['result'] == 'API token limited.' and len(token_list) - 1 != index:
+                continue
+            break
+    if github_data['status'] == "fail":
+        return {'status': 'fail', 'reason': github_data['result']}
+
+    github_data = github_data['result']
+    github_user, created = GithubUser.objects.update_or_create(github_id=github_id,
+                                                               defaults={**github_data, 'status': 'progress'})
+    core_repo_list(user_data)
+    return {'status': 'success', 'github_user': github_user, 'created': created}
+
+
 def loading_page(request, github_id):
-    user_data = {"github_id": github_id, "tech_stack": True}
-    if request.POST.get('update'):
-        user_data['update'] = True
-        core_repo_list(user_data)
-        return JsonResponse({'status': 'analyzing'})
-    core_response = core_repo_list(user_data)
-    if core_response['status'] == 'fail' and (core_response.get('msg') == 'token does not exist' or core_response.get('msg') == 'github API error'):
-        error_code = 400
-        return render(request, 'exception_page.html', {'error': error_code, 'message': 'Please check the user or try again later'})
-    elif core_response.get('tech_card_data'):
-        context = {
-            'github_user_data': core_response.get('github_user_data'),
-            'tech_card_data': core_response.get('tech_card_data'),
-            'calendar_data': core_response.get('calendar_data'),
-            'status': core_response.get('status')
-        }
-        return render(request, 'git_analysis.html', context)
-    return render(request, 'loading.html', {'github_id': github_id})
+    github_user = GithubUser.objects.filter(github_id__iexact=github_id).first()
+    analysis_data = AnalysisData.objects.filter(github_id=github_user).first()
+    error_code = 400
+    if not github_user:
+        result = update_or_create_github_user(github_id)
+        if result.get('status') != 'success':
+            return render(request, 'exception_page.html', {'error': error_code, 'message': result.get('reason')})
+
+    if not analysis_data:
+        return render(request, 'loading.html', {'github_id': github_id})
+    if request.POST.get('update') == 'true':
+        ghp_token = request.POST.get('ghp_token')
+        result = update_or_create_github_user(github_id, ghp_token)
+        if result.get('status') == 'fail':
+            return JsonResponse({"status": result.get('status'), 'reason': result.get('reason')})
+        return JsonResponse({"status": "progress"})
+
+    tech_card_data = json.loads(analysis_data.tech_card_data.replace("'", '"'))
+    calendar_data = analysis_data.git_calendar_data.replace("'", '"')
+    context = {'github_user': github_user, 'tech_card_data': tech_card_data, 'calendar_data': calendar_data}
+    return render(request, 'git_analysis.html', context)
 
 
 def analyze_page(request):
     if request.method != 'POST':
-        return JsonResponse({"status":"Not allowed method"})
+        return JsonResponse({"status": "fail", 'msg': 'Not allowed method'})
     github_id = request.POST.get('github_id')
     if not github_id:
-        return JsonResponse({"status": "no github id"})
+        return JsonResponse({"status": "fail", 'msg': 'No github id'})
 
     user_data = {"github_id": github_id, "tech_stack": True}
     core_response = core_repo_list(user_data)
     core_status = core_response['status']
-    if core_status != 'success':
+    if core_status == 'progress':
         return JsonResponse({"status": core_status})
+
+    github_user = GithubUser.objects.filter(github_id__iexact=github_id).first()
+    github_user.status = core_status
+    github_user.save()
+    if core_status == 'fail':
+        return JsonResponse({"status": "fail", 'msg': 'Core API fail'})
+    AnalysisData.objects.update_or_create(github_id=github_user,
+                                          defaults={
+                                              'git_calendar_data': core_response.get('calendar_data'),
+                                              'tech_card_data': core_response.get('tech_card_data')
+                                          })
     context = {
-        'github_user_data': core_response.get('github_user_data'),
+        'github_user': github_user,
         'tech_card_data': core_response.get('tech_card_data'),
     }
     json_data = {

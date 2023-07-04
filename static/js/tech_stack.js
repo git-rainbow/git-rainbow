@@ -26,7 +26,7 @@ function _analyze_developer(github_id) {
             }
         ,async: false
         ,success: function (data) {
-            if (data.status == 'success') {
+            if (data.status == 'completed') {
                 waiting = false;
                 $("#under_header").html(data.content);
                 show_profile_calendar(data.calendar_data)
@@ -61,7 +61,7 @@ function update_analysis(github_id){
         data: {'github_id': github_id, 'update': true},
         async: true,
         success: function (data) {
-            if (data.status == 'analyzing') {
+            if (data.status == 'progress') {
                 analyze_developer(github_id);
             } else {
                 updateBtn.classList.remove("rotate-img");

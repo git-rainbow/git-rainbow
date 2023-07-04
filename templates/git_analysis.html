@@ -6,6 +6,6 @@
 </div>
 <script>
     show_profile_calendar(JSON.parse('{{calendar_data|safe}}'));
-    check_analysis_updating("{{github_user_data.github_id}}", "{{status}}");
+    check_analysis_updating("{{github_user.github_id}}", "{{github_user.status}}");
 </script>
 {% endblock %}
