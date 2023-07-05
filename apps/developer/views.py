@@ -111,17 +111,31 @@ def analyze_page(request):
 
 
 def git_rainbow_svg(request, github_id):
-    user_data = {"github_id": github_id, "tech_stack": True}
-    core_response = core_repo_list(user_data)
-    if core_response.get('tech_card_data'):
-        tech_card_data = core_response.get('tech_card_data')
-        calendar_data = json.loads(core_response.get('calendar_data'))
-    else:
-        return redirect(f'/{github_id}')
+    github_user = GithubUser.objects.filter(github_id__iexact=github_id).first()
+    analysis_data = AnalysisData.objects.filter(github_id=github_user).first()
 
-    status, svg_inner_html = generate_github_calendar(calendar_data)
+    if analysis_data:
+        tech_card_data = json.loads(analysis_data.tech_card_data.replace("'", '"'))
+        calendar_data = json.loads(analysis_data.git_calendar_data.replace("'", '"'))
+    else:
+        user_data = {"github_id": github_id, "tech_stack": True}
+        core_response = core_repo_list(user_data)
+        tech_card_data = core_response.get('tech_card_data')
+        calendar_data = core_response.get('calendar_data')
+        if not tech_card_data:
+            return redirect(f'/{github_id}')
+        user_result = update_or_create_github_user(github_id)
+        if user_result['status'] == 'fail':
+            return redirect(f'/{github_id}')
+        AnalysisData.objects.create(
+            github_id=user_result['github_user'],
+            git_calendar_data=calendar_data,
+            tech_card_data=tech_card_data
+        )
+
+    status, svg_inner_html = generate_github_calendar(json.loads(calendar_data))
     if status == False:
-        return JsonResponse({"status":"fail"})
+        return redirect(f'/{github_id}')
 
     index = 0
     for tech_data in tech_card_data:
