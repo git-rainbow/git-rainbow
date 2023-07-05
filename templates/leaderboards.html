@@ -1,0 +1,388 @@
+{% extends 'base.html' %}
+{% load static custom_tags %}
+{% block content %}
+  <div id='under_header' class="flex items-center p-6 bg-gray-50 w-full h-full">
+    <div style="margin:0 auto;">
+
+      <!-- First Row Start -->
+      <div class="grid gap-4 mb-3 md:grid-cols-2 xl:grid-cols-2-2">
+        <div style="min-width:450px">
+
+          <!-- Search Tech -->
+          <div class="flex mb-3" style="min-width:450px;align-content:flex-end;flex-wrap:wrap;">
+            <div class="relative focus-within:text-purple-500"
+                 style="width: 95%; min-width: 110px; display: flex; margin: 0 auto; justify-content: center;">
+              <div style="position:absolute; top: 30%; left: 2%;">
+                <svg class="w-4 h-4" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd"
+                        d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                        clip-rule="evenodd"></path>
+                </svg>
+              </div>
+              <input style="min-width: 110px;"
+                     class="w-full pl-8 pr-2 text-sm text-gray-700 placeholder-gray-600 bg-gray-100 border-0 rounded-md dark:placeholder-gray-500 dark:focus:shadow-outline-gray dark:focus:placeholder-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:placeholder-gray-500 focus:bg-white focus:border-purple-300 focus:outline-none focus:shadow-outline-purple form-input"
+                     type="text" placeholder="Search a tech name" aria-label="Search">
+            </div>
+          </div>
+
+          <!-- Tech Card Group Start -->
+          <div class="grid gap-4 mb-3 md:grid-cols-2 xl:grid-cols-3">
+
+            <!-- Card -->
+            {% for tech, color in github_calendar_colors.items %}
+              <div class="flex items-center ml-2 bg-white rounded-lg shadow-xs dark:bg-gray-800 mb-3 pointer" onclick="window.location.href='/leaderboards/{{ tech }}'"
+                   style="width: 125px;height: 50px; {% if tech == tech_name %} border: 2px solid {{ color }} {% endif %}">
+                <img class="mr-8" style="width:45px;height:45px" src="https://git-rainbow.com/static/img/{{ tech.lower }}.png">
+                <p class="pl-2 py-2 text-xs">{{ tech }}</p>
+              </div>
+            {% endfor %}
+          </div>
+          <!-- Tech Card Group End -->
+        </div>
+
+        <div>
+
+          <!-- Selected Tech & Top3 Group Start -->
+          <div class="grid gap-4 mb-3 md:grid-cols-2 xl:grid-cols-5">
+
+            <!-- Selected Tech Card -->
+            <div class="flex mb-3 bg-white rounded-lg shadow-xs dark:bg-gray-800"
+                 style="height: 136px;width: 126px;align-items: center;flex-direction: column;">
+              <div class="w-full inline-block">
+                <div class="tech_color mt-2 mr-2"
+                     style="background-color: {{ tech_color }}; float: right; display: block;"></div>
+              </div>
+              <img class="mx-auto mb-2" src="https://git-rainbow.com/static/img/{{ tech_name.lower }}.png">
+              <p class="mx-auto mb-2 text-sm">{{ tech_name }}</p>
+            </div>
+
+            <!-- Top1 Start -->
+            <div class="flex py-3 bg-white rounded-lg shadow-xs dark:bg-gray-800"
+                 style="height: 220px;width: 140px;align-items: center;flex-direction: column;">
+              <img class="object-cover w-full h-full rounded-full"
+                   src="https://avatars.githubusercontent.com/u/170270?v=4" style="width:64px;height:64px">
+              <p class="mx-auto mb-2 font-semibold" style="font-size:15px">1 &nbsp;sindresorhus</p>
+              <div class="text-xs">
+                Crazy
+                <span class="px-2 py-1 ml-2 font-semibold leading-tight text-orange-700 bg-orange-100 rounded-full"
+                      style="font-size: .75rem">
+                  99%
+              </span>
+              </div>
+              <div class="mt-3 text-xs">
+                Lines
+                <span
+                  class="px-2 py-1 ml-2 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700"
+                  style="font-size: .75rem">
+                  13k
+                </span>
+              </div>
+            </div>
+            <!-- Top1 End -->
+
+            <!-- Top2 Start -->
+            <div class="flex py-3 bg-white rounded-lg shadow-xs dark:bg-gray-800"
+                 style="height: 220px;width: 140px;align-items: center;flex-direction: column;">
+              <img class="object-cover w-full h-full rounded-full"
+                   src="https://avatars.githubusercontent.com/u/32802673?v=4" style="width:64px;height:64px">
+              <p class="mx-auto mb-2 font-semibold" style="font-size:15px">2 &nbsp;j1mmyson</p>
+              <div class="text-xs">
+                Crazy
+                <span class="px-2 py-1 ml-2 font-semibold leading-tight text-orange-700 bg-orange-100 rounded-full"
+                      style="font-size: .75rem">
+                  85%
+                </span>
+              </div>
+              <div class="mt-3 text-xs">
+                Lines
+                <span
+                  class="px-2 py-1 ml-2 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700"
+                  style="font-size: .75rem">
+                  13k
+                </span>
+              </div>
+            </div>
+            <!-- Top2 End -->
+
+            <!-- Top3 Start -->
+            <div class="flex py-3 bg-white rounded-lg shadow-xs dark:bg-gray-800"
+                 style="height: 220px;width: 140px;align-items: center;flex-direction: column;">
+              <img class="object-cover w-full h-full rounded-full"
+                   src="https://avatars.githubusercontent.com/u/32462617?v=4" style="width:64px;height:64px">
+              <p class="mx-auto mb-2 font-semibold" style="font-size:15px">3 &nbsp;brunafreit4s</p>
+              <div class="text-xs">
+                Crazy
+                <span class="px-2 py-1 ml-2 font-semibold leading-tight text-orange-700 bg-orange-100 rounded-full"
+                      style="font-size: .75rem">
+                  74%
+                </span>
+              </div>
+              <div class="mt-3 text-xs">
+                Lines
+                <span
+                  class="px-2 py-1 ml-2 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700"
+                  style="font-size: .75rem">
+                  13k
+                </span>
+              </div>
+            </div>
+            <!-- Top3 End -->
+
+            <!-- My Ranking Start -->
+            <div class="flex py-3 bg-white rounded-lg shadow-xs dark:bg-gray-800"
+                 style="height: 220px;width: 140px;align-items: center;flex-direction: column;">
+              <img class="object-cover w-full h-full rounded-full"
+                   src="https://static.vecteezy.com/system/resources/previews/007/126/739/original/question-mark-icon-free-vector.jpg"
+                   style="width:64px;height:64px">
+              <p class="mx-auto mb-2 font-semibold" style="font-size:15px">????</p>
+              <div class="text-xs">
+                Crazy
+                <span class="px-2 py-1 ml-2 font-semibold leading-tight text-orange-700 bg-orange-100 rounded-full"
+                      style="font-size: .75rem">
+                  ??%
+                </span>
+              </div>
+              <div class="mt-3 text-xs">
+                Lines
+                <span
+                  class="px-2 py-1 ml-2 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700"
+                  style="font-size: .75rem">
+                  ??k
+                </span>
+              </div>
+              <div class="mt-3">
+                <button
+                  class="px-2 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                  My ranking
+                </button>
+              </div>
+            </div>
+            <!-- My Ranking End -->
+
+          </div>
+          <!-- Selected Tech & Top3 Group End -->
+
+          <!-- Table -->
+          <div class="overflow-hidden rounded-lg shadow-xs" style="margin-left: auto !important;">
+            <div class="w-full overflow-x-auto">
+              <table class="w-full whitespace-no-wrap">
+                <thead>
+                <tr
+                  class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800"
+                  style="border: 0 solid #d5d6d7!important;">
+                  <th class="px-4 py-3" style="width:150px">GitHub ID</th>
+                  <th class="px-4 py-3" style="width:200px">Top3 tech stack</th>
+                  <th class="px-4 py-3 text-center" style="min-width:50px">Code Crazy</th>
+                  <th class="px-4 py-3">Code Lines</th>
+                </tr>
+                </thead>
+                <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+                <tr class="text-gray-700 dark:text-gray-400" style="border: 0.5 solid #d5d6d7!important;">
+                  <td class="px-3 py-3" style="width:150px;border:none!important">
+                    <div class="flex items-center text-sm">
+                      <p class="pr-3 text-xs text-gray-600 dark:text-gray-400">
+                        1
+                      </p>
+
+                      <!-- Avatar with inset shadow -->
+                      <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block" style="min-width:32px;">
+                        <img class="object-cover w-full h-full rounded-full"
+                             src="https://avatars.githubusercontent.com/u/170270?v=4" alt="" loading="lazy">
+                        <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
+                      </div>
+                      <div>
+                        <p class="font-semibold">sindresorhus</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="py-2 text-sm" style="border:none!important">
+                    <div class="flex items-center">
+                      <div class="flex ml-3" style="align-items: center;flex-direction: column;">
+                        <img style="width:45px;height:45px" src="https://git-rainbow.com/static/img/swift.png">
+                        <p class="text-xs text-gray-600">Swift</p>
+                        <span class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full"
+                              style="font-size: .65rem; text-align: center; margin: 0 auto; margin-top: 8px;">
+                          49%
+                        </span>
+                      </div>
+                      <div class="flex ml-3" style="align-items: center;flex-direction: column;">
+                        <img class="mr-8" style="width:45px;height:45px"
+                             src="https://git-rainbow.com/static/img/javascript.png">
+                        <p class="text-xs text-gray-600">Javascript</p>
+                        <span class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full"
+                              style="font-size: .65rem; text-align: center; margin: 0 auto; margin-top: 8px;">
+                          23%
+                        </span>
+                      </div>
+                      <div class="flex ml-3" style="align-items: center;flex-direction: column;">
+                        <img class="mr-8" style="width:45px;height:45px"
+                             src="https://git-rainbow.com/static/img/nodejs.png">
+                        <p class="text-xs text-gray-600">Nodejs</p>
+                        <span class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full"
+                              style="font-size: .65rem; text-align: center; margin: 0 auto; margin-top: 8px;">
+                          23%
+                        </span>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-4 text-sm text-center" style="max-width:70px;border:none!important">
+                    <span
+                      class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
+                      99%
+                    </span>
+                  </td>
+                  <td style="border:none!important">
+                    <div class="w-full rounded-full" style="background-color:lightgray">
+                      <div
+                        class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
+                        style="width: 90%"><p style="color:white">13,432 k</p></div>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr class="text-gray-700 dark:text-gray-400" style="border: 0.5 solid #d5d6d7!important;">
+                  <td class="px-3 py-3" style="width:150px;border:none!important">
+                    <div class="flex items-center text-sm">
+                      <p class="pr-3 text-xs text-gray-600 dark:text-gray-400">
+                        2
+                      </p>
+
+                      <!-- Avatar with inset shadow -->
+                      <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block" style="min-width:32px">
+                        <img class="object-cover w-full h-full rounded-full"
+                             src="https://avatars.githubusercontent.com/u/32802673?v=4" alt="" loading="lazy">
+                        <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
+                      </div>
+                      <div>
+                        <p class="font-semibold">j1mmyson</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="py-2 text-sm" style="border:none!important">
+                    <div class="flex items-center">
+                      <div class="flex ml-3" style="align-items: center;flex-direction: column;">
+                        <img style="width:45px;height:45px" src="https://git-rainbow.com/static/img/javascript.png">
+                        <p class="text-xs text-gray-600">Javascript</p>
+                        <span class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full"
+                              style="font-size: .65rem; text-align: center; margin: 0 auto; margin-top: 8px;">
+                          49%
+                        </span>
+                      </div>
+                      <div class="flex ml-3" style="align-items: center;flex-direction: column;">
+                        <img class="mr-8" style="width:45px;height:45px"
+                             src="https://git-rainbow.com/static/img/react.png">
+                        <p class="text-xs text-gray-600">React</p>
+                        <span class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full"
+                              style="font-size: .65rem; text-align: center; margin: 0 auto; margin-top: 8px;">
+                          23%
+                        </span>
+                      </div>
+                      <div class="flex ml-3" style="align-items: center;flex-direction: column;">
+                        <img class="mr-8" style="width:45px;height:45px"
+                             src="https://git-rainbow.com/static/img/vue.png">
+                        <p class="text-xs text-gray-600">Vuejs</p>
+                        <span class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full"
+                              style="font-size: .65rem; text-align: center; margin: 0 auto; margin-top: 8px;">
+                          23%
+                        </span>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-4 py-3 text-sm text-center" style="max-width:70px;border:none!important">
+                    <span
+                      class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
+                      78%
+                    </span>
+                  </td>
+                  <td style="border:none!important">
+                    <div class="w-full rounded-full" style="background-color:lightgray">
+                      <div
+                        class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
+                        style="width: 70%">
+                        <p style="color:white">5,621 k</p>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+
+                </tbody>
+              </table>
+            </div>
+            <div
+              class="grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800">
+              <span class="flex items-center col-span-3">
+                Showing 21-30 of 100
+              </span>
+              <span class="col-span-2"></span>
+              <!-- Pagination -->
+              <span class="flex col-span-4 mt-2 sm:mt-auto sm:justify-end">
+              <nav aria-label="Table navigation">
+                <ul class="inline-flex items-center">
+                  <li>
+                    <button class="px-3 py-1 rounded-md rounded-l-lg focus:outline-none focus:shadow-outline-purple"
+                            aria-label="Previous">
+                      <svg aria-hidden="true" class="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                        <path
+                          d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                          clip-rule="evenodd" fill-rule="evenodd">
+                        </path>
+                      </svg>
+                    </button>
+                  </li>
+                  <li>
+                    <button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
+                      1
+                    </button>
+                  </li>
+                  <li>
+                    <button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
+                      2
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      class="px-3 py-1 text-white transition-colors duration-150 bg-purple-600 border border-r-0 border-purple-600 rounded-md focus:outline-none focus:shadow-outline-purple">
+                      3
+                    </button>
+                  </li>
+                  <li>
+                    <button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
+                      4
+                    </button>
+                  </li>
+                  <li>
+                    <span class="px-3 py-1">...</span>
+                  </li>
+                  <li>
+                    <button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
+                      8
+                    </button>
+                  </li>
+                  <li>
+                    <button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
+                      9
+                    </button>
+                  </li>
+                  <li>
+                    <button class="px-3 py-1 rounded-md rounded-r-lg focus:outline-none focus:shadow-outline-purple"
+                            aria-label="Next">
+                      <svg class="w-4 h-4 fill-current" aria-hidden="true" viewBox="0 0 20 20">
+                        <path
+                          d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                          clip-rule="evenodd" fill-rule="evenodd">
+                        </path>
+                      </svg>
+                    </button>
+                  </li>
+                </ul>
+              </nav>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- First Row End -->
+
+    </div>
+  </div>
+{% endblock %}

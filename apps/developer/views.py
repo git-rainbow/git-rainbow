@@ -8,6 +8,7 @@ from apps.tech_stack.utils import core_repo_list
 from config.local_settings import token_list
 from utils.github_api import request_github_profile
 from utils.github_calendar.github_calendar import generate_github_calendar
+from utils.github_calendar_colors.github_calendar_colors import github_calendar_colors
 
 
 def exception_view(request, exception=None):
@@ -132,3 +133,18 @@ def git_rainbow_svg(request, github_id):
                                                       'tech_card_width': tech_card_width,
                                                       'github_calendar_svg': svg_inner_html[0]},
                   content_type='image/svg+xml')
+
+
+def leaderboards_tech_stack(request, tech_name='Android'):
+    sorted_github_calendar_colors = dict(sorted(github_calendar_colors.items(), key=lambda x: x[0].lower()))
+
+    for key in sorted_github_calendar_colors.keys():
+        if key.lower() == tech_name.lower():
+            tech_name = key
+            break
+
+    context = {
+        'github_calendar_colors': sorted_github_calendar_colors,
+        'tech_name': tech_name,
+        'tech_color': sorted_github_calendar_colors.get(tech_name)}
+    return render(request, 'leaderboards.html', context)
