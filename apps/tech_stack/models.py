@@ -24,3 +24,10 @@ class AnalysisData(models.Model):
     github_id = models.OneToOneField('GithubUser', on_delete=models.CASCADE)
     tech_card_data = models.TextField(null=True)
     git_calendar_data = models.TextField(null=True)
+
+
+class GithubCalendar(models.Model):
+    author_date = models.DateTimeField()
+    tech_name = models.CharField(max_length=50)
+    lines = models.IntegerField()
+    github_id = models.ForeignKey("GithubUser", on_delete=models.CASCADE)
