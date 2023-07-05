@@ -78,7 +78,7 @@ function update_analysis(github_id){
 function check_analysis_updating(github_id, status){
     if(status == 'fail') {
         alert("Analysis failed");
-    } else if (status != 'success') {
+    } else if (status == 'progress') {
         let updateBtn = document.querySelector("#update_btn");
         updateBtn.classList.add("rotate-img");
         analyze_developer(github_id);
