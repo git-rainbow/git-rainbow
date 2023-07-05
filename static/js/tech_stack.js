@@ -1,14 +1,21 @@
-function analyze_developer(github_id) {
-    var waiting = _analyze_developer(github_id);
+function analyze_developer(github_id, update) {
+    if (update) {
+        let updateBtn = document.querySelector("#update_btn");
+        updateBtn.classList.add("rotate-img");
+    }
+    var waiting = _analyze_developer(github_id, update);
     var interval = setInterval(function () {
-        if (waiting == false)
+        if (waiting == false) {
             clearInterval(interval);
+            if (update)
+                updateBtn.classList.remove("rotate-img");
+        }
         else
-            waiting = _analyze_developer(github_id);
+            waiting = _analyze_developer(github_id, update);
     }, 3000);
 }
 
-function _analyze_developer(github_id) {
+function _analyze_developer(github_id, update) {
     var waiting = true;
     $.ajaxSetup({
         beforeSend: function (xhr, settings) {
@@ -18,11 +25,12 @@ function _analyze_developer(github_id) {
         }
     });
     $.ajax({
-        url: '/analysis'
+        url: '/update-git-rainbow'
         ,method: 'POST'
         ,data:
             {
-                'github_id': github_id
+                'github_id': github_id,
+                'update': update
             }
         ,async: false
         ,success: function (data) {
@@ -43,44 +51,10 @@ function _analyze_developer(github_id) {
     return waiting;
 }
 
-function update_analysis(github_id){
-    let updateBtn = document.querySelector("#update_btn");
-    updateBtn.classList.add("rotate-img");
-
-    $.ajaxSetup({
-        beforeSend: function (xhr, settings) {
-            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                xhr.setRequestHeader("X-CSRFToken", csrftoken);
-            }
-        }
-    });
-
-    $.ajax({
-        url: `/${github_id}`,
-        method: 'POST',
-        data: {'github_id': github_id, 'update': true},
-        async: true,
-        success: function (data) {
-            if (data.status == 'progress') {
-                analyze_developer(github_id);
-            } else {
-                updateBtn.classList.remove("rotate-img");
-                alert(data.reason);
-            }
-        },
-        error: function (data) {
-            updateBtn.classList.remove("rotate-img");
-            alert("Update failed");
-        }
-    });
-}
-
 function check_analysis_updating(github_id, status){
     if(status == 'fail') {
         alert("Analysis failed");
     } else if (status == 'progress') {
-        let updateBtn = document.querySelector("#update_btn");
-        updateBtn.classList.add("rotate-img");
         analyze_developer(github_id);
     } 
 }

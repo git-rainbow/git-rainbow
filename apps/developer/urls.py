@@ -19,9 +19,9 @@ from apps.developer import views
 
 urlpatterns = [
     path('', views.main_page),
-    path('analysis', views.analyze_page),
+    path('update-git-rainbow', views.update_git_rainbow),
     path('leaderboards', views.leaderboards_tech_stack),
     path('leaderboards/<str:tech_name>', views.leaderboards_tech_stack),
-    path('<str:github_id>', views.loading_page),
+    path('<str:github_id>', views.git_rainbow),
     path('svg/<str:github_id>', views.git_rainbow_svg)
 ]

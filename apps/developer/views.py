@@ -47,7 +47,7 @@ def update_or_create_github_user(github_id, ghp_token=None):
     return {'status': 'success', 'github_user': github_user, 'created': created}
 
 
-def loading_page(request, github_id):
+def git_rainbow(request, github_id):
     github_user = GithubUser.objects.filter(github_id__iexact=github_id).first()
     analysis_data = AnalysisData.objects.filter(github_id=github_user).first()
     error_code = 400
@@ -58,12 +58,6 @@ def loading_page(request, github_id):
 
     if not analysis_data:
         return render(request, 'loading.html', {'github_id': github_id})
-    if request.POST.get('update') == 'true':
-        ghp_token = request.POST.get('ghp_token')
-        result = update_or_create_github_user(github_id, ghp_token)
-        if result.get('status') == 'fail':
-            return JsonResponse({"status": result.get('status'), 'reason': result.get('reason')})
-        return JsonResponse({"status": "progress"})
 
     tech_card_data = json.loads(analysis_data.tech_card_data.replace("'", '"'))
     calendar_data = analysis_data.git_calendar_data.replace("'", '"')
@@ -71,36 +65,45 @@ def loading_page(request, github_id):
     return render(request, 'git_analysis.html', context)
 
 
-def analyze_page(request):
+def update_git_rainbow(request):
     if request.method != 'POST':
         return JsonResponse({"status": "fail", 'msg': 'Not allowed method'})
     github_id = request.POST.get('github_id')
     if not github_id:
         return JsonResponse({"status": "fail", 'msg': 'No github id'})
 
+    github_user = GithubUser.objects.filter(github_id__iexact=github_id).first()
+    github_id = github_user.github_id
     user_data = {"github_id": github_id, "tech_stack": True}
+    user_data['update'] = bool(request.POST.get('update') == 'true')
+    ghp_token = request.POST.get('ghp_token')
+    user_data['ghp_token'] = ghp_token
+
     core_response = core_repo_list(user_data)
     core_status = core_response['status']
     if core_status == 'progress':
         return JsonResponse({"status": core_status})
 
-    github_user = GithubUser.objects.filter(github_id__iexact=github_id).first()
     github_user.status = core_status
     github_user.save()
+
     if core_status == 'fail':
         return JsonResponse({"status": "fail", 'msg': 'Core API fail'})
+
+    calendar_data = core_response.get('calendar_data')
+    tech_card_data = core_response.get('tech_card_data')
     AnalysisData.objects.update_or_create(github_id=github_user,
                                           defaults={
-                                              'git_calendar_data': core_response.get('calendar_data'),
-                                              'tech_card_data': core_response.get('tech_card_data')
+                                              'git_calendar_data': calendar_data,
+                                              'tech_card_data': tech_card_data
                                           })
     context = {
         'github_user': github_user,
-        'tech_card_data': core_response.get('tech_card_data'),
+        'tech_card_data': tech_card_data,
     }
     json_data = {
         'status': core_status,
-        'calendar_data': json.loads(core_response.get('calendar_data'))
+        'calendar_data': json.loads(calendar_data)
     }
     content = loader.render_to_string(
         'min_git_analysis.html',
