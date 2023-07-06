@@ -10,6 +10,7 @@ github_calendar_colors = {
     'CSS': '#0277BD',
     'Go':'#4DD0E1',
     'C': '#3b5aab',
+    'C#': '#2f027bad',
     'Ruby':'#b00640',
     'C++': '#0086D4',
     'Spring': '#8BC34A',
