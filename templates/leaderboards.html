@@ -93,11 +93,11 @@
                 <tr
                   class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800"
                   style="border: 0 solid #d5d6d7!important;">
-                  <th class="px-4 py-3" style="width:150px">GitHub ID</th>
+                  <th class="px-4 py-3 text-center" style="width:150px">GitHub ID</th>
                   <th></th>
-                  <th class="px-4 py-3 text-center" style="max-width:10px">Code Crazy</th>
-                  <th class="px-4 py-3">Code Lines</th>
-                  <th class="px-4 py-3">Major</th>
+                  <th class="text-center">Code Crazy</th>
+                  <th class="px-4 py-3 text-center">Code Lines</th>
+                  <th class="px-4 text-center"> Major</th>
                 </tr>
                 </thead>
                 <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
@@ -119,7 +119,7 @@
                           <p class="font-semibold">{{ ranker.github_id }}</p>
                         </div>
                     </td>
-                    <td style="border:none!important">
+                    <td style="border:none!important;width:60px">
                       <div class="flex items-center text-sm">
                         <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="red" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
                           <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
@@ -127,7 +127,7 @@
                         <div class="ml-2" >13</div>
                       </div>
                     </td>
-                    <td class="px-4 text-sm text-center" style="max-width:70px;border:none!important">
+                    <td class="text-sm text-center" style="border:none!important">
                       <span
                         class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
                         {{ ranker.tech_code_crazy }}%
@@ -140,8 +140,8 @@
                           style="width: {{ ranker.code_line_percent }}%; background-color: {{ tech_color }}"><p style="color:white">{{ ranker.total_lines }}</p></div>
                       </div>
                     </td>
-                    <td class="py-2 text-sm" style="border:none!important">
-                      <div class="flex items-center">
+                    <td class="px-5 py-2 text-sm" style="width:100px;border:none!important">
+                      <div class="flex items-center" style="justify-content:center;">
                         <div class="flex ml-3" style="align-items: center;flex-direction: column;">
                           <img style="width:45px;height:45px" src="https://git-rainbow.com/static/img/{{ ranker.top_tech.lower|replace_special_char }}.png">
                           <p class="text-xs text-gray-600">{{ ranker.top_tech }}</p>
