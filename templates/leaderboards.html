@@ -30,9 +30,9 @@
 
             <!-- Card -->
             {% for tech, color in github_calendar_colors.items %}
-              <div class="flex items-center ml-2 bg-white rounded-lg shadow-xs dark:bg-gray-800 mb-3 pointer tech_list" onclick="window.location.href='/leaderboards/{{ tech }}'"
+              <div class="flex items-center ml-2 bg-white rounded-lg shadow-xs dark:bg-gray-800 mb-3 pointer tech_list" onclick="window.location.href='/leaderboards/{{ tech|replace_special_char }}'"
                    style="width: 125px;height: 50px; {% if tech == tech_name %} border: 2px solid {{ color }} {% endif %}">
-                <img class="mr-8" style="width:45px;height:45px" src="https://git-rainbow.com/static/img/{{ tech.lower }}.png">
+                <img class="mr-8" style="width:45px;height:45px" src="https://git-rainbow.com/static/img/{{ tech.lower|replace_special_char }}.png">
                 <p class="pl-2 py-2 text-xs">{{ tech }}</p>
               </div>
             {% endfor %}
@@ -52,7 +52,7 @@
                 <div class="tech_color mt-2 mr-2"
                      style="background-color: {{ tech_color }}; float: right; display: block;"></div>
               </div>
-              <img class="mx-auto mb-2" src="https://git-rainbow.com/static/img/{{ tech_name.lower }}.png">
+              <img class="mx-auto mb-2" src="https://git-rainbow.com/static/img/{{ tech_name.lower|replace_special_char }}.png">
               <p class="mx-auto mb-2 text-sm">{{ tech_name }}</p>
             </div>
 
@@ -143,7 +143,7 @@
                     <td class="py-2 text-sm" style="border:none!important">
                       <div class="flex items-center">
                         <div class="flex ml-3" style="align-items: center;flex-direction: column;">
-                          <img style="width:45px;height:45px" src="https://git-rainbow.com/static/img/{{ ranker.top_tech.lower }}.png">
+                          <img style="width:45px;height:45px" src="https://git-rainbow.com/static/img/{{ ranker.top_tech.lower|replace_special_char }}.png">
                           <p class="text-xs text-gray-600">{{ ranker.top_tech }}</p>
                         </div>
                       </div>

@@ -155,11 +155,13 @@ def git_rainbow_svg(request, github_id):
 
 def leaderboards_tech_stack(request, tech_name='Android'):
     sorted_github_calendar_colors = dict(sorted(github_calendar_colors.items(), key=lambda x: x[0].lower()))
-
-    for key in sorted_github_calendar_colors.keys():
-        if key.lower() == tech_name.lower():
-            tech_name = key
-            break
+    if tech_name.lower() == 'c_sharp':
+        tech_name = 'C#'
+    else:
+        for key in sorted_github_calendar_colors.keys():
+            if key.lower() == tech_name.lower():
+                tech_name = key
+                break
 
     now_tech_ranker = GithubCalendar.objects.filter(tech_name__iexact=tech_name).values('github_id').annotate(total_lines=Sum('lines')).exclude(total_lines=0).order_by('-total_lines')
     if now_tech_ranker:
