@@ -171,8 +171,10 @@ def leaderboards_tech_stack(request, tech_name='Android'):
     if now_tech_ranker:
         first_total_lines = now_tech_ranker[0]['total_lines']
     for ranker in now_tech_ranker:
-        code_line_percent = ranker['total_lines'] / first_total_lines * 100
-        ranker['code_line_percent'] = round(code_line_percent, 2)
+        code_line_percent = round(ranker['total_lines'] / first_total_lines * 95, 2)
+        if code_line_percent < 25:
+            code_line_percent = 25
+        ranker['code_line_percent'] = code_line_percent
         github_user = GithubUser.objects.get(github_id=ranker['github_id'])
         ranker['avatar_url'] = github_user.avatar_url
         analysis_data = github_user.analysisdata.tech_card_data
