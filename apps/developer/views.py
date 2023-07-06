@@ -137,7 +137,7 @@ def git_rainbow_svg(request, github_id):
             tech_card_data=tech_card_data
         )
 
-    status, svg_inner_html = generate_github_calendar(json.loads(calendar_data))
+    status, svg_inner_html = generate_github_calendar(calendar_data)
     if status == False:
         return redirect(f'/{github_id}')
 
