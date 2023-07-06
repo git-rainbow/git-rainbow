@@ -106,7 +106,7 @@
                     <td class="px-3 py-3" style="width:150px;border:none!important">
                       <div class="flex items-center text-sm">
                         <p class="pr-3 text-xs text-gray-600 dark:text-gray-400">
-                          {{ forloop.counter }}
+                          {{ ranker.rank }}
                         </p>
 
                         <!-- Avatar with inset shadow -->
@@ -119,12 +119,22 @@
                           <p class="font-semibold">{{ ranker.github_id }}</p>
                         </div>
                     </td>
-                    <td style="border:none!important;width:60px">
+                    <td style="border:none!important;">
                       <div class="flex items-center text-sm">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="red" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
-                          <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-                        </svg>
-                        <div class="ml-2" >13</div>
+                        {% if ranker.change_rank > 0 %}
+                          <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="red" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+                            <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+                          </svg>
+                        {% elif ranker.change_rank < 0 %}
+                         <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="blue" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                          <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                         </svg>
+                        {% else %}
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#96C362" class="bi bi-circle-fill" viewBox="0 0 16 16" style="margin-left: 6px; margin-right: 7px;">
+                            <circle cx="8" cy="8" r="8"/>
+                          </svg>
+                        {% endif %}
+                        <div class="ml-2" >{{ ranker.change_rank }}</div>
                       </div>
                     </td>
                     <td class="text-sm text-center" style="border:none!important">

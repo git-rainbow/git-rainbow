@@ -19,6 +19,7 @@ from apps.developer import views
 
 urlpatterns = [
     path('', views.main_page),
+    path('update-ranking', views.save_tech_ranking_data),
     path('update-git-rainbow', views.update_git_rainbow),
     path('leaderboards', views.leaderboards_tech_stack),
     path('leaderboards/<str:tech_name>', views.leaderboards_tech_stack),

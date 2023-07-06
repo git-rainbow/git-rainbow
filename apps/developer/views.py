@@ -7,7 +7,7 @@ from django.http import JsonResponse
 from django.template import loader
 from django.utils import timezone
 
-from apps.tech_stack.models import GithubUser, AnalysisData, GithubCalendar
+from apps.tech_stack.models import GithubUser, AnalysisData, GithubCalendar, Ranking
 from apps.tech_stack.utils import core_repo_list
 from config.local_settings import token_list
 from utils.github_api import request_github_profile
@@ -183,7 +183,33 @@ def make_ranker_data(tech_name):
         ranker['total_lines'] = format(ranker['total_lines'], ',')
 
     now_tech_ranker = sorted(now_tech_ranker, key=lambda x: x['rank_point'], reverse=True)
+    rank = 0
+    for ranker in now_tech_ranker:
+        rank += 1
+        ranker['rank'] = rank
+        github_user = GithubUser.objects.get(github_id=ranker['github_id'])
+        midnight_rank = Ranking.objects.filter(github_id=github_user, tech_name=tech_name).first()
+        if not midnight_rank:
+            change_rank = 0
+        else:
+            change_rank = midnight_rank.midnight_rank - rank
+        ranker['change_rank'] = change_rank
     return now_tech_ranker
+
+
+def save_tech_ranking_data(request):
+    sorted_github_calendar_colors = dict(sorted(github_calendar_colors.items(), key=lambda x: x[0].lower()))
+    Ranking.objects.all().delete()
+    for tech_name in sorted_github_calendar_colors.keys():
+        now_ranker_data = make_ranker_data(tech_name)
+        rank = 0
+        for ranker in now_ranker_data:
+            rank += 1
+            Ranking.objects.update_or_create(
+                github_id_id=ranker['github_id'],
+                tech_name=tech_name,
+                defaults={'midnight_rank': rank})
+    return JsonResponse({'status': 'success'})
 
 
 def leaderboards_tech_stack(request, tech_name='Android'):
