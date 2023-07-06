@@ -34,7 +34,7 @@ class GithubCalendar(models.Model):
 
 
 class Ranking(models.Model):
-    github_id = models.OneToOneField('GithubUser', on_delete=models.CASCADE)
+    github_id = models.ForeignKey('GithubUser', on_delete=models.CASCADE)
     tech_name = models.CharField(max_length=50)
     midnight_rank = models.IntegerField()
-    updated_date = models.DateTimeField()
+    updated_date = models.DateTimeField(auto_now=True)
