@@ -110,6 +110,12 @@ def update_git_rainbow(request):
 
 def git_rainbow_svg(request, github_id):
     github_user = GithubUser.objects.filter(github_id__iexact=github_id).first()
+    if not github_user:
+        user_result = update_or_create_github_user(github_id)
+        if user_result['status'] == 'fail':
+            return render(request, 'exception_page.html', {'error': 404, 'message': user_result['reason']})
+        github_user = user_result['github_user']
+
     analysis_data = AnalysisData.objects.filter(github_id=github_user).first()
 
     if analysis_data:
@@ -118,16 +124,12 @@ def git_rainbow_svg(request, github_id):
     else:
         user_data = {"github_id": github_id, "tech_stack": True}
         core_response = core_repo_list(user_data)
+        github_user.status = core_response['status']
+        github_user.save()
         tech_card_data = core_response.get('tech_card_data')
         calendar_data = core_response.get('calendar_data')
         if not tech_card_data:
             return redirect(f'/{github_id}')
-        user_result = update_or_create_github_user(github_id)
-        if user_result['status'] == 'fail':
-            return redirect(f'/{github_id}')
-        github_user = user_result['github_user']
-        github_user.status = core_response['status']
-        github_user.save()
         AnalysisData.objects.create(
             github_id=github_user,
             git_calendar_data=calendar_data,
