@@ -1,9 +1,11 @@
 import json
 
+from dateutil.relativedelta import relativedelta
 from django.db.models import Sum
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.template import loader
+from django.utils import timezone
 
 from apps.tech_stack.models import GithubUser, AnalysisData, GithubCalendar
 from apps.tech_stack.utils import core_repo_list
@@ -158,7 +160,9 @@ def git_rainbow_svg(request, github_id):
 
 
 def make_ranker_data(tech_name):
-    now_tech_ranker = GithubCalendar.objects.filter(tech_name__iexact=tech_name).values('github_id').annotate(
+    today = timezone.now()
+    year_ago = (today - relativedelta(years=1)).replace(hour=0, minute=0, second=0)
+    now_tech_ranker = GithubCalendar.objects.filter(tech_name__iexact=tech_name, author_date__range=[year_ago, today]).values('github_id').annotate(
         total_lines=Sum('lines')).exclude(total_lines=0).order_by('-total_lines')
     if now_tech_ranker:
         first_total_lines = now_tech_ranker[0]['total_lines']
