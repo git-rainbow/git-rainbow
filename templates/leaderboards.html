@@ -57,7 +57,7 @@
             </div>
 
             <!-- Top1 Start -->
-            {% for top3 in now_tech_ranking|slice:":3" %}
+            {% for top3 in now_ranker_data|slice:":3" %}
             <div class="flex py-3 bg-white rounded-lg shadow-xs dark:bg-gray-800"
                  style="height: 136px;width: 140px;align-items: center;flex-direction: column;">
               <img class="mt-2 object-cover w-full h-full rounded-full"
@@ -101,7 +101,7 @@
                 </tr>
                 </thead>
                 <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-                  {% for ranker in now_tech_ranking %}
+                  {% for ranker in now_ranker_data %}
                   <tr class="text-gray-700 dark:text-gray-400" style="border: 0.5 solid #d5d6d7!important;">
                     <td class="px-3 py-3" style="width:150px;border:none!important">
                       <div class="flex items-center text-sm">

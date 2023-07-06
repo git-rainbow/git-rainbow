@@ -157,17 +157,9 @@ def git_rainbow_svg(request, github_id):
                   content_type='image/svg+xml')
 
 
-def leaderboards_tech_stack(request, tech_name='Android'):
-    sorted_github_calendar_colors = dict(sorted(github_calendar_colors.items(), key=lambda x: x[0].lower()))
-    if tech_name.lower() == 'c_sharp':
-        tech_name = 'C#'
-    else:
-        for key in sorted_github_calendar_colors.keys():
-            if key.lower() == tech_name.lower():
-                tech_name = key
-                break
-
-    now_tech_ranker = GithubCalendar.objects.filter(tech_name__iexact=tech_name).values('github_id').annotate(total_lines=Sum('lines')).exclude(total_lines=0).order_by('-total_lines')
+def make_ranker_data(tech_name):
+    now_tech_ranker = GithubCalendar.objects.filter(tech_name__iexact=tech_name).values('github_id').annotate(
+        total_lines=Sum('lines')).exclude(total_lines=0).order_by('-total_lines')
     if now_tech_ranker:
         first_total_lines = now_tech_ranker[0]['total_lines']
     for ranker in now_tech_ranker:
@@ -187,10 +179,24 @@ def leaderboards_tech_stack(request, tech_name='Android'):
         ranker['total_lines'] = format(ranker['total_lines'], ',')
 
     now_tech_ranker = sorted(now_tech_ranker, key=lambda x: x['rank_point'], reverse=True)
+    return now_tech_ranker
+
+
+def leaderboards_tech_stack(request, tech_name='Android'):
+    sorted_github_calendar_colors = dict(sorted(github_calendar_colors.items(), key=lambda x: x[0].lower()))
+    if tech_name.lower() == 'c_sharp':
+        tech_name = 'C#'
+    else:
+        for key in sorted_github_calendar_colors.keys():
+            if key.lower() == tech_name.lower():
+                tech_name = key
+                break
+
+    now_ranker_data = make_ranker_data(tech_name)
     context = {
         'github_calendar_colors': sorted_github_calendar_colors,
         'tech_name': tech_name,
         'tech_color': sorted_github_calendar_colors.get(tech_name),
-        'now_tech_ranking': now_tech_ranker,
+        'now_ranker_data': now_ranker_data,
     }
     return render(request, 'leaderboards.html', context)
