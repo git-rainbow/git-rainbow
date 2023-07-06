@@ -68,11 +68,10 @@ def git_rainbow(request, github_id):
 def update_git_rainbow(request):
     if request.method != 'POST':
         return JsonResponse({"status": "fail", 'msg': 'Not allowed method'})
-    github_id = request.POST.get('github_id')
-    if not github_id:
+    github_user = GithubUser.objects.filter(github_id__iexact=request.POST.get('github_id')).first()
+    if not github_user:
         return JsonResponse({"status": "fail", 'msg': 'No github id'})
 
-    github_user = GithubUser.objects.filter(github_id__iexact=github_id).first()
     github_id = github_user.github_id
     user_data = {"github_id": github_id, "tech_stack": True}
     user_data['update'] = bool(request.POST.get('update') == 'true')
