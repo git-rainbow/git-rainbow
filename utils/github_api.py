@@ -3,13 +3,13 @@ import requests
 from config.local_settings import token_list
 
 
-def request_github_profile(github_id, token):
+def _request_github_profile(github_id, token):
     users_api_url = f'https://api.github.com/users/{github_id}'
-    header = token
+    header = {'Authorization': f'token {token}'}
     try:
         response = requests.get(users_api_url, headers=header)
     except Exception as e:
-        return {'status': 'fail', 'result': 'Wrong URL'}
+        return {'status': 'fail', 'result': 'Wrong URL'}, github_id
     response_json = response.json()
     message = response_json.get('message')
     if response.status_code == 404 and message == 'Not Found':
@@ -29,3 +29,15 @@ def request_github_profile(github_id, token):
         data = {'status': 'success', 'result': {info: response_json.get(info) for info in info_list}}
         github_id = response_json.get('login')
         return data, github_id
+
+
+def request_github_profile(github_id, token=None):
+    if token:
+        return _request_github_profile(github_id, token)
+
+    for index in range(len(token_list)):
+        github_data, github_id = _request_github_profile(github_id, token_list[index])
+        if github_data['result'] == 'API token limited.' and len(token_list) - 1 != index:
+            continue
+        break
+    return github_data, github_id

@@ -27,25 +27,13 @@ def main_page(request):
 
 
 def update_or_create_github_user(github_id, ghp_token=None):
-    user_data = {"github_id": github_id, "tech_stack": True, 'update': True}
-    if ghp_token:
-        ghp_token = ghp_token.token
-        github_data, github_id = request_github_profile(github_id, {'Authorization': f'token {ghp_token}'})
-        user_data['ghp_token'] = ghp_token
-    else:
-        for index in range(len(token_list)):
-            github_data, github_id = request_github_profile(github_id, token_list[index])
-
-            if github_data['result'] == 'API token limited.' and len(token_list) - 1 != index:
-                continue
-            break
+    github_data, github_id = request_github_profile(github_id, ghp_token)
     if github_data['status'] == "fail":
         return {'status': 'fail', 'reason': github_data['result']}
 
     github_data = github_data['result']
     github_user, _ = GithubUser.objects.update_or_create(github_id=github_id,
-                                                               defaults={**github_data, 'status': 'progress'})
-    core_repo_list(user_data)
+                                                               defaults={**github_data})
     return {'status': 'success', 'github_user': github_user}
 
 
@@ -54,11 +42,16 @@ def git_rainbow(request, github_id):
     analysis_data = AnalysisData.objects.filter(github_id=github_user).first()
     error_code = 400
     if not github_user:
-        result = update_or_create_github_user(github_id)
-        if result.get('status') != 'success':
-            return render(request, 'exception_page.html', {'error': error_code, 'message': result.get('reason')})
+        user_result = update_or_create_github_user(github_id)
+        if user_result.get('status') != 'success':
+            return render(request, 'exception_page.html', {'error': error_code, 'message': user_result.get('reason')})
+        github_user = user_result['github_user']
 
     if not analysis_data:
+        user_data = {"github_id": github_id, "tech_stack": True}
+        core_response = core_repo_list(user_data)
+        github_user.status = core_response['status']
+        github_user.save()
         return render(request, 'loading.html', {'github_id': github_id})
 
     tech_card_data = json.loads(analysis_data.tech_card_data.replace("'", '"'))
@@ -82,15 +75,16 @@ def update_git_rainbow(request):
 
     core_response = core_repo_list(user_data)
     core_status = core_response['status']
-    if core_status == 'progress':
-        return JsonResponse({"status": core_status})
-
     github_user.status = core_status
     github_user.save()
+
+    if core_status == 'progress':
+        return JsonResponse({"status": core_status})
 
     if core_status == 'fail':
         return JsonResponse({"status": "fail", 'msg': 'Core API fail'})
 
+    update_or_create_github_user(github_id, ghp_token)
     calendar_data = core_response.get('calendar_data')
     tech_card_data = core_response.get('tech_card_data')
     AnalysisData.objects.update_or_create(github_id=github_user,
@@ -131,8 +125,11 @@ def git_rainbow_svg(request, github_id):
         user_result = update_or_create_github_user(github_id)
         if user_result['status'] == 'fail':
             return redirect(f'/{github_id}')
+        github_user = user_result['github_user']
+        github_user.status = core_response['status']
+        github_user.save()
         AnalysisData.objects.create(
-            github_id=user_result['github_user'],
+            github_id=github_user,
             git_calendar_data=calendar_data,
             tech_card_data=tech_card_data
         )
