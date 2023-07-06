@@ -57,31 +57,15 @@
             </div>
 
             <!-- Top1 Start -->
+            {% for top3 in now_tech_ranking|slice:":3" %}
             <div class="flex py-3 bg-white rounded-lg shadow-xs dark:bg-gray-800"
                  style="height: 136px;width: 140px;align-items: center;flex-direction: column;">
               <img class="mt-2 object-cover w-full h-full rounded-full"
-                   src="https://avatars.githubusercontent.com/u/170270?v=4" style="width:64px;height:64px">
-              <p class="mx-auto mb-2 font-semibold" style="font-size:15px">1 &nbsp;sindresorhus</p>
+                   src="{{ top3.avatar_url }}" style="width:64px;height:64px">
+              <p class="mx-auto mb-2 font-semibold" style="font-size:15px">{{ forloop.counter }} &nbsp;{{ top3.github_id }}</p>
             </div>
+            {% endfor %}
             <!-- Top1 End -->
-
-            <!-- Top2 Start -->
-            <div class="flex py-3 bg-white rounded-lg shadow-xs dark:bg-gray-800"
-                 style="height: 136px;width: 140px;align-items: center;flex-direction: column;">
-              <img class="mt-2 object-cover w-full h-full rounded-full"
-                   src="https://avatars.githubusercontent.com/u/32802673?v=4" style="width:64px;height:64px">
-              <p class="mx-auto mb-2 font-semibold" style="font-size:15px">2 &nbsp;j1mmyson</p>
-            </div>
-            <!-- Top2 End -->
-
-            <!-- Top3 Start -->
-            <div class="flex py-3 bg-white rounded-lg shadow-xs dark:bg-gray-800"
-                 style="height: 136px;width: 140px;align-items: center;flex-direction: column;">
-              <img class="mt-2 object-cover w-full h-full rounded-full"
-                   src="https://avatars.githubusercontent.com/u/32462617?v=4" style="width:64px;height:64px">
-              <p class="mx-auto mb-2 font-semibold" style="font-size:15px">3 &nbsp;brunafreit4s</p>
-            </div>
-            <!-- Top3 End -->
 
             <!-- My Ranking Start -->
             <div class="flex py-3 bg-white rounded-lg shadow-xs dark:bg-gray-800"
@@ -111,154 +95,61 @@
                   style="border: 0 solid #d5d6d7!important;">
                   <th class="px-4 py-3" style="width:150px">GitHub ID</th>
                   <th></th>
-                  <th class="px-4 py-3" style="width:200px">Top3 tech stack</th>
-                  <th class="px-4 py-3 text-center" style="min-width:50px">Code Crazy</th>
+                  <th class="px-4 py-3 text-center" style="max-width:10px">Code Crazy</th>
                   <th class="px-4 py-3">Code Lines</th>
+                  <th class="px-4 py-3">Major</th>
                 </tr>
                 </thead>
                 <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-                <tr class="text-gray-700 dark:text-gray-400" style="border: 0.5 solid #d5d6d7!important;">
-                  <td class="px-3 py-3" style="width:150px;border:none!important">
-                    <div class="flex items-center text-sm">
-                      <p class="pr-3 text-xs text-gray-600 dark:text-gray-400">
-                        1
-                      </p>
+                  {% for ranker in now_tech_ranking %}
+                  <tr class="text-gray-700 dark:text-gray-400" style="border: 0.5 solid #d5d6d7!important;">
+                    <td class="px-3 py-3" style="width:150px;border:none!important">
+                      <div class="flex items-center text-sm">
+                        <p class="pr-3 text-xs text-gray-600 dark:text-gray-400">
+                          {{ forloop.counter }}
+                        </p>
 
-                      <!-- Avatar with inset shadow -->
-                      <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block" style="min-width:32px;">
-                        <img class="object-cover w-full h-full rounded-full"
-                             src="https://avatars.githubusercontent.com/u/170270?v=4" alt="" loading="lazy">
-                        <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
+                        <!-- Avatar with inset shadow -->
+                        <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block" style="min-width:32px;">
+                          <img class="object-cover w-full h-full rounded-full"
+                               src="{{ ranker.avatar_url }}" alt="" loading="lazy">
+                          <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
+                        </div>
+                        <div>
+                          <p class="font-semibold">{{ ranker.github_id }}</p>
+                        </div>
+                    </td>
+                    <td style="border:none!important">
+                      <div class="flex items-center text-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="red" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+                          <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+                        </svg>
+                        <div class="ml-2" >13</div>
                       </div>
-                      <div>
-                        <p class="font-semibold">sindresorhus</p>
+                    </td>
+                    <td class="px-4 text-sm text-center" style="max-width:70px;border:none!important">
+                      <span
+                        class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
+                        {{ ranker.tech_code_crazy }}%
+                      </span>
+                    </td>
+                    <td style="border:none!important">
+                      <div class="w-full rounded-full" style="background-color:lightgray">
+                        <div
+                          class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
+                          style="width: {{ ranker.code_line_percent }}%"><p style="color:white">{{ ranker.total_lines }}</p></div>
                       </div>
-                  </td>
-                  <td style="border:none!important">
-                    <div class="flex items-center text-sm">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="red" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
-                        <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-                      </svg>
-                      <div class="ml-2" >13</div>
-                    </div>
-                  </td>
-                  <td class="py-2 text-sm" style="border:none!important">
-                    <div class="flex items-center">
-                      <div class="flex ml-3" style="align-items: center;flex-direction: column;">
-                        <img style="width:45px;height:45px" src="https://git-rainbow.com/static/img/swift.png">
-                        <p class="text-xs text-gray-600">Swift</p>
-                        <span class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full"
-                              style="font-size: .65rem; text-align: center; margin: 0 auto; margin-top: 8px;">
-                          49%
-                        </span>
+                    </td>
+                    <td class="py-2 text-sm" style="border:none!important">
+                      <div class="flex items-center">
+                        <div class="flex ml-3" style="align-items: center;flex-direction: column;">
+                          <img style="width:45px;height:45px" src="https://git-rainbow.com/static/img/{{ ranker.top_tech.lower }}.png">
+                          <p class="text-xs text-gray-600">{{ ranker.top_tech }}</p>
+                        </div>
                       </div>
-                      <div class="flex ml-3" style="align-items: center;flex-direction: column;">
-                        <img class="mr-8" style="width:45px;height:45px"
-                             src="https://git-rainbow.com/static/img/javascript.png">
-                        <p class="text-xs text-gray-600">Javascript</p>
-                        <span class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full"
-                              style="font-size: .65rem; text-align: center; margin: 0 auto; margin-top: 8px;">
-                          23%
-                        </span>
-                      </div>
-                      <div class="flex ml-3" style="align-items: center;flex-direction: column;">
-                        <img class="mr-8" style="width:45px;height:45px"
-                             src="https://git-rainbow.com/static/img/nodejs.png">
-                        <p class="text-xs text-gray-600">Nodejs</p>
-                        <span class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full"
-                              style="font-size: .65rem; text-align: center; margin: 0 auto; margin-top: 8px;">
-                          23%
-                        </span>
-                      </div>
-                    </div>
-                  </td>
-                  <td class="px-4 text-sm text-center" style="max-width:70px;border:none!important">
-                    <span
-                      class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
-                      99%
-                    </span>
-                  </td>
-                  <td style="border:none!important">
-                    <div class="w-full rounded-full" style="background-color:lightgray">
-                      <div
-                        class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
-                        style="width: 90%"><p style="color:white">13,432 k</p></div>
-                    </div>
-                  </td>
-                </tr>
-
-                <tr class="text-gray-700 dark:text-gray-400" style="border: 0.5 solid #d5d6d7!important;">
-                  <td class="px-3 py-3" style="width:150px;border:none!important">
-                    <div class="flex items-center text-sm">
-                      <p class="pr-3 text-xs text-gray-600 dark:text-gray-400">
-                        2
-                      </p>
-
-                      <!-- Avatar with inset shadow -->
-                      <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block" style="min-width:32px">
-                        <img class="object-cover w-full h-full rounded-full"
-                             src="https://avatars.githubusercontent.com/u/32802673?v=4" alt="" loading="lazy">
-                        <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
-                      </div>
-                      <div>
-                        <p class="font-semibold">j1mmyson</p>
-                      </div>
-                  </td>
-                  <td style="border:none!important">
-                    <div class="flex items-center text-sm">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="blue" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                        <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                      </svg>
-                      <div class="ml-2" >4</div>
-                    </div>
-                  </td>
-                  <td class="py-2 text-sm" style="border:none!important">
-                    <div class="flex items-center">
-                      <div class="flex ml-3" style="align-items: center;flex-direction: column;">
-                        <img style="width:45px;height:45px" src="https://git-rainbow.com/static/img/javascript.png">
-                        <p class="text-xs text-gray-600">Javascript</p>
-                        <span class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full"
-                              style="font-size: .65rem; text-align: center; margin: 0 auto; margin-top: 8px;">
-                          49%
-                        </span>
-                      </div>
-                      <div class="flex ml-3" style="align-items: center;flex-direction: column;">
-                        <img class="mr-8" style="width:45px;height:45px"
-                             src="https://git-rainbow.com/static/img/react.png">
-                        <p class="text-xs text-gray-600">React</p>
-                        <span class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full"
-                              style="font-size: .65rem; text-align: center; margin: 0 auto; margin-top: 8px;">
-                          23%
-                        </span>
-                      </div>
-                      <div class="flex ml-3" style="align-items: center;flex-direction: column;">
-                        <img class="mr-8" style="width:45px;height:45px"
-                             src="https://git-rainbow.com/static/img/vue.png">
-                        <p class="text-xs text-gray-600">Vuejs</p>
-                        <span class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full"
-                              style="font-size: .65rem; text-align: center; margin: 0 auto; margin-top: 8px;">
-                          23%
-                        </span>
-                      </div>
-                    </div>
-                  </td>
-                  <td class="px-4 py-3 text-sm text-center" style="max-width:70px;border:none!important">
-                    <span
-                      class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
-                      78%
-                    </span>
-                  </td>
-                  <td style="border:none!important">
-                    <div class="w-full rounded-full" style="background-color:lightgray">
-                      <div
-                        class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
-                        style="width: 70%">
-                        <p style="color:white">5,621 k</p>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-
+                    </td>
+                  </tr>
+                  {% endfor %}
                 </tbody>
               </table>
             </div>

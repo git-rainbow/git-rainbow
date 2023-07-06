@@ -1,9 +1,11 @@
 import json
+
+from django.db.models import Sum
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.template import loader
 
-from apps.tech_stack.models import GithubUser, AnalysisData
+from apps.tech_stack.models import GithubUser, AnalysisData, GithubCalendar
 from apps.tech_stack.utils import core_repo_list
 from config.local_settings import token_list
 from utils.github_api import request_github_profile
@@ -159,8 +161,28 @@ def leaderboards_tech_stack(request, tech_name='Android'):
             tech_name = key
             break
 
+    now_tech_ranker = GithubCalendar.objects.filter(tech_name__iexact=tech_name).values('github_id').annotate(total_lines=Sum('lines')).exclude(total_lines=0).order_by('-total_lines')
+    if now_tech_ranker:
+        first_total_lines = now_tech_ranker[0]['total_lines']
+    for ranker in now_tech_ranker:
+        code_line_percent = ranker['total_lines'] / first_total_lines * 100
+        ranker['code_line_percent'] = round(code_line_percent, 2)
+        github_user = GithubUser.objects.get(github_id=ranker['github_id'])
+        ranker['avatar_url'] = github_user.avatar_url
+        analysis_data = github_user.analysisdata.tech_card_data
+        ranker['top_tech'] = json.loads(analysis_data.replace("'", '"'))[0]['name']
+        coding_date_count = GithubCalendar.objects.filter(github_id=github_user, tech_name__iexact=tech_name).count()
+        ranker['tech_code_crazy'] = coding_date_count
+        # Ranking in order of Crazy (days/365 %) X Coding lines
+        rank_point = coding_date_count * ranker['total_lines']
+        ranker['rank_point'] = rank_point
+        ranker['total_lines'] = format(ranker['total_lines'], ',')
+
+    now_tech_ranker = sorted(now_tech_ranker, key=lambda x: x['rank_point'], reverse=True)
     context = {
         'github_calendar_colors': sorted_github_calendar_colors,
         'tech_name': tech_name,
-        'tech_color': sorted_github_calendar_colors.get(tech_name)}
+        'tech_color': sorted_github_calendar_colors.get(tech_name),
+        'now_tech_ranking': now_tech_ranker,
+    }
     return render(request, 'leaderboards.html', context)
