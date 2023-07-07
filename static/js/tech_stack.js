@@ -3,21 +3,21 @@ function analyze_developer(github_id, update) {
     if (updateBtn){
         updateBtn.classList.add("rotate-img");
     }
-    var waiting = _analyze_developer(github_id, update);
+    let waiting = setTimeout(function(){_analyze_developer(github_id, update)}, 0);
     var interval = setInterval(function () {
         if (waiting == false) {
             clearInterval(interval);
             if (updateBtn){
                 updateBtn.classList.remove("rotate-img");
             }
-        }
-        else
+        } else {
             waiting = _analyze_developer(github_id, update);
+        }
     }, 3000);
 }
 
 function _analyze_developer(github_id, update) {
-    var waiting = true;
+    let waiting = true;
     $.ajaxSetup({
         beforeSend: function (xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
