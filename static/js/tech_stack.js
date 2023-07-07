@@ -1,14 +1,15 @@
 function analyze_developer(github_id, update) {
-    if (update) {
-        let updateBtn = document.querySelector("#update_btn");
+    let updateBtn = document.querySelector("#update_btn");
+    if (updateBtn){
         updateBtn.classList.add("rotate-img");
     }
     var waiting = _analyze_developer(github_id, update);
     var interval = setInterval(function () {
         if (waiting == false) {
             clearInterval(interval);
-            if (update)
+            if (updateBtn){
                 updateBtn.classList.remove("rotate-img");
+            }
         }
         else
             waiting = _analyze_developer(github_id, update);
