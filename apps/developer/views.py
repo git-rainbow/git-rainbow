@@ -1,7 +1,7 @@
 import json
 
 from dateutil.relativedelta import relativedelta
-from django.db.models import Sum
+from django.db.models import Sum, F, Count, Max
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.template import loader
@@ -162,38 +162,35 @@ def git_rainbow_svg(request, github_id):
 def make_ranker_data(tech_name):
     today = timezone.now()
     year_ago = (today - relativedelta(years=1)).replace(hour=0, minute=0, second=0)
-    now_tech_ranker = GithubCalendar.objects.filter(tech_name__iexact=tech_name, author_date__range=[year_ago, today]).values('github_id').annotate(
-        total_lines=Sum('lines')).exclude(total_lines=0).order_by('-total_lines')
-    if now_tech_ranker:
-        first_total_lines = now_tech_ranker[0]['total_lines']
-    for ranker in now_tech_ranker:
-        code_line_percent = round(ranker['total_lines'] / first_total_lines * 95, 2)
-        if code_line_percent < 25:
-            code_line_percent = 25
-        ranker['code_line_percent'] = code_line_percent
-        github_user = GithubUser.objects.get(github_id=ranker['github_id'])
-        ranker['avatar_url'] = github_user.avatar_url
-        analysis_data = github_user.analysisdata.tech_card_data
-        ranker['top_tech'] = json.loads(analysis_data.replace("'", '"'))[0]['name']
-        coding_date_count = GithubCalendar.objects.filter(github_id=github_user, tech_name__iexact=tech_name).count()
-        ranker['tech_code_crazy'] = coding_date_count
-        # Ranking in order of Crazy (days/365 %) X Coding lines
-        rank_point = coding_date_count * ranker['total_lines']
-        ranker['rank_point'] = rank_point
-        ranker['total_lines'] = format(ranker['total_lines'], ',')
 
-    now_tech_ranker = sorted(now_tech_ranker, key=lambda x: x['rank_point'], reverse=True)
+    now_tech_ranker = GithubCalendar.objects.filter(tech_name__iexact=tech_name, author_date__range=[year_ago, today]).values('github_id').annotate(
+        tech_code_crazy=Count('github_id'),
+        total_lines=Sum('lines'),
+        avatar_url=F('github_id__avatar_url'),
+        analysisdata=F('github_id__analysisdata__tech_card_data'),
+        midnight_tech=F('github_id__ranking__tech_name'),
+        midnight_rank=F('github_id__ranking__midnight_rank'),
+        # Ranking in order of Crazy (days/365 %) X Coding lines
+        rank_point=F('tech_code_crazy') * F('total_lines')
+    ).exclude(total_lines=0).filter(midnight_tech=tech_name).order_by('-rank_point')
+
+    if now_tech_ranker:
+        most_user_code_lines = now_tech_ranker.aggregate(total_lines=Max('total_lines'))['total_lines']
     rank = 0
     for ranker in now_tech_ranker:
         rank += 1
         ranker['rank'] = rank
-        github_user = GithubUser.objects.get(github_id=ranker['github_id'])
-        midnight_rank = Ranking.objects.filter(github_id=github_user, tech_name=tech_name).first()
-        if not midnight_rank:
+        if ranker['midnight_rank'] is None:
             change_rank = 0
         else:
-            change_rank = midnight_rank.midnight_rank - rank
+            change_rank = ranker['midnight_rank'] - rank
         ranker['change_rank'] = change_rank
+        code_line_percent = round(ranker['total_lines'] / most_user_code_lines * 95, 2)
+        if code_line_percent < 25:
+            code_line_percent = 25
+        ranker['code_line_percent'] = code_line_percent
+        ranker['top_tech'] = json.loads(ranker['analysisdata'].replace("'", '"'))[0]['name']
+        ranker['total_lines'] = format(ranker['total_lines'], ',')
     return now_tech_ranker
 
 
