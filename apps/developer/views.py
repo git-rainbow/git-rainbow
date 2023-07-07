@@ -11,6 +11,7 @@ from config.local_settings import token_list
 from utils.github_api import request_github_profile
 from utils.github_calendar.github_calendar import generate_github_calendar
 from utils.github_calendar_colors.github_calendar_colors import github_calendar_colors
+from utils.github_id.github_id import check_github_id
 
 
 def exception_view(request, exception=None):
@@ -38,9 +39,13 @@ def update_or_create_github_user(github_id, ghp_token=None):
 
 
 def git_rainbow(request, github_id):
+    error_code = 400
+    is_github_id_valid = check_github_id(github_id)
+    if not is_github_id_valid:
+        return render(request, 'exception_page.html', {'error': error_code, 'message': 'Invalid github id'})
     github_user = GithubUser.objects.filter(github_id__iexact=github_id).first()
     analysis_data = AnalysisData.objects.filter(github_id=github_user).first()
-    error_code = 400
+
     if not github_user:
         user_result = update_or_create_github_user(github_id)
         if user_result.get('status') != 'success':
