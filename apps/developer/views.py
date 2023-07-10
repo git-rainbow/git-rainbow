@@ -1,6 +1,7 @@
 import json
 
 from dateutil.relativedelta import relativedelta
+from django.core.paginator import Paginator
 from django.db.models import Sum, F, Count, Max
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
@@ -220,10 +221,15 @@ def leaderboards_tech_stack(request, tech_name='Android'):
                 break
 
     now_ranker_data = make_ranker_data(tech_name)
+    page_number = request.GET.get('page')
+    items_per_page = 5
+    paginator = Paginator(now_ranker_data, items_per_page)
+    page_rank_data = paginator.get_page(page_number)
     context = {
         'github_calendar_colors': sorted_github_calendar_colors,
         'tech_name': tech_name,
         'tech_color': sorted_github_calendar_colors.get(tech_name),
-        'now_ranker_data': now_ranker_data,
+        'top_ranker': now_ranker_data[:3],
+        'now_ranker_data': page_rank_data,
     }
     return render(request, 'leaderboards.html', context)
