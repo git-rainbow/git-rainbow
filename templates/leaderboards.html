@@ -68,6 +68,12 @@
             <!-- Top1 End -->
 
             <!-- My Ranking Start -->
+          {% if user %}
+            <div class="flex py-3 bg-white rounded-lg shadow-xs dark:bg-gray-800" style="height: 136px;width: 140px;align-items: center;flex-direction: column;">
+              <img class="mt-2 object-cover w-full h-full rounded-full" src="{{ user.avatar_url }}" style="width:64px;height:64px">
+              <p class="mx-auto mb-2 font-semibold" style="font-size:15px">{% if user_rank %}{{ user_rank }}{% else %}-{% endif %} &nbsp;{{ user.github_id }}</p>
+            </div>
+          {% else %}
             <div class="flex py-3 bg-white rounded-lg shadow-xs dark:bg-gray-800"
                  style="height: 136px;width: 140px;align-items: center;flex-direction: column;">
               <img class="mt-2 object-cover w-full h-full rounded-full"
@@ -80,6 +86,7 @@
                 </button>
               </div>
             </div>
+          {% endif %}
             <!-- My Ranking End -->
 
           </div>

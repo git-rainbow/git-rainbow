@@ -232,4 +232,13 @@ def leaderboards_tech_stack(request, tech_name='Android'):
         'top_ranker': now_ranker_data[:3],
         'now_ranker_data': page_rank_data,
     }
+    if request.user.is_authenticated:
+        context['user'] = request.user.githubuser_set.first()
+        github_id = context['user'].github_id
+        if now_ranker_data.filter(github_id=github_id).first():
+            for ranker in now_ranker_data:
+                if ranker['github_id'] == github_id:
+                    context['user_rank'] = ranker['rank']
+                    break
+
     return render(request, 'leaderboards.html', context)
