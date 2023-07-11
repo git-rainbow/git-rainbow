@@ -83,10 +83,10 @@ def check_user_token(github_id, token):
 
 def update_git_rainbow(request):
     if request.method != 'POST':
-        return JsonResponse({"status": "fail", 'msg': 'Not allowed method'})
+        return JsonResponse({"status": "fail", 'reason': 'Not allowed method'})
     github_user = GithubUser.objects.filter(github_id__iexact=request.POST.get('github_id')).first()
     if not github_user:
-        return JsonResponse({"status": "fail", 'msg': 'No github id'})
+        return JsonResponse({"status": "fail", 'reason': 'No github id'})
 
     github_id = github_user.github_id
     user_data = {"github_id": github_id, "tech_stack": True}
@@ -108,7 +108,7 @@ def update_git_rainbow(request):
         return JsonResponse({"status": core_status})
 
     if core_status == 'fail':
-        return JsonResponse({"status": "fail", 'msg': 'Core API fail'})
+        return JsonResponse({"status": "fail", 'reason': 'Core API fail'})
 
     update_or_create_github_user(github_id, ghp_token)
     calendar_data = core_response.get('calendar_data')
