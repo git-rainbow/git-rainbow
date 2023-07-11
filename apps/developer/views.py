@@ -194,7 +194,7 @@ def make_ranker_data(tech_name):
     ).exclude(total_lines=0).filter(Q(midnight_tech=tech_name) | Q(midnight_tech=None)).order_by('-rank_point')
 
     if now_tech_ranker:
-        most_user_code_lines = now_tech_ranker.aggregate(total_lines=Max('total_lines'))['total_lines']
+        most_user_code_lines = now_tech_ranker.aggregate(max_lines=Max('total_lines'))['max_lines']
     rank = 0
     for ranker in now_tech_ranker:
         rank += 1
