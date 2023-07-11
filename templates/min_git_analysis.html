@@ -22,6 +22,7 @@
     <div style="display:flex; justify-content: space-between;">
       <span class="font-bold mb-2" style="font-size:20px; font-family: 'Noto Sans KR';float: left">Tech Stack<g class="ml-3" style="font-weight: normal;">in the last year</g></span>
       <div style="display: flex;cursor: pointer; align-items: center;">
+        <a href="https://github.com/{{github_user.github_id}}" target="blank" style="outline:none; color: inherit;"><i class="bi bi-github" style="font-size: 20px; margin-right: 15px;"></i></a>
         <img class="pointer" style="width:20px; height: 20px; margin-right: 15px;" src="{% static 'img/share.png' %}" alt="share" onclick="copy_svg_url('{{github_user.github_id}}')">
         <img id="update_btn"
           {% if request.user.github_id == github_user.github_id %}
