@@ -240,7 +240,7 @@ def leaderboards_tech_stack(request, tech_name='Android'):
 
     now_ranker_data = make_ranker_data(tech_name)
     page_number = request.GET.get('page')
-    items_per_page = 5
+    items_per_page = 50
     paginator = Paginator(now_ranker_data, items_per_page)
     page_rank_data = paginator.get_page(page_number)
     context = {
