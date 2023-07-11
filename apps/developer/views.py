@@ -2,7 +2,7 @@ import json
 
 from dateutil.relativedelta import relativedelta
 from django.core.paginator import Paginator
-from django.db.models import Sum, F, Count, Max
+from django.db.models import Sum, F, Count, Max, Q
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.template import loader
@@ -173,7 +173,7 @@ def make_ranker_data(tech_name):
         midnight_rank=F('github_id__ranking__midnight_rank'),
         # Ranking in order of Crazy (days/365 %) X Coding lines
         rank_point=F('tech_code_crazy') * F('total_lines')
-    ).exclude(total_lines=0).filter(midnight_tech=tech_name).order_by('-rank_point')
+    ).exclude(total_lines=0).filter(Q(midnight_tech=tech_name) | Q(midnight_tech=None)).order_by('-rank_point')
 
     if now_tech_ranker:
         most_user_code_lines = now_tech_ranker.aggregate(total_lines=Max('total_lines'))['total_lines']
