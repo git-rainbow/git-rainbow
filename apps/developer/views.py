@@ -1,4 +1,7 @@
 import json
+from datetime import datetime
+
+import pytz
 import requests
 
 from dateutil.relativedelta import relativedelta
@@ -118,6 +121,7 @@ def update_git_rainbow(request):
                                               'git_calendar_data': calendar_data,
                                               'tech_card_data': tech_card_data
                                           })
+    sava_github_calendar_data(calendar_data, github_user)
     context = {
         'github_user': github_user,
         'tech_card_data': tech_card_data,
@@ -226,6 +230,29 @@ def save_tech_ranking_data(request):
                 tech_name=tech_name,
                 defaults={'midnight_rank': rank})
     return JsonResponse({'status': 'success'})
+
+
+def sava_github_calendar_data(git_calendar_data, github_user):
+    user_git_calendar_data = github_user.githubcalendar_set.all()
+    last_author_date = user_git_calendar_data.aggregate(last_author_date=Max('author_date'))['last_author_date']
+    if last_author_date:
+        user_git_calendar_data.filter(author_date__gte=last_author_date).delete()
+    calendar_data = json.loads(git_calendar_data.replace("'", '"'))
+    git_calendar_data_bulk = []
+    for author_date, data in calendar_data.items():
+        date_format = "%Y-%m-%d"
+        datetime_object = datetime.strptime(author_date, date_format)
+        datetime_object = pytz.utc.localize(datetime_object)
+        if last_author_date is None or last_author_date <= datetime_object:
+            for tech_name, lines in data.items():
+                github_calendar = GithubCalendar(
+                    github_id=github_user,
+                    author_date=datetime_object,
+                    tech_name=tech_name,
+                    lines=lines
+                )
+                git_calendar_data_bulk.append(github_calendar)
+    GithubCalendar.objects.bulk_create(git_calendar_data_bulk)
 
 
 def leaderboards_tech_stack(request, tech_name='Android'):
