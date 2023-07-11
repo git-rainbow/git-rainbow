@@ -2772,3 +2772,11 @@ section {
   pointer-events: none;
   animation: animate-loading 2s linear infinite;
 }
+
+.ranking-ellipsis {
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 120px;
+}
