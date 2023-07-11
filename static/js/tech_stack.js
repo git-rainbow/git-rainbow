@@ -1,22 +1,35 @@
-function analyze_developer(github_id, update) {
+function analyze_developer(github_id, update, is_with_token) {
+    let data = {
+        'github_id': github_id,
+        'update': update
+    }
+    if (is_with_token){
+        let token = document.querySelector("#token_input").value;
+        if (token == ''){
+            alert('Please input your token');
+            return;
+        }
+        data['ghp_token'] = token;
+    }
+    let close_btn = document.querySelector("#close_btn");
+    if (close_btn)
+        close_btn.click();
     let updateBtn = document.querySelector("#update_btn");
     if (updateBtn){
         updateBtn.classList.add("rotate-img");
     }
-    let waiting = setTimeout(function(){_analyze_developer(github_id, update)}, 0);
     var interval = setInterval(function () {
+        let waiting = _analyze_developer(data);
         if (waiting == false) {
             clearInterval(interval);
             if (updateBtn){
                 updateBtn.classList.remove("rotate-img");
             }
-        } else {
-            waiting = _analyze_developer(github_id, update);
         }
     }, 3000);
 }
 
-function _analyze_developer(github_id, update) {
+function _analyze_developer(data) {
     let waiting = true;
     $.ajaxSetup({
         beforeSend: function (xhr, settings) {
@@ -28,11 +41,7 @@ function _analyze_developer(github_id, update) {
     $.ajax({
         url: '/update-git-rainbow'
         ,method: 'POST'
-        ,data:
-            {
-                'github_id': github_id,
-                'update': update
-            }
+        ,data: data
         ,async: false
         ,success: function (data) {
             if (data.status == 'completed') {
@@ -41,7 +50,7 @@ function _analyze_developer(github_id, update) {
                 show_profile_calendar(data.calendar_data)
             } else if(data.status == 'fail') {
                 waiting = false;
-                alert('status:fail');
+                alert(`status: fail, reaseon: ${data.reason}`);
             }
         },
         error: function (data) {

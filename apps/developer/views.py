@@ -1,4 +1,5 @@
 import json
+import requests
 
 from dateutil.relativedelta import relativedelta
 from django.core.paginator import Paginator
@@ -68,6 +69,18 @@ def git_rainbow(request, github_id):
     return render(request, 'git_analysis.html', context)
 
 
+def check_user_token(github_id, token):
+    token_check_api_url = 'https://api.github.com/user'
+    token_check_res = requests.get(token_check_api_url, headers={'Authorization': f'token {token}'}).json()
+    token_check_message = token_check_res.get('message')
+    if token_check_message:
+        return {'status': 'fail', 'reason': token_check_message}
+    elif token_check_res.get('login') != github_id:
+        return {'status': 'fail', 'reason': 'Github ID and token mismatched'}
+    else:
+        return {'status':'success'}
+
+
 def update_git_rainbow(request):
     if request.method != 'POST':
         return JsonResponse({"status": "fail", 'msg': 'Not allowed method'})
@@ -80,6 +93,11 @@ def update_git_rainbow(request):
     user_data['update'] = bool(request.POST.get('update') == 'true')
     ghp_token = request.POST.get('ghp_token')
     user_data['ghp_token'] = ghp_token
+
+    if ghp_token:
+        check_user_token_result = check_user_token(github_id, ghp_token)
+        if check_user_token_result.get('status') == 'fail':
+            return JsonResponse(check_user_token_result)
 
     core_response = core_repo_list(user_data)
     core_status = core_response['status']
