@@ -22,6 +22,7 @@ function show_profile_calendar(commit_data){
 function highlight_card_tech(event, tech_name, tech_color) {
     let cards = document.querySelectorAll('.tech_card');
     let cells = document.querySelectorAll(".day-cell");
+    let tech_graphs = document.querySelectorAll(".tech_graph");
 
     if (event.currentTarget.getAttribute('selected') == 'true') {
         event.currentTarget.setAttribute('selected', 'false');
@@ -34,6 +35,9 @@ function highlight_card_tech(event, tech_name, tech_color) {
         for (let cell of cells) {
             cell.setAttribute('fill', cell.getAttribute('origin-fill'));
             cell.setAttribute('opacity', 1);
+        }
+        for (let tech_graph of tech_graphs) {
+            tech_graph.setAttribute('style', 'opacity:1;');
         }
     } else {
         for (let card of cards) {
@@ -52,6 +56,13 @@ function highlight_card_tech(event, tech_name, tech_color) {
             } else {
                 cell.setAttribute('opacity', 0.2);
                 cell.setAttribute('fill', cell.getAttribute('origin-fill'));
+            }
+        }
+        for (let tech_graph of tech_graphs) {
+            if (tech_graph.id == `tech_${tech_name}`){
+                tech_graph.setAttribute('style', 'opacity:1;');
+            } else{
+                tech_graph.setAttribute('style', 'opacity:0.2;');
             }
         }
     }
@@ -92,7 +103,7 @@ function show_total_lines(commit_data){
         if (percentage < 20){
             percentage = 13
         }
-        let tech_info = `<tr class="text-gray-700 dark:text-gray-400">
+        let tech_info = `<tr class="text-gray-700 dark:text-gray-400 tech_graph" id="tech_${tech}">
           <td class="px-3 py-3" style="width:150px;border:none!important">
             <div class="flex items-center text-sm">
               <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block" style="min-width:40px;">
