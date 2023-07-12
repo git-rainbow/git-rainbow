@@ -335,9 +335,8 @@ function profile_calendar() {
     };
   }
   /* jshint ignore:end */
-function fill_color(counts) {
 
-    function color_choice(name, opacity){
+function color_choice(name, opacity){
         const colors = {
         'Django': `rgba(0,77,64,${opacity})`,
         'React':  `rgba(128,222,234,${opacity})`,
@@ -365,7 +364,10 @@ function fill_color(counts) {
         'PHP': `rgba(191,173,243,${opacity})`,
     }
     return colors[name]
-    }
+}
+
+function fill_color(counts) {
+
     if (!counts)
         return '#F1F1F1FF'
     else if (color_choice(Object.keys(counts)[0],1.0)){
