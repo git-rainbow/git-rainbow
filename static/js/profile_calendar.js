@@ -147,6 +147,7 @@ function profile_calendar() {
         var enterSelection = dayRects.enter().append('rect')
           .attr('class', 'day-cell')
           .attr('date', function(d) { return moment(d).format('YYYY-MM-DD'); })
+          .attr('selected', false)
           .attr('width', SQUARE_LENGTH)
           .attr('height', SQUARE_LENGTH)
           .attr('fill', function(d) { return fill_color(countForDate(d)); })
@@ -159,6 +160,19 @@ function profile_calendar() {
           .attr('y', function (d, i) {
             return MONTH_LABEL_PADDING + formatWeekday(d.getDay()) * (SQUARE_LENGTH + SQUARE_PADDING);
           })
+         .on('click', function(d) {
+             var count = countForDate(d);
+             let tech_name_list = Object.keys(count);
+             let line_list = Object.values(count);
+             let date = moment(d).format('YYYY-MM-DD');
+             let tech_data = {};
+             for (var i = 0; i < tech_name_list.length; i++) {
+                 tech_data[tech_name_list[i]] = line_list[i];
+             }
+             let data = {};
+             data[date]= tech_data;
+             highlight_cell(event, data);
+         })
          .on("mouseover", function(d) {
              tooltip.setAttribute('style','position:absolute;');
              var dateStr = moment(d).format('ddd, MMM Do YYYY');

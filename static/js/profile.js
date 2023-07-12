@@ -94,6 +94,8 @@ function make_tech_lines(calendar_commits){
 }
 
 function show_total_lines(commit_data){
+    let tagArea = document.getElementById('tech_grahp');
+    tagArea.innerHTML='';
     let lines_data = make_tech_lines(commit_data)
     let new_tech_lines_data = lines_data['new_tech_lines_data']
     let new_total_lines = lines_data['new_total_lines']
@@ -124,7 +126,34 @@ function show_total_lines(commit_data){
             </div>
           </td>
         </tr>`;
-        let tagArea = document.getElementById('tech_grahp');
         tagArea.innerHTML += tech_info;
+    }
+}
+
+function highlight_cell(event, commits=null){
+    let cells = document.querySelectorAll(".day-cell");
+
+    if (event.currentTarget.getAttribute('selected') == 'true') {
+        event.currentTarget.setAttribute('selected', 'false');
+        let selected_cell_list = Array.from(cells).map(cell => cell.getAttribute('selected'));
+        if (!selected_cell_list.includes('true')){
+            cells.forEach(cell => {
+                cell.setAttribute('style', 'opacity:1;');
+            });
+        }
+        for (let cell of cells) {
+            cell.setAttribute('fill', cell.getAttribute('origin-fill'));
+            cell.setAttribute('opacity', 1);
+        }
+        show_total_lines(calendar_commits);
+
+    } else {
+        for (let cell of cells) {
+            cell.setAttribute('selected', 'false');
+            cell.setAttribute('style', 'opacity:0.2;');
+        }
+        event.currentTarget.setAttribute('selected', 'true');
+        event.currentTarget.setAttribute('style', 'opacity:1;');
+        show_total_lines(commits);
     }
 }
