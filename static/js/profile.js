@@ -19,28 +19,39 @@ function show_profile_calendar(commit_data){
 };
 
 
-function highlight_card_tech(event, tech_name) {
+function highlight_card_tech(event, tech_name, tech_color) {
     let cards = document.querySelectorAll('.tech_card');
     let cells = document.querySelectorAll(".day-cell");
 
     if (event.currentTarget.getAttribute('selected') == 'true') {
         event.currentTarget.setAttribute('selected', 'false');
+        let selected_list = Array.from(cards).map(card => card.getAttribute('selected'));
+        if (!selected_list.includes('true')){
+            cards.forEach(card => {
+                card.setAttribute('style', 'opacity:1;');
+            });
+        }
         for (let cell of cells) {
+            cell.setAttribute('fill', cell.getAttribute('origin-fill'));
             cell.setAttribute('opacity', 1);
         }
     } else {
         for (let card of cards) {
             card.setAttribute('selected', 'false');
+            card.setAttribute('style', 'opacity:0.2;');
         }
 
         event.currentTarget.setAttribute('selected', 'true');
+        event.currentTarget.setAttribute('style', 'opacity:1;');
         
         for (let cell of cells) {
             let date = cell.getAttribute('date');
             if (calendar_commits[date]?.[tech_name]){
                 cell.setAttribute('opacity', 1);
+                cell.setAttribute('fill', tech_color);
             } else {
                 cell.setAttribute('opacity', 0.2);
+                cell.setAttribute('fill', cell.getAttribute('origin-fill'));
             }
         }
     }

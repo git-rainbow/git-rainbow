@@ -150,6 +150,7 @@ function profile_calendar() {
           .attr('width', SQUARE_LENGTH)
           .attr('height', SQUARE_LENGTH)
           .attr('fill', function(d) { return fill_color(countForDate(d)); })
+          .attr('origin-fill', function(d) { return fill_color(countForDate(d)); })
           .attr('x', function (d, i) {
             var cellDate = moment(d);
             var result = cellDate.week() - firstDate.week() + (firstDate.weeksInYear() * (cellDate.weekYear() - firstDate.weekYear()));
