@@ -294,3 +294,28 @@ def leaderboards_tech_stack(request, tech_name='Android'):
                     break
 
     return render(request, 'leaderboards.html', context)
+
+
+def find_user_page(request):
+    if request.method != 'POST':
+        return render(request, 'exception_page.html', {'error': 403, 'message': 'Not allowed method'})   
+
+    tech_name, search_user = request.POST.values()
+    now_ranker_data = make_ranker_data(tech_name)
+    
+    items_per_page = 50
+    search_user_page_number = 0
+    exist = None
+    for data in now_ranker_data:
+        if data.get('github_id') == search_user:
+            search_user_rank = data.get('rank')
+            search_user_page_number = search_user_rank//items_per_page + 1
+            exist = True
+            break
+    result = {
+        'exist': exist,
+        'tech_name': tech_name,
+        'search_user': search_user,
+        'search_user_page_number': search_user_page_number
+    }
+    return JsonResponse(result)
