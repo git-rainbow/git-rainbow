@@ -27,6 +27,11 @@ function highlight_card_tech(event, tech_name, tech_color) {
     let cards = document.querySelectorAll('.tech_card');
     let cells = document.querySelectorAll(".day-cell");
     let tech_graphs = document.querySelectorAll(".tech_graph");
+    for (let cell of cells) {
+            cell.setAttribute('selected', 'false');
+            cell.setAttribute('fill', cell.getAttribute('origin-fill'));
+            cell.setAttribute('style', 'opacity:1;');
+        }
 
     if (event.currentTarget.getAttribute('selected') == 'true') {
         event.currentTarget.setAttribute('selected', 'false');
@@ -38,7 +43,7 @@ function highlight_card_tech(event, tech_name, tech_color) {
         }
         for (let cell of cells) {
             cell.setAttribute('fill', cell.getAttribute('origin-fill'));
-            cell.setAttribute('opacity', 1);
+            cell.setAttribute('style', 'opacity:1;');
         }
         for (let tech_graph of tech_graphs) {
             tech_graph.setAttribute('style', 'opacity:1;');
@@ -55,10 +60,10 @@ function highlight_card_tech(event, tech_name, tech_color) {
         for (let cell of cells) {
             let date = cell.getAttribute('date');
             if (calendar_commits[date]?.[tech_name]){
-                cell.setAttribute('opacity', 1);
+                cell.setAttribute('style', 'opacity:1;');
                 cell.setAttribute('fill', tech_color);
             } else {
-                cell.setAttribute('opacity', 0.2);
+                cell.setAttribute('style', 'opacity:0.2;');
                 cell.setAttribute('fill', cell.getAttribute('origin-fill'));
             }
         }
@@ -136,6 +141,11 @@ function show_total_lines(commit_data){
 
 function highlight_cell(event, commits=null){
     let cells = document.querySelectorAll(".day-cell");
+    let cards = document.querySelectorAll('.tech_card');
+    for (let card of cards) {
+        card.setAttribute('selected', 'false');
+        card.setAttribute('style', 'opacity:1;');
+    }
 
     if (event.currentTarget.getAttribute('selected') == 'true') {
         event.currentTarget.setAttribute('selected', 'false');
