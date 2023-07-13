@@ -6,7 +6,7 @@ import requests
 
 from dateutil.relativedelta import relativedelta
 from django.core.paginator import Paginator
-from django.db.models import Sum, F, Count, Max, Q
+from django.db.models import Sum, F, Count, Max, Q, Avg
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.template import loader
@@ -198,7 +198,7 @@ def make_ranker_data(tech_name):
     ).exclude(total_lines=0).filter(Q(midnight_tech=tech_name) | Q(midnight_tech=None)).order_by('-rank_point')
 
     if now_tech_ranker:
-        most_user_code_lines = now_tech_ranker.aggregate(max_lines=Max('total_lines'))['max_lines']
+        user_avg_lines = now_tech_ranker.aggregate(avg_lines=Avg('total_lines'))['avg_lines'] * 2
     rank = 0
     for ranker in now_tech_ranker:
         rank += 1
@@ -208,9 +208,11 @@ def make_ranker_data(tech_name):
         else:
             change_rank = ranker['midnight_rank'] - rank
         ranker['change_rank'] = change_rank
-        code_line_percent = round(ranker['total_lines'] / most_user_code_lines * 95, 2)
+        code_line_percent = round(ranker['total_lines'] / user_avg_lines * 100, 2)
         if code_line_percent < 25:
             code_line_percent = 25
+        elif code_line_percent > 95:
+            code_line_percent = 95
         ranker['code_line_percent'] = code_line_percent
         ranker['top_tech'] = json.loads(ranker['analysisdata'].replace("'", '"'))[0]['name']
         ranker['total_lines'] = format(ranker['total_lines'], ',')
