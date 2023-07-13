@@ -6,7 +6,10 @@
 </div>
 <script>
     show_profile_calendar(JSON.parse('{{calendar_data|safe}}'));
-    show_total_lines(JSON.parse('{{calendar_data|safe}}'));
     check_analysis_updating("{{github_user.github_id}}", "{{github_user.status}}");
+    {% if last_tech_data %}
+        show_total_lines(JSON.parse('{{last_tech_data|safe}}'));
+        save_global_var(JSON.parse('{{last_tech_data|safe}}'));
+    {% endif %}
 </script>
 {% endblock %}

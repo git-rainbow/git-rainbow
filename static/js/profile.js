@@ -1,4 +1,5 @@
 let calendar_commits;
+let last_tech_data;
 
 function show_profile_calendar(commit_data){
     calendar_commits = commit_data;
@@ -18,6 +19,9 @@ function show_profile_calendar(commit_data){
     calendar();
 };
 
+function save_global_var(tech_data){
+    last_tech_data = tech_data;
+}
 
 function highlight_card_tech(event, tech_name, tech_color) {
     let cards = document.querySelectorAll('.tech_card');
@@ -145,7 +149,7 @@ function highlight_cell(event, commits=null){
             cell.setAttribute('fill', cell.getAttribute('origin-fill'));
             cell.setAttribute('opacity', 1);
         }
-        show_total_lines(calendar_commits);
+        show_total_lines(last_tech_data);
 
     } else {
         for (let cell of cells) {

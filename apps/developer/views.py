@@ -50,7 +50,7 @@ def git_rainbow(request, github_id):
     is_github_id_valid = check_github_id(github_id)
     if not is_github_id_valid:
         return render(request, 'exception_page.html', {'error': error_code, 'message': 'Invalid github id'})
-    github_user = GithubUser.objects.filter(github_id__iexact=github_id).first()
+    github_user = GithubUser.objects.prefetch_related('githubcalendar_set').filter(github_id__iexact=github_id).first()
     analysis_data = AnalysisData.objects.filter(github_id=github_user).first()
 
     if not github_user:
@@ -65,10 +65,15 @@ def git_rainbow(request, github_id):
         github_user.status = core_response['status']
         github_user.save()
         return render(request, 'loading.html', {'github_id': github_id})
-
     tech_card_data = json.loads(analysis_data.tech_card_data.replace("'", '"'))
     calendar_data = analysis_data.git_calendar_data.replace("'", '"')
     context = {'github_user': github_user, 'tech_card_data': tech_card_data, 'calendar_data': calendar_data}
+
+    last_day = github_user.githubcalendar_set.aggregate(last_day=Max('author_date'))['last_day']
+    if last_day:
+        last_day_commits_data = github_user.githubcalendar_set.filter(author_date=last_day)
+        last_tech_data = str({last_day.strftime("%Y-%m-%d"): {data['tech_name']: data['lines'] for data in last_day_commits_data.values()}}).replace("'", '"')
+        context["last_tech_data"] = last_tech_data
     return render(request, 'git_analysis.html', context)
 
 
