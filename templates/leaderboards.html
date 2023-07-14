@@ -62,7 +62,7 @@
                  style="height: 136px;width: 140px;align-items: center;flex-direction: column;">
               <img class="mt-2 object-cover w-full h-full rounded-full"
                    src="{{ top3.avatar_url }}" style="width:64px;height:64px">
-              <p class="mx-auto mb-2 font-semibold ranking-ellipsis" style="font-size:15px">{{ forloop.counter }} &nbsp;<a href="/{{top3.github_id}}" target="blank">{{ top3.github_id }}</a></p>
+              <p class="mx-auto mb-2 font-semibold ranking-ellipsis" style="font-size:15px">{{ forloop.counter }} &nbsp;<a href="/{{top3.github_id}}" target="_blank">{{ top3.github_id }}</a></p>
             </div>
             {% endfor %}
             <!-- Top1 End -->
@@ -71,7 +71,7 @@
           {% if login_user %}
             <div class="flex py-3 bg-white rounded-lg shadow-xs dark:bg-gray-800" style="height: 136px;width: 140px;align-items: center;flex-direction: column;">
               <img class="mt-2 object-cover w-full h-full rounded-full" src="{{ login_user.avatar_url }}" style="width:64px;height:64px">
-              <p class="mx-auto mb-2 font-semibold ranking-ellipsis" style="font-size:15px">{% if login_user_rank %}{{ login_user_rank }}{% else %}-{% endif %} &nbsp;<a href="/{{ login_user.github_id }}" target="blank">{{ login_user.github_id }}</a></p>
+              <p class="mx-auto mb-2 font-semibold ranking-ellipsis" style="font-size:15px">{% if login_user_rank %}{{ login_user_rank }}{% else %}-{% endif %} &nbsp;<a href="/{{ login_user.github_id }}" target="_blank">{{ login_user.github_id }}</a></p>
             </div>
           {% else %}
             <div class="flex py-3 bg-white rounded-lg shadow-xs dark:bg-gray-800" onclick="alert('Login required')"
@@ -131,7 +131,7 @@
                           <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
                         </div>
                         <div class="ranking-ellipsis">
-                          <a class="font-semibold" href="/{{ ranker.github_id }}" target="blank">{{ ranker.github_id }}</a>
+                          <a class="font-semibold" href="/{{ ranker.github_id }}" target="_blank">{{ ranker.github_id }}</a>
                         </div>
                     </td>
                     <td style="border:none!important;">
