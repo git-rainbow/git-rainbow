@@ -196,11 +196,9 @@ def make_ranker_data(tech_name):
         total_lines=Sum('lines'),
         avatar_url=F('github_id__avatar_url'),
         analysisdata=F('github_id__analysisdata__tech_card_data'),
-        midnight_tech=F('github_id__ranking__tech_name'),
-        midnight_rank=F('github_id__ranking__midnight_rank'),
         # Ranking in order of Crazy (days/365 %) X Coding lines
         rank_point=F('tech_code_crazy') * F('total_lines')
-    ).exclude(total_lines=0).filter(Q(midnight_tech=tech_name) | Q(midnight_tech=None)).order_by('-rank_point')
+    ).exclude(total_lines=0).order_by('-rank_point')
 
     if now_tech_ranker:
         user_avg_lines = now_tech_ranker.aggregate(avg_lines=Avg('total_lines'))['avg_lines'] * 2
@@ -208,10 +206,11 @@ def make_ranker_data(tech_name):
     for ranker in now_tech_ranker:
         rank += 1
         ranker['rank'] = rank
-        if ranker['midnight_rank'] is None:
+        user_ranking = Ranking.objects.filter(tech_name=tech_name, github_id_id=ranker['github_id']).first()
+        if user_ranking is None:
             change_rank = 0
         else:
-            change_rank = ranker['midnight_rank'] - rank
+            change_rank = user_ranking.midnight_rank - rank
         ranker['change_rank'] = change_rank
         code_line_percent = round(ranker['total_lines'] / user_avg_lines * 100, 2)
         if code_line_percent < 25:
