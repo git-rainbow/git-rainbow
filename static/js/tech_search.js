@@ -22,7 +22,11 @@ function search_tech(event) {
     }, 300);
 }
 
-function find_ranking_user() {
+function find_ranking_user(event) {
+    if (event.type != "click" && !(event.keyCode && event.keyCode == 13)){
+        return;
+    }
+
     let tech_name = document.querySelector("#tech_title").innerHTML;
     let github_id = document.querySelector("#ranking_search_input").value;
 
