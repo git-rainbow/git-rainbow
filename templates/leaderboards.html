@@ -92,14 +92,23 @@
           </div>
           <!-- Selected Tech & Top3 Group End -->
 
-          <div style="justify-content: right;">
-            <div style="display: flex; justify-content: end; align-items: center;">
-              <input id="ranking_search_input" onkeydown="find_ranking_user(event)" type="text" placeholder="Search user" class="w-full pl-8 pr-2 text-sm text-gray-700 placeholder-gray-600 bg-gray-100 rounded-md dark:placeholder-gray-500 dark:focus:shadow-outline-gray dark:focus:placeholder-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:placeholder-gray-500 focus:bg-white focus:border-purple-300 focus:outline-none focus:shadow-outline-purple form-input" style="width: 150px; border: solid 1px rgb(227, 227, 227);">
-              <svg onclick="find_ranking_user(event)" class="w-4 h-4" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" style="margin-left: 5px;">
-                <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
-              </svg>
+          <!-- Search GitHub User -->
+          <div class="flex mb-3" style="min-width:450px;align-content:flex-end;flex-wrap:wrap;">
+            <div class="relative focus-within:text-purple-500"
+                 style="min-width: 90px; margin-left:2px">
+              <div style="position:absolute; top: 30%; left: 3.5%;">
+                <svg class="w-4 h-4" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd"
+                        d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                        clip-rule="evenodd"></path>
+                </svg>
+              </div>
+              <input style="min-width: 90px;" id="ranking_search_input" onkeydown="find_ranking_user(event)"
+                     class="w-full pl-8 pr-2 text-sm text-gray-700 placeholder-gray-600 bg-gray-100 border-0 rounded-md dark:placeholder-gray-500 dark:focus:shadow-outline-gray dark:focus:placeholder-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:placeholder-gray-500 focus:bg-white focus:border-purple-300 focus:outline-none focus:shadow-outline-purple form-input"
+                     type="text" placeholder="Search a GitHub ID" aria-label="Search">
             </div>
           </div>
+
           <!-- Table -->
           <div class="overflow-hidden rounded-lg shadow-xs" style="margin-left: auto !important;">
             <div class="w-full overflow-x-auto">
