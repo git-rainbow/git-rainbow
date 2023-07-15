@@ -102,6 +102,13 @@ function make_tech_lines(calendar_commits){
     return {new_tech_lines_data, new_total_lines};
 }
 
+function tech_name(tech) {
+    let tech_name = tech.toLowerCase();
+    tech_name = tech_name.replace('#', '_sharp');
+
+    return tech_name
+}
+
 function show_total_lines(commit_data){
     let tagArea = document.getElementById('tech_grahp');
     tagArea.innerHTML='';
@@ -119,7 +126,7 @@ function show_total_lines(commit_data){
             <div class="flex items-center text-sm">
               <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block" style="min-width:40px;">
                 <img class="object-cover w-full h-full rounded-full"
-                     src="https://git-rainbow.com/static/img/${tech.toLowerCase()}.png" alt="" loading="lazy">
+                     src="https://git-rainbow.com/static/img/${tech_name(tech)}.png" alt="" loading="lazy">
                 <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
               </div>
               <div class="ranking-ellipsis">
