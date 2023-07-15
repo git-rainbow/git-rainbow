@@ -59,24 +59,25 @@
             <!-- Top1 Start -->
             {% for top3 in top_ranker %}
             <div class="flex py-3 bg-white rounded-lg shadow-xs dark:bg-gray-800"
-                 style="height: 136px;width: 140px;align-items: center;flex-direction: column;">
+                 style="height: 160px;width: 140px;align-items: center;flex-direction: column;">
+              <p class="mx-auto mb-2 font-semibold ranking-ellipsis" style="font-size:15px">Top {{ forloop.counter }}</p>
               <img class="mt-2 object-cover w-full h-full rounded-full"
                    src="{{ top3.avatar_url }}" style="width:64px;height:64px">
-              <p class="mx-auto mb-2 font-semibold ranking-ellipsis" style="font-size:15px">{{ forloop.counter }} &nbsp;<a href="/{{top3.github_id}}" target="_blank">{{ top3.github_id }}</a></p>
+              <p class="mx-auto mt-2 font-semibold ranking-ellipsis" style="font-size:15px"><a href="/{{top3.github_id}}" target="_blank">{{ top3.github_id }}</a></p>
             </div>
             {% endfor %}
             <!-- Top1 End -->
 
             <!-- My Ranking Start -->
           {% if login_user %}
-            <div class="flex py-3 bg-white rounded-lg shadow-xs dark:bg-gray-800" style="height: 136px;width: 140px;align-items: center;flex-direction: column;">
+            <div class="flex py-3 bg-white rounded-lg shadow-xs dark:bg-gray-800" style="height: 160px;width: 140px;align-items: center;flex-direction: column;">
               <img class="mt-2 object-cover w-full h-full rounded-full" src="{{ login_user.avatar_url }}" style="width:64px;height:64px">
               <p class="mx-auto mb-2 font-semibold ranking-ellipsis" style="font-size:15px">{% if login_user_rank %}{{ login_user_rank }}{% else %}-{% endif %} &nbsp;<a href="/{{ login_user.github_id }}" target="_blank">{{ login_user.github_id }}</a></p>
             </div>
           {% else %}
             <div class="flex py-3 bg-white rounded-lg shadow-xs dark:bg-gray-800" onclick="alert('Login required')"
-                 style="height: 136px;width: 140px;align-items: center;flex-direction: column;">
-              <img class="mt-2 object-cover w-full h-full rounded-full"
+                 style="height: 160px;width: 140px;align-items: center;flex-direction: column;">
+              <img class="mt-3 object-cover w-full h-full rounded-full"
                    src="https://static.vecteezy.com/system/resources/previews/007/126/739/original/question-mark-icon-free-vector.jpg"
                    style="width:64px;height:64px">
               <div class="mt-2">
