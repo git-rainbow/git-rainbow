@@ -74,7 +74,7 @@ def git_rainbow(request, github_id):
         last_day_commits_data = github_user.githubcalendar_set.filter(author_date=last_day)
         last_tech_data = str({last_day.strftime("%Y-%m-%d"): {data['tech_name']: data['lines'] for data in last_day_commits_data.values()}}).replace("'", '"')
         context["last_tech_data"] = last_tech_data
-    return render(request, 'git_analysis.html', context)
+    return render(request, 'git_rainbow.html', context)
 
 
 def check_user_token(github_id, token):
@@ -136,7 +136,7 @@ def update_git_rainbow(request):
         'calendar_data': json.loads(calendar_data)
     }
     content = loader.render_to_string(
-        'min_git_analysis.html',
+        'min_git_rainbow.html',
         context,
         request
     )
