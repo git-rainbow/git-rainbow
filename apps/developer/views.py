@@ -261,7 +261,7 @@ def sava_github_calendar_data(git_calendar_data, github_user):
     GithubCalendar.objects.bulk_create(git_calendar_data_bulk)
 
 
-def leaderboards_tech_stack(request, tech_name='Android'):
+def ranking_tech_stack(request, tech_name='Android'):
     sorted_github_calendar_colors = dict(sorted(github_calendar_colors.items(), key=lambda x: x[0].lower()))
     if tech_name.lower() == 'c_sharp':
         tech_name = 'C#'
@@ -292,7 +292,7 @@ def leaderboards_tech_stack(request, tech_name='Android'):
                     context['login_user_rank'] = ranker['rank']
                     break
 
-    return render(request, 'leaderboards.html', context)
+    return render(request, 'ranking.html', context)
 
 
 def find_user_page(request):
