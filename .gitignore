@@ -409,3 +409,6 @@ pyrightconfig.json
 .ionide
 
 # End of https://www.toptal.com/developers/gitignore/api/django,pycharm,visualstudiocode,python
+
+#channel API
+static/js/channelAPI.js
