@@ -67,7 +67,8 @@ def git_rainbow(request, github_id):
         return render(request, 'loading.html', {'github_id': github_id})
     tech_card_data = json.loads(analysis_data.tech_card_data.replace("'", '"'))
     calendar_data = analysis_data.git_calendar_data.replace("'", '"')
-    context = {'github_user': github_user, 'tech_card_data': tech_card_data, 'calendar_data': calendar_data}
+    context = {'github_user': github_user, 'tech_card_data': tech_card_data, 'calendar_data': calendar_data,
+               'days':len(json.loads(calendar_data).keys())}
 
     last_day = github_user.githubcalendar_set.aggregate(last_day=Max('author_date'))['last_day']
     if last_day:
@@ -127,13 +128,15 @@ def update_git_rainbow(request):
                                               'tech_card_data': tech_card_data
                                           })
     sava_github_calendar_data(calendar_data, github_user)
+    calendar_data = json.loads(calendar_data)
     context = {
         'github_user': github_user,
         'tech_card_data': tech_card_data,
+        'days':len(calendar_data.keys()),
     }
     json_data = {
         'status': core_status,
-        'calendar_data': json.loads(calendar_data)
+        'calendar_data': calendar_data
     }
     content = loader.render_to_string(
         'min_git_rainbow.html',
