@@ -31,15 +31,16 @@
       <span class="font-bold mb-2" style="font-size:20px; font-family: 'Noto Sans KR';float: left">Tech Stack<g class="ml-3" style="font-weight: normal;">in the last year</g></span>
       <div style="display: flex;cursor: pointer; align-items: center;">
         <a href="https://github.com/{{github_user.github_id}}" target="_blank" style="outline:none; color: inherit;"><i class="bi bi-github" style="font-size: 20px; margin-right: 15px;"></i></a>
-        <img class="pointer" style="width:20px; height: 20px; margin-right: 15px;" src="{% static 'img/share.png' %}" alt="share" onclick="copy_svg_url('{{github_user.github_id}}')">
-        <img id="update_btn"
-          {% if request.user.github_id == github_user.github_id %}
-            @click="openModal"
-          {% else %}
-            onclick="analyze_developer('{{github_user.github_id}}', true)"
-          {% endif %}
-          src="{% static 'img/update.png' %}" alt="update" style="width:20px; height: 20px;"
-        >
+        {% if not request.user.is_authenticated %}
+          <img class="pointer" onclick="go_to_login()" style="width:20px; height: 20px; margin-right: 15px;" src="{% static 'img/share.png' %}" alt="share">
+          <img id="update_btn" onclick="go_to_login()" src="{% static 'img/update.png' %}" alt="update" style="width:20px; height: 20px;">
+        {% elif request.user.github_id == github_user.github_id %}
+          <img class="pointer" onclick="copy_svg_url('{{github_user.github_id}}')" style="width:20px; height: 20px; margin-right: 15px;" src="{% static 'img/share.png' %}" alt="share">
+          <img id="update_btn" @click="openModal" src="{% static 'img/update.png' %}" alt="update" style="width:20px; height: 20px;">
+        {% else %}
+          <img class="pointer" onclick="copy_svg_url('{{github_user.github_id}}')" style="width:20px; height: 20px; margin-right: 15px;" src="{% static 'img/share.png' %}" alt="share">
+          <img id="update_btn" onclick="analyze_developer('{{github_user.github_id}}', true)" src="{% static 'img/update.png' %}" alt="update" style="width:20px; height: 20px;">
+        {% endif %}
       </div>
     </div>
     <div class="flex-1 md:w-full w-full h-full overflow-hidden bg-white rounded-lg shadow-xs p-6">
