@@ -50,7 +50,7 @@ function find_ranking_user(event) {
         ,async: false
         ,success: function (data) {
             if(data.exist == true) {
-                location.href = `/leaderboards/${tech_name}?page=${data.search_user_page_number}&search_user=${data.search_user}`;
+                location.href = `/ranking/${tech_name}?page=${data.search_user_page_number}&search_user=${data.search_user}`;
             } else {
                 alert(`'${github_id}' does not exist in this tech ranking`);
             }
