@@ -281,6 +281,9 @@
         </div>
       </div>
       <!-- First Row End -->
+      {% if now_ranker_data.number != 1 %}
+        <img src="{% static 'img/to_the_top.png' %}" alt="top" onclick="location.href=location.pathname" style="position: fixed; right: 120px; bottom: 250px; width: 60px; height: 60px; cursor: pointer;">
+      {% endif %}
 
     </div>
   </div>
