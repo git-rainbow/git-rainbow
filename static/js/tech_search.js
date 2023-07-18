@@ -78,3 +78,10 @@ function show_ranking_user() {
         }
     }
 }
+
+function reset_opacity() {
+    const user_trs = document.querySelectorAll('.user_tr');
+    for (let user_tr of user_trs){
+    user_tr.setAttribute('style', 'opacity: 1;');
+    }
+}
