@@ -222,20 +222,41 @@
                         </button>
                       </li>
                     {% endif %}
-                  {% for num in now_ranker_data.paginator.page_range %}
-                    {% if num == now_ranker_data.number %}
+                    <li>
+                      <button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple" onclick="window.location.href='?page=1'">
+                        <p {% if now_ranker_data.number == 1 %}style="color: blue; font-weight: bolder"{% endif %}>1</p>
+                      </button>
+                    </li>
+                    {% if now_ranker_data.paginator.count > 50 %}
                       <li>
-                        <button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
-                          <p style="color: blue; font-weight: bolder">{{ num }}</p>
+                        <button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple" onclick="window.location.href='?page=2'">
+                            <p {% if now_ranker_data.number == 2 %}style="color: blue; font-weight: bolder"{% endif %}>2</p>
                         </button>
                       </li>
+                    {% endif %}
+                    {% if now_ranker_data.number >= 6 %}
+                      <li>
+                        <p>...</p>
+                      </li>
+                    {% endif %}
+                  {% for num in now_ranker_data.paginator.page_range %}
+                    {% if num == now_ranker_data.number %}
+                      {% if num >= 3 %}
+                        <li>
+                          <button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
+                            <p style="color: blue; font-weight: bolder">{{ num }}</p>
+                          </button>
+                        </li>
+                      {% endif %}
                     {% else %}
                       {% if now_ranker_data.number|add:"-2" <= num and num <= now_ranker_data.number|add:"2" %}
+                        {% if num >= 3 %}
                         <li>
                           <button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple" onclick="window.location.href='?page={{ num }}'">
                             {{ num }}
                           </button>
                         </li>
+                        {% endif %}
                       {% endif %}
                     {% endif %}
                   {% endfor %}
