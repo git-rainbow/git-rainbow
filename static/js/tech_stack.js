@@ -46,6 +46,12 @@ function _analyze_developer(data) {
         ,success: function (data) {
             if (data.status == 'completed') {
                 waiting = false;
+                // Don't change template in ranking page - start
+                const ranking_regex = /^\/ranking(\/[^/]+)?$/;
+                if (ranking_regex.test(location.pathname)){
+                    return waiting;
+                }
+                // Don't change template in ranking page - finish
                 $("#under_header").html(data.content);
                 show_profile_calendar(data.calendar_data)
             } else if(data.status == 'fail') {

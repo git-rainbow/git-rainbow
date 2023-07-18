@@ -47,12 +47,12 @@
 
             <!-- Selected Tech Card -->
             <div class="flex mb-3 bg-white rounded-lg shadow-xs dark:bg-gray-800"
-                 style="height: 136px;width: 126px;align-items: center;flex-direction: column;">
+                 style="height: 160px;width: 126px;align-items: center;flex-direction: column;">
               <div class="w-full inline-block">
                 <div class="tech_color mt-2 mr-2"
                      style="background-color: {{ tech_color }}; float: right; display: block;"></div>
               </div>
-              <img class="mx-auto mb-2" src="https://git-rainbow.com/static/img/{{ tech_name.lower|replace_special_char }}.png">
+              <img class="mx-auto mb-2" src="https://git-rainbow.com/static/img/{{ tech_name.lower|replace_special_char }}.png" style="margin-top: 20px;">
               <p class="mx-auto mb-2 text-sm" id="tech_title">{{ tech_name }}</p>
             </div>
 
@@ -69,11 +69,20 @@
             <!-- Top1 End -->
 
             <!-- My Ranking Start -->
-          {% if login_user %}
-            <div class="flex py-3 bg-white rounded-lg shadow-xs dark:bg-gray-800" style="height: 160px;width: 140px;align-items: center;flex-direction: column;">
-              <img class="mt-2 object-cover w-full h-full rounded-full" src="{{ login_user.avatar_url }}" style="width:64px;height:64px">
-              <p class="mx-auto mb-2 font-semibold ranking-ellipsis" style="font-size:15px">{% if login_user_rank %}{{ login_user_rank }}{% else %}-{% endif %} &nbsp;<a href="/{{ login_user.github_id }}" target="_blank">{{ login_user.github_id }}</a></p>
+          {% if login_user and login_user_rank %}
+          <div>
+            <div style="position: absolute;">
+              <img id="update_btn" @click="openModal" src="{% static 'img/update-arrows.svg' %}" alt="update" style="padding: 2px; background-color: #866BF2; width: 18px; height:18px; position: relative; top: 5px; left: 120px; border-radius: 50%; font-weight: bold; cursor: pointer;">
             </div>
+            {% with login_user as github_user %}
+              {% include 'token_modals.html' %}
+            {% endwith %}
+            <div class="flex py-3 bg-white rounded-lg shadow-xs dark:bg-gray-800" style="height: 160px;width: 140px;align-items: center;flex-direction: column;">
+              <p class="mx-auto mb-2 font-semibold ranking-ellipsis" style="font-size:15px">Rank {{ login_user_rank }}</p>
+              <img class="mt-2 object-cover w-full h-full rounded-full" src="{{ login_user.avatar_url }}" style="width:64px;height:64px">
+              <p class="mx-auto mb-2 font-semibold ranking-ellipsis" style="font-size:15px"><a href="/{{ login_user.github_id }}" target="_blank">{{ login_user.github_id }}</a></p>
+            </div>
+          </div>
           {% else %}
             <div class="flex py-3 bg-white rounded-lg shadow-xs dark:bg-gray-800" onclick="alert('Login required')"
                  style="height: 160px;width: 140px;align-items: center;flex-direction: column;">
@@ -249,5 +258,10 @@
     </div>
   </div>
 <script type="text/javascript" src="{% static "js/tech_search.js" %}"></script>
-<script>show_ranking_user();</script>
+<script>
+  show_ranking_user();
+  {% if login_user %}
+    check_analysis_updating("{{login_user.github_id}}", "{{login_user.status}}");
+  {% endif %}
+</script>
 {% endblock %}
