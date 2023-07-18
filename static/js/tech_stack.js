@@ -218,3 +218,10 @@ function admin_tech_list_manage(action){
         },
     });
 }
+
+function go_to_login() {
+    let confirmed = confirm('This service is login required. \n Will you login?');
+    if (confirmed){
+        location.href = '/login/github';
+    }
+}
