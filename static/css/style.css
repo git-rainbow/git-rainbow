@@ -2780,3 +2780,13 @@ section {
     text-overflow: ellipsis;
     width: 120px;
 }
+
+.desc-box {
+    position:absolute;
+    background-color:rgba(0,0,0,0.7);
+    color:white;
+    padding:10px;
+    border-radius:10px;
+    text-transform: none;
+    margin:0;
+}

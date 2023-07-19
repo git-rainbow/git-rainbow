@@ -133,22 +133,32 @@
                 <tr
                   class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800"
                   style="border: 0 solid #d5d6d7!important;">
-                  <th class="px-4 py-3 text-center" style="width:150px">GitHub ID</th>
+                  <th id="rank_rank" onmousemove="show_desc(event)" onmouseleave="show_desc(event)" class="px-4 py-3 text-center">
+                    RANK
+                  </th>
+                  <th class="px-4 py-3 text-center" style="width:150px">GITHUB ID</th>
                   <th></th>
-                  <th class="text-center">Code Crazy</th>
-                  <th class="px-4 py-3 text-center">Code Lines</th>
-                  <th class="px-4 text-center"> Major</th>
+                  <th id="rank_code_crazy" onmousemove="show_desc(event)" onmouseleave="show_desc(event)" class="px-4 py-3 text-center">
+                      Code Crazy
+                  </th>
+                  <th id="rank_code_lines" onmousemove="show_desc(event);" onmouseleave="show_desc(event)" class="px-4 text-center">
+                    Code Lines
+                  </th>
+                  <th id="rank_major" onmousemove="show_desc(event);" onmouseleave="show_desc(event)" class="px-4 text-center">
+                    Major
+                  </th>
                 </tr>
                 </thead>
                 <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
                   {% for ranker in now_ranker_data %}
                   <tr id="{{ ranker.github_id }}" class="user_tr text-gray-700 dark:text-gray-400" style="border: 0.5 solid #d5d6d7!important;">
+                    <td style="width:50px;border:none!important; text-align: center;">
+                      <p class="pr-3 text-xs text-gray-600 dark:text-gray-400">
+                        {{ ranker.rank }}
+                      </p>
+                    </td>
                     <td class="px-3 py-3" style="width:150px;border:none!important">
                       <div class="flex items-center text-sm">
-                        <p class="pr-3 text-xs text-gray-600 dark:text-gray-400">
-                          {{ ranker.rank }}
-                        </p>
-
                         <!-- Avatar with inset shadow -->
                         <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block" style="min-width:32px;">
                           <img class="object-cover w-full h-full rounded-full"
@@ -284,7 +294,7 @@
       {% if now_ranker_data.number != 1 %}
         <img src="{% static 'img/to_the_top.png' %}" alt="top" onclick="location.href=location.pathname" style="position: fixed; right: 120px; bottom: 250px; width: 60px; height: 60px; cursor: pointer;">
       {% endif %}
-
+      {% include 'desc_div.html' %}
     </div>
   </div>
 <script type="text/javascript" src="{% static "js/tech_search.js" %}"></script>

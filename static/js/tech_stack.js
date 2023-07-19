@@ -225,3 +225,28 @@ function go_to_login() {
         location.href = '/login/github';
     }
 }
+
+function show_desc(event){
+    let desc_box = document.querySelector("#desc_div");
+    if (event.type == 'mousemove') {
+        desc_box.classList.remove('hidden');
+    } else if (event.type == 'mouseleave') {
+        desc_box.classList.add('hidden');
+        return;
+    }
+
+    let target = event.currentTarget;
+    let desc_object = {
+        'code_crazy_btn':'How much crazy about coding in the last year (%)',
+        'github_link':'Github profile page',
+        'svg_link':'Copy embeding link for README or Notion',
+        'update_btn':'Update current work',
+        'rank_rank':'Ranking of developers actively coded over the past year<br>(Code Crazy % X Code Lines)',
+        'rank_code_crazy':'How much crazy about coding this tech in the last year<br>(100 days: 100%, 365 days: 365%)',
+        'rank_code_lines':'lines of coding about corresponding tech in the last year',
+        'rank_major':'Main technology for this GitHub user',
+    }
+    
+    desc_box.innerHTML = desc_object[target.id];
+    desc_box.setAttribute('style', `left: ${event.pageX-desc_box.clientWidth/2}px; top: ${event.pageY-desc_box.clientHeight-20}px`);
+}
