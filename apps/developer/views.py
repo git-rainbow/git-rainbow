@@ -6,8 +6,8 @@ import requests
 
 from dateutil.relativedelta import relativedelta
 from django.core.paginator import Paginator
-from django.db.models import Sum, F, Count, Max, Avg,  Value, OuterRef, Subquery, IntegerField, Window
-from django.db.models.functions import Coalesce, Rank
+from django.db.models import Sum, F, Count, Max, Avg, OuterRef, Subquery, Window
+from django.db.models.functions import Rank
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.template import loader
@@ -202,20 +202,17 @@ def make_ranker_data(tech_name):
         analysisdata=F('github_id__analysisdata__tech_card_data'),
         # Ranking in order of Crazy (days/365 %) X Coding lines
         rank_point=F('tech_code_crazy') * F('total_lines'),
-        midnight_rank=Coalesce(
-            Subquery(Ranking.objects.filter(tech_name=OuterRef('tech_name'), github_id=OuterRef('github_id')).values('midnight_rank')),
-            Value(None),
-            output_field=IntegerField()
-        ),
+        midnight_rank=Subquery(Ranking.objects.filter(tech_name=OuterRef('tech_name'), github_id=OuterRef('github_id')).values('midnight_rank')),
         rank=Window(expression=Rank(), order_by=F('rank_point').desc()),
     ).exclude(total_lines=0).order_by('rank')
 
     if now_tech_ranker:
         user_avg_lines = now_tech_ranker.aggregate(avg_lines=Avg('total_lines'))['avg_lines'] * 2
+        total_ranking_count = now_tech_ranker.count()
     for ranker in now_tech_ranker:
         last_rank = ranker.get('midnight_rank')
         current_rank = ranker.get('rank')
-        ranker['change_rank'] = last_rank - current_rank if last_rank else 0
+        ranker['change_rank'] = last_rank - current_rank if last_rank else total_ranking_count - current_rank
         code_line_percent = round(ranker['total_lines'] / user_avg_lines * 100, 2)
         if code_line_percent < 25:
             code_line_percent = 25
