@@ -6,7 +6,8 @@ import requests
 
 from dateutil.relativedelta import relativedelta
 from django.core.paginator import Paginator
-from django.db.models import Sum, F, Count, Max, Q, Avg
+from django.db.models import Sum, F, Count, Max, Avg,  Value, OuterRef, Subquery, IntegerField, Window
+from django.db.models.functions import Coalesce, Rank
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.template import loader
@@ -200,21 +201,21 @@ def make_ranker_data(tech_name):
         avatar_url=F('github_id__avatar_url'),
         analysisdata=F('github_id__analysisdata__tech_card_data'),
         # Ranking in order of Crazy (days/365 %) X Coding lines
-        rank_point=F('tech_code_crazy') * F('total_lines')
-    ).exclude(total_lines=0).order_by('-rank_point')
+        rank_point=F('tech_code_crazy') * F('total_lines'),
+        midnight_rank=Coalesce(
+            Subquery(Ranking.objects.filter(tech_name=OuterRef('tech_name'), github_id=OuterRef('github_id')).values('midnight_rank')),
+            Value(None),
+            output_field=IntegerField()
+        ),
+        rank=Window(expression=Rank(), order_by=F('rank_point').desc()),
+    ).exclude(total_lines=0).order_by('rank')
 
     if now_tech_ranker:
         user_avg_lines = now_tech_ranker.aggregate(avg_lines=Avg('total_lines'))['avg_lines'] * 2
-    rank = 0
     for ranker in now_tech_ranker:
-        rank += 1
-        ranker['rank'] = rank
-        user_ranking = Ranking.objects.filter(tech_name=tech_name, github_id_id=ranker['github_id']).first()
-        if user_ranking is None:
-            change_rank = 0
-        else:
-            change_rank = user_ranking.midnight_rank - rank
-        ranker['change_rank'] = change_rank
+        last_rank = ranker.get('midnight_rank')
+        current_rank = ranker.get('rank')
+        ranker['change_rank'] = last_rank - current_rank if last_rank else 0
         code_line_percent = round(ranker['total_lines'] / user_avg_lines * 100, 2)
         if code_line_percent < 25:
             code_line_percent = 25
@@ -231,13 +232,11 @@ def save_tech_ranking_data(request):
     Ranking.objects.all().delete()
     for tech_name in sorted_github_calendar_colors.keys():
         now_ranker_data = make_ranker_data(tech_name)
-        rank = 0
         for ranker in now_ranker_data:
-            rank += 1
             Ranking.objects.update_or_create(
                 github_id_id=ranker['github_id'],
                 tech_name=tech_name,
-                defaults={'midnight_rank': rank})
+                defaults={'midnight_rank': ranker['rank']})
     return JsonResponse({'status': 'success'})
 
 
