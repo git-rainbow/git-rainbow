@@ -62,6 +62,9 @@
         <g id='error_text' style="color: red; font-size: 1em;"></g>
     </div>
       <div class="flex center">
+        {% if request.user.is_superuser %}
+          <a class="mr-4" href="/admins" style="color: #013289; font-weight: 700;">Admin</a>
+        {% endif %}
         <a href="/ranking/Android" style="color: #013289; font-weight: 700; margin-right:50px">Ranking</a>
         {% include 'toggle_login.html' %}
       </div>
