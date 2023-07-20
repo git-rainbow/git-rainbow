@@ -275,12 +275,14 @@ def ranking_tech_stack(request, tech_name='Android'):
     items_per_page = 50
     paginator = Paginator(now_ranker_data, items_per_page)
     page_rank_data = paginator.get_page(page_number)
+    total_rank_count = now_ranker_data.count()
     context = {
         'github_calendar_colors': sorted_github_calendar_colors,
         'tech_name': tech_name,
         'tech_color': sorted_github_calendar_colors.get(tech_name),
         'top_ranker': now_ranker_data[:3],
         'now_ranker_data': page_rank_data,
+        'total_rank_count': format(total_rank_count, ','),
     }
     if request.user.is_authenticated:
         context['login_user'] = request.user.githubuser_set.first()

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-20 00:58+0000\n"
+"POT-Creation-Date: 2023-07-20 02:31+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -49,3 +49,7 @@ msgstr "최근 1년간 해당 기술 코딩 라인 수 "
 #: static/js/tech_stack.js:247
 msgid "Main technology for this GitHub user"
 msgstr "해당 GitHub 유저의 메인 기술 (주요 기술)"
+
+#: static/js/tech_stack.js:248
+msgid "It is automatically updated every 1 day of the month"
+msgstr "매달 1일 주기로 전체 자동 업데이트 됩니다."

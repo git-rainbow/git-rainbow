@@ -245,6 +245,7 @@ function show_desc(event){
         'rank_code_crazy':gettext('How much crazy about coding this tech in the last year<br>(100 days: 100%, 365 days: 365%)'),
         'rank_code_lines':gettext('lines of coding about corresponding tech in the last year'),
         'rank_major':gettext('Main technology for this GitHub user'),
+        'rank_count':gettext('It is automatically updated every 1 day of the month'),
     }
     
     desc_box.innerHTML = desc_object[target.id];

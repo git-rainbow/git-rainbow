@@ -109,7 +109,7 @@
           <!-- Selected Tech & Top3 Group End -->
 
           <!-- Search GitHub User -->
-          <div class="flex mb-3" style="min-width:450px;align-content:flex-end;flex-wrap:wrap;">
+          <div class="flex mb-3" style="min-width:450px;align-content:flex-end;flex-wrap:wrap;justify-content:space-between;">
             <div class="relative focus-within:text-purple-500"
                  style="min-width: 90px; margin-left:2px">
               <div style="position:absolute; top: 30%; left: 3.5%;">
@@ -122,6 +122,15 @@
               <input style="min-width: 90px;" id="ranking_search_input" onkeydown="find_ranking_user(event)"
                      class="w-full pl-8 pr-2 text-sm text-gray-700 placeholder-gray-600 bg-gray-100 border-0 rounded-md dark:placeholder-gray-500 dark:focus:shadow-outline-gray dark:focus:placeholder-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:placeholder-gray-500 focus:bg-white focus:border-purple-300 focus:outline-none focus:shadow-outline-purple form-input"
                      type="text" placeholder="Search a GitHub ID" aria-label="Search">
+            </div>
+            <div class="relative focus-within:text-purple-500"
+                style="min-width: 90px; margin-left:2px; white-space:nowrap;">
+              <div style="position:absolute; top: 30%; right: 30%; width: auto; display: flex;">
+                <p class="text-lg">
+                  {{tech_name}} developers: {{total_rank_count}}
+                </p>
+                <img id="rank_count" onmousemove="show_desc(event)" onmouseleave="show_desc(event)" src="{% static 'img/question-mark.svg' %}" style="width: 25px; height: 25px; margin-left: 10px; padding-top: 5px;">
+              </div>
             </div>
           </div>
 
