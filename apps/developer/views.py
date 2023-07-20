@@ -291,6 +291,7 @@ def ranking_tech_stack(request, tech_name='Android'):
             for ranker in now_ranker_data:
                 if ranker['github_id'] == github_id:
                     context['login_user_rank'] = ranker['rank']
+                    context['login_user_data'] = ranker
                     break
 
     return render(request, 'ranking.html', context)

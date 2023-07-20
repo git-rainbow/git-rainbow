@@ -43,10 +43,10 @@
         <div>
 
           <!-- Selected Tech & Top3 Group Start -->
-          <div class="grid gap-4 mb-2 md:grid-cols-2 xl:grid-cols-5">
+          <div class="grid gap-4 pt-3 pb-3 pl-3 mb-3" style="grid-template-columns: 0.6fr 1fr 1fr 1fr 1fr; background-color: #EEEEEE;">
 
             <!-- Selected Tech Card -->
-            <div class="flex mb-3 bg-white rounded-lg shadow-xs dark:bg-gray-800"
+            <div class="flex mb-3 bg-white rounded-lg shadow-xs dark:bg-gray-800 mr-2"
                  style="height: 190px;width: 126px;align-items: center;flex-direction: column;">
               <div class="w-full inline-block">
                 <div class="tech_color mt-2 mr-2"
@@ -58,30 +58,56 @@
 
             <!-- Top1 Start -->
             {% for top3 in top_ranker %}
-            <div class="flex py-3 bg-white rounded-lg shadow-xs dark:bg-gray-800"
-                 style="height: 190px;width: 140px;align-items: center;flex-direction: column;">
-              <p class="mx-auto mb-2 font-semibold ranking-ellipsis" style="font-size:15px">Top {{ forloop.counter }}</p>
-              <img class="mt-2 object-cover w-full h-full rounded-full"
-                   src="{{ top3.avatar_url }}" style="width:64px;height:64px">
-              <p class="mx-auto mt-2 font-semibold ranking-ellipsis" style="font-size:15px"><a href="/{{top3.github_id}}" target="_blank">{{ top3.github_id }}</a></p>
+            <div class="flex bg-white rounded-lg shadow-xs dark:bg-gray-800"
+                 style="height: 257px;width: 180px;align-items: center;flex-direction: column;">
+              <div class="flex mt-1">
+                <img style="width:30px;height:30px;" src="https://git-rainbow.com/static/img/rank_{{ top3.rank }}.png">
+                <p class="font-semibold ranking-ellipsis flex" style="font-size:15px; align-content: flex-start;">Top {{ top3.rank }}</p>
+              </div>
+              <img class="object-cover w-full h-full rounded-full mt-1" src="{{ top3.avatar_url }}" style="width:64px;height:64px">
+              <p class="mx-auto mt-2 mb-3 font-semibold ranking-ellipsis" style="font-size:15px"><a href="/{{top3.github_id}}" target="_blank">{{ top3.github_id }}</a></p>
+              <button type="button" class="btn btn-danger font-semibold mt-2 mb-1"
+                style="color:rgb(200,30,30);background-color:rgb(253,232,232);border-color:rgb(253,232,232); font-size: 70%; padding: 2%; width: 70%;">
+                Code Crazy <span class="badge badge-danger" style="font-size:100%;margin-left:4px; top: 1px;">{{ top3.tech_code_crazy }}%</span>
+              </button>
+              <div class="rounded-full mt-2 mb-1" style="background-color:lightgray; width: 70%;">
+                <div
+                  class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
+                  style="width: {{ top3.code_line_percent }}%; background-color: {{ tech_color }}"><p style="color:white">{{ top3.total_lines }}</p>
+                </div>
+              </div>
+              <div class="flex mt-2 mb-1" style="align-items: center;flex-direction: row; justify-content: space-around; width: 50%;">
+                <img style="width:30px;height:30px;" src="https://git-rainbow.com/static/img/{{ top3.top_tech.lower|replace_special_char }}.png">
+                <p class="text-xs text-gray-600">{{ top3.top_tech }}</p>
+              </div>
             </div>
             {% endfor %}
             <!-- Top1 End -->
 
             <!-- My Ranking Start -->
           <div>
-            <div class="flex py-3 bg-white rounded-lg shadow-xs dark:bg-gray-800" style="height: 190px;width: 140px;align-items: center;flex-direction: column;">
+            <div class="flex py-2 bg-white rounded-lg shadow-xs dark:bg-gray-800" style="height: 257px;width: 180px;align-items: center;flex-direction: column;">
               {% if login_user and login_user_rank %}
                 <div style="position: absolute;">
-                  <img id="update_btn" @click="openModal" src="{% static 'img/update-arrows.svg' %}" alt="update" style="padding: 2px; background-color: #866BF2; width: 18px; height:18px; position: relative; top: -10px; left: 55px; border-radius: 50%; font-weight: bold; cursor: pointer;">
+                  <img id="update_btn" @click="openModal" src="{% static 'img/update-arrows.svg' %}" alt="update" style="padding: 2px; background-color: #866BF2; width: 18px; height:18px; position: relative; top: -5px; left: 75px; border-radius: 50%; font-weight: bold; cursor: pointer;">
                 </div>
                 {% with login_user as github_user %}
                   {% include 'token_modals.html' %}
                 {% endwith %}
                 <p class="mx-auto mb-2 font-semibold ranking-ellipsis" style="font-size:15px">Rank {{ login_user_rank }}</p>
                 <img class="mt-2 object-cover w-full h-full rounded-full" src="{{ login_user.avatar_url }}" style="width:64px;height:64px">
-                <p class="mx-auto mb-2 font-semibold ranking-ellipsis" style="font-size:15px"><a href="/{{ login_user.github_id }}" target="_blank">{{ login_user.github_id }}</a></p>
-                <button onclick="find_ranking_user(event, '{{login_user.github_id}}')" class="px-2 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                <p class="mx-auto mb-3 font-semibold ranking-ellipsis" style="font-size:15px"><a href="/{{ login_user.github_id }}" target="_blank">{{ login_user.github_id }}</a></p>
+                <button type="button" class="btn btn-danger font-semibold mt-2 mb-1"
+                        style="color:rgb(200,30,30);background-color:rgb(253,232,232);border-color:rgb(253,232,232); font-size: 70%; padding: 2%; width: 70%;">
+                  Code Crazy <span class="badge badge-danger" style="font-size:100%;margin-left:4px; top: 0.5px;">{{ login_user_data.tech_code_crazy }}%</span>
+                </button>
+                <div class="rounded-full mt-2 mb-1" style="background-color:lightgray; width: 70%;">
+                  <div
+                    class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
+                    style="width: {{ login_user_data.code_line_percent }}%; background-color: {{ tech_color }}"><p style="color:white">{{ login_user_data.total_lines }}</p>
+                  </div>
+                </div>
+                <button onclick="find_ranking_user(event, '{{login_user.github_id}}')" class="px-2 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple mt-2">
                   More
                 </button>
               {% elif login_user and not login_user_rank %}
