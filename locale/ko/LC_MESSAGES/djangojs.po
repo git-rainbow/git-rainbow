@@ -1,0 +1,51 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-07-20 00:58+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+#: static/js/tech_stack.js:240
+msgid "How much crazy about coding in the last year (%)"
+msgstr "최근 1년간 코딩에 미쳐있는 정도 (%)"
+
+#: static/js/tech_stack.js:241
+msgid "Github profile page"
+msgstr "GitHub 프로필 페이지"
+
+#: static/js/tech_stack.js:242
+msgid "Copy embeding link for README or Notion"
+msgstr "README 또는 Notion 등에 임베딩 링크 복사"
+
+#: static/js/tech_stack.js:243
+msgid "Update current work"
+msgstr "최근작업 업데이트 하기"
+
+#: static/js/tech_stack.js:244
+#, javascript-format
+msgid "Ranking of developers actively coded over the past year<br>(Code Crazy % X Code Lines)"
+msgstr "최근 1년 동안 활발하게 코딩한 개발자 순위<br> (Code Crazy % X Code Lines)"
+
+#: static/js/tech_stack.js:245
+msgid "How much crazy about coding this tech in the last year<br>(100 days: 100%, 365 days: 365%)"
+msgstr "최근 1년간 해당 기술 코딩에 미쳐있는 정도(예: 100일: 100%, 365일: 365%)"
+
+#: static/js/tech_stack.js:246
+msgid "lines of coding about corresponding tech in the last year"
+msgstr "최근 1년간 해당 기술 코딩 라인 수 "
+
+#: static/js/tech_stack.js:247
+msgid "Main technology for this GitHub user"
+msgstr "해당 GitHub 유저의 메인 기술 (주요 기술)"

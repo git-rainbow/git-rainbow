@@ -20,4 +20,6 @@ RUN uglifycss static/css/tailwind.clean.css > static/css/tailwind.output.css \
 RUN apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+RUN django-admin compilemessages
+
 CMD ["python3", "-m", "gunicorn", "--bind", ":8000", "--workers", "2", "config.wsgi:application"]

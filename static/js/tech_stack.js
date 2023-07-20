@@ -237,14 +237,14 @@ function show_desc(event){
 
     let target = event.currentTarget;
     let desc_object = {
-        'code_crazy_btn':'How much crazy about coding in the last year (%)',
-        'github_link':'Github profile page',
-        'svg_link':'Copy embeding link for README or Notion',
-        'update_btn':'Update current work',
-        'rank_rank':'Ranking of developers actively coded over the past year<br>(Code Crazy % X Code Lines)',
-        'rank_code_crazy':'How much crazy about coding this tech in the last year<br>(100 days: 100%, 365 days: 365%)',
-        'rank_code_lines':'lines of coding about corresponding tech in the last year',
-        'rank_major':'Main technology for this GitHub user',
+        'code_crazy_btn':gettext('How much crazy about coding in the last year (%)'),
+        'github_link':gettext('Github profile page'),
+        'svg_link':gettext('Copy embeding link for README or Notion'),
+        'update_btn':gettext('Update current work'),
+        'rank_rank':gettext('Ranking of developers actively coded over the past year<br>(Code Crazy % X Code Lines)'),
+        'rank_code_crazy':gettext('How much crazy about coding this tech in the last year<br>(100 days: 100%, 365 days: 365%)'),
+        'rank_code_lines':gettext('lines of coding about corresponding tech in the last year'),
+        'rank_major':gettext('Main technology for this GitHub user'),
     }
     
     desc_box.innerHTML = desc_object[target.id];

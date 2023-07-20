@@ -16,6 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls.i18n import i18n_patterns
+from django.views.i18n import JavaScriptCatalog
 from apps.developer.views import exception_view
 
 handler404 = exception_view
@@ -26,3 +28,8 @@ urlpatterns = [
     path('', include('apps.users.urls')),
     path('', include('apps.developer.urls')),
 ]
+
+urlpatterns += i18n_patterns(
+    path('', include('apps.developer.urls')),
+    path('jsi18n/', JavaScriptCatalog.as_view(), name='javascript-catalog')
+)
