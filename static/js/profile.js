@@ -117,7 +117,6 @@ function show_total_lines(commit_data, is_reset=false, specific_tech){
     if (full_sort_recent_list.length <= 3*show_more_index+3){
         show_more_btn.classList.add('hidden');
     }
-    let max_line = Math.max(...(full_sort_recent_list).map(item => Object.values(item[1])[0]));
 
     if (specific_tech && !show_more_index) {
         var k = Object.keys(commit_data)[0];
@@ -169,7 +168,7 @@ function show_total_lines(commit_data, is_reset=false, specific_tech){
               <div class="px-3 py-3" style="width: 100%; display: flex; justify-content:center; align-items:center;">
                 <div class="rounded-full" style="background-color:lightgray; width: 95%;">
                   <div
-                    class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full tech_lines" lines=${lines}><p style="color:white">${lines.toLocaleString()} lines</p>
+                    class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full tech_lines" lines=${lines} tech=${tech}><p style="color:white">${lines.toLocaleString()} lines</p>
                   </div>
                 </div>
               </div>
@@ -197,7 +196,7 @@ function show_total_lines(commit_data, is_reset=false, specific_tech){
         } else if (new_line_percent <= 10){
             new_line_percent = 10;
         }
-        current_line_div.setAttribute('style', `width:${new_line_percent}%;`);
+        current_line_div.setAttribute('style', `width:${new_line_percent}%; background-color:${color_choice(current_line_div.getAttribute('tech'), 1)};`);
     }
 }
 
