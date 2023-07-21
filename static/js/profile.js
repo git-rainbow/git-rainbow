@@ -138,10 +138,10 @@ function show_total_lines(commit_data, is_reset=false){
             <div class="text-gray-700 dark:text-gray-400 tech_graph" id="tech_${tech}" style="display:flex; border: none;">
               <div class="px-3 py-3">
                 <div class="flex items-center text-sm">
-                  <div>
-                    <img style="max-width:60px;margin-right:20px" src="/static/img/${tech_name(tech)}.png" onerror="this.onerror=null; this.src='/static/img/none3.png';" loading="lazy">
+                  <div style="width:60px;margin-right:20px">
+                    <img src="/static/img/${tech_name(tech)}.png" onerror="this.onerror=null; this.src='/static/img/none3.png';" loading="lazy">
                   </div>
-                  <div>
+                  <div style="width:60px">
                     <p class="font-semibold">${tech}</p>
                   </div>
                 </div>
