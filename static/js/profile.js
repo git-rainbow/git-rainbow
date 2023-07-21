@@ -125,7 +125,7 @@ function show_total_lines(commit_data){
           <td class="px-3 py-3" style="width:150px;border:none!important">
             <div class="flex items-center text-sm">
               <div>
-                <img style="max-width:60px;margin-right:20px" src="https://git-rainbow.com/static/img/${tech_name(tech)}.png" alt="" loading="lazy">
+                <img style="max-width:60px;margin-right:20px" src="/static/img/${tech_name(tech)}.png" alt="" loading="lazy">
               </div>
               <div>
                 <p class="font-semibold">${tech}</p>

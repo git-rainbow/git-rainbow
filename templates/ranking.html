@@ -32,7 +32,7 @@
             {% for tech, color in github_calendar_colors.items %}
               <div class="flex items-center ml-2 bg-white rounded-lg shadow-xs dark:bg-gray-800 mb-3 pointer tech_list" onclick="window.location.href='/ranking/{{ tech|replace_special_char }}'"
                    style="width: 125px;height: 50px; {% if tech == tech_name %} border: 2px solid {{ color }} {% endif %}">
-                <img class="mr-8" style="width:45px;height:45px" src="https://git-rainbow.com/static/img/{{ tech.lower|replace_special_char }}.png">
+                <img class="mr-8" style="width:45px;height:45px" src="{% get_static_prefix %}img/{{ tech.lower|replace_special_char }}.png">
                 <p class="pl-2 py-2 text-xs">{{ tech }}</p>
               </div>
             {% endfor %}
@@ -52,7 +52,7 @@
                 <div class="tech_color mt-2 mr-2"
                      style="background-color: {{ tech_color }}; float: right; display: block;"></div>
               </div>
-              <img class="mx-auto mb-2" src="https://git-rainbow.com/static/img/{{ tech_name.lower|replace_special_char }}.png" style="margin-top: 25px;">
+              <img class="mx-auto mb-2" src="{% get_static_prefix %}img/{{ tech_name.lower|replace_special_char }}.png" style="margin-top: 25px;">
               <p class="mx-auto mb-2 text-sm" id="tech_title">{{ tech_name }}</p>
             </div>
 
@@ -61,7 +61,7 @@
             <div class="flex bg-white rounded-lg shadow-xs dark:bg-gray-800"
                  style="height: 257px;width: 180px;align-items: center;flex-direction: column;">
               <div class="flex mt-1">
-                <img style="width:30px;height:30px;" src="https://git-rainbow.com/static/img/rank_{{ top3.rank }}.png">
+                <img style="width:30px;height:30px;" src="{% get_static_prefix %}img/rank_{{ top3.rank }}.png">
                 <p class="font-semibold ranking-ellipsis flex" style="font-size:15px; align-content: flex-start;">Top {{ top3.rank }}</p>
               </div>
               <img class="object-cover w-full h-full rounded-full mt-1" src="{{ top3.avatar_url }}" style="width:64px;height:64px">
@@ -77,7 +77,7 @@
                 </div>
               </div>
               <div class="flex mt-2 mb-1" style="align-items: center;flex-direction: row; justify-content: space-around; width: 50%;">
-                <img style="width:30px;height:30px;" src="https://git-rainbow.com/static/img/{{ top3.top_tech.lower|replace_special_char }}.png">
+                <img style="width:30px;height:30px;" src="{% get_static_prefix %}img/{{ top3.top_tech.lower|replace_special_char }}.png">
                 <p class="text-xs text-gray-600">{{ top3.top_tech }}</p>
               </div>
             </div>
@@ -238,7 +238,7 @@
                     <td class="px-5 py-2 text-sm" style="width:100px;border:none!important">
                       <div class="flex items-center" style="justify-content:center;">
                         <div class="flex ml-3" style="align-items: center;flex-direction: column;">
-                          <img style="width:45px;height:45px" src="https://git-rainbow.com/static/img/{{ ranker.top_tech.lower|replace_special_char }}.png">
+                          <img style="width:45px;height:45px" src="{% get_static_prefix %}img/{{ ranker.top_tech.lower|replace_special_char }}.png">
                           <p class="text-xs text-gray-600">{{ ranker.top_tech }}</p>
                         </div>
                       </div>
