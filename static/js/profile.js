@@ -124,12 +124,10 @@ function show_total_lines(commit_data){
         let tech_info = `<tr class="text-gray-700 dark:text-gray-400 tech_graph" id="tech_${tech}">
           <td class="px-3 py-3" style="width:150px;border:none!important">
             <div class="flex items-center text-sm">
-              <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block" style="min-width:40px;">
-                <img class="object-cover w-full h-full rounded-full"
-                     src="https://git-rainbow.com/static/img/${tech_name(tech)}.png" alt="" loading="lazy">
-                <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
+              <div>
+                <img style="max-width:60px;margin-right:20px" src="https://git-rainbow.com/static/img/${tech_name(tech)}.png" alt="" loading="lazy">
               </div>
-              <div class="ranking-ellipsis">
+              <div>
                 <p class="font-semibold">${tech}</p>
               </div>
             </div>
