@@ -7,8 +7,14 @@
 <script>
     show_profile_calendar(JSON.parse('{{calendar_data|safe}}'));
     check_analysis_updating("{{github_user.github_id}}", "{{github_user.status}}");
+    var show_more_index = 0;
+    var current_data;
+    var show_more_btn = document.querySelector("#show_more_btn");
+    show_more_btn.addEventListener('click', function(){
+        show_total_lines(current_data, false)
+    });
     {% if last_tech_data %}
-        show_total_lines(JSON.parse('{{last_tech_data|safe}}'));
+        show_total_lines(JSON.parse('{{last_tech_data|safe}}'), true);
         save_global_var(JSON.parse('{{last_tech_data|safe}}'));
     {% endif %}
 </script>

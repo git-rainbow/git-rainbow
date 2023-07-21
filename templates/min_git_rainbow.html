@@ -43,7 +43,7 @@
         {% endif %}
       </div>
     </div>
-    <div class="flex-1 md:w-full w-full h-full overflow-hidden bg-white rounded-lg shadow-xs p-6">
+    <div id="graph_box" class="flex-1 md:w-full w-full h-full overflow-hidden bg-white rounded-lg shadow-xs p-6">
       <div class="flex w-full mb-3 scroll-x">
         {% for tech_data in tech_card_data %}
           <div class="tech_card" onclick="highlight_card_tech(event, '{{tech_data.name}}', '{{tech_data.color}}')" selected='false' style="cursor: pointer;">
@@ -77,10 +77,11 @@
         <div class="mb-3">
           <span class="font-bold" style="font-size: 20px;">Tech activity</span>
         </div>
-        <table class="w-full whitespace-no-wrap" style="border:none; border-collapse: unset; !important">
-          <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800" id="tech_grahp">
-          </tbody>
-        </table>
+        <div class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800" id="tech_grahp">
+        </div>
+        <button id="show_more_btn" class="bg-white w-full border border-gray-500 rounded-md flex items-center justify-center px-4 text-center" style="color: #2977de; height: 40px;">
+            Show more activity
+        </button>
       </div>
       <!--Git grahp(end)-->
     </div>
