@@ -11,7 +11,7 @@
     var current_data;
     var show_more_btn = document.querySelector("#show_more_btn");
     show_more_btn.addEventListener('click', function(){
-        show_total_lines(current_data, false)
+        show_total_lines(current_data, false, true)
     });
     {% if last_tech_data %}
         show_total_lines(JSON.parse('{{last_tech_data|safe}}'), true);

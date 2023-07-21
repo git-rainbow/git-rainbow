@@ -44,7 +44,7 @@ function highlight_card_tech(event, tech_name, tech_color) {
             cell.setAttribute('fill', cell.getAttribute('origin-fill'));
             cell.setAttribute('style', 'opacity:1;');
         }
-        show_total_lines(last_tech_data, true);
+        show_total_lines(last_tech_data, true, true);
     } else {
         for (let card of cards) {
             card.setAttribute('selected', 'false');
@@ -66,7 +66,7 @@ function highlight_card_tech(event, tech_name, tech_color) {
                 cell.setAttribute('fill', cell.getAttribute('origin-fill'));
             }
         }
-        show_total_lines(tech_commit_data, true);
+        show_total_lines(tech_commit_data, true, true);
     }
 }
 
@@ -102,7 +102,7 @@ function tech_name(tech) {
     return tech_name
 }
 
-function show_total_lines(commit_data, is_reset=false){
+function show_total_lines(commit_data, is_reset=false, specific_tech){
     let tagArea = document.getElementById('tech_grahp');
     if (is_reset){
         tagArea.innerHTML = '';
@@ -118,6 +118,22 @@ function show_total_lines(commit_data, is_reset=false){
         show_more_btn.classList.add('hidden');
     }
     let max_line = Math.max(...(full_sort_recent_list).map(item => Object.values(item[1])[0]));
+
+    if (specific_tech && !show_more_index) {
+        var k = Object.keys(commit_data)[0];
+        var tech = Object.keys(commit_data[k])[0];
+
+        tagArea.innerHTML +=
+                `<div class="flex items-center text-sm mb-2">
+                  <div style="width:60px;margin-right:20px">
+                    <img src="/static/img/${tech_name(tech)}.png" onerror="this.onerror=null; this.src='/static/img/none3.png';" loading="lazy">
+                  </div>
+                  <div style="width:60px">
+                    <p class="font-semibold">${tech}</p>
+                  </div>
+                </div>`
+    }
+
     sort_recent_list.forEach(item => {
         let date = item[0];
         let tech_data = item[1];
@@ -129,13 +145,15 @@ function show_total_lines(commit_data, is_reset=false){
         <h3 class="h6 pr-2 py-1 border-bottom mb-3" style="height: 14px; border: none;">
         <span class="pl-2 pr-3 text-sm font-semibold" style="background-color:white">${month} ${day}<span style="font-weight: normal;">, ${year}</span>
         </span>
-        </h3>
-        `
+        </h3>`
+
         tagArea.innerHTML += date_info;
 
         Object.entries(tech_data).forEach(function ([tech, lines]) {
             let tech_info = `
-            <div class="text-gray-700 dark:text-gray-400 tech_graph" id="tech_${tech}" style="display:flex; border: none;">
+            <div class="text-gray-700 dark:text-gray-400 tech_graph" style="display:flex; border: none;">`
+            if (!specific_tech) {
+                tech_info += `
               <div class="px-3 py-3">
                 <div class="flex items-center text-sm">
                   <div style="width:60px;margin-right:20px">
@@ -145,8 +163,10 @@ function show_total_lines(commit_data, is_reset=false){
                     <p class="font-semibold">${tech}</p>
                   </div>
                 </div>
-              </div>
-              <div style="width: 100%; display: flex; justify-content:center; align-items:center;">
+              </div>`
+            }
+            tech_info += `
+              <div class="px-3 py-3" style="width: 100%; display: flex; justify-content:center; align-items:center;">
                 <div class="rounded-full" style="background-color:lightgray; width: 95%;">
                   <div
                     class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
@@ -180,7 +200,7 @@ function highlight_cell(event, commits=null){
             cell.setAttribute('fill', cell.getAttribute('origin-fill'));
             cell.setAttribute('opacity', 1);
         }
-        show_total_lines(last_tech_data, true);
+        show_total_lines(last_tech_data, true, false);
 
     } else {
         for (let cell of cells) {
@@ -189,6 +209,6 @@ function highlight_cell(event, commits=null){
         }
         event.currentTarget.setAttribute('selected', 'true');
         event.currentTarget.setAttribute('style', 'opacity:1;');
-        show_total_lines(commits, true);
+        show_total_lines(commits, true, false);
     }
 }
