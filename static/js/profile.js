@@ -169,8 +169,7 @@ function show_total_lines(commit_data, is_reset=false, specific_tech){
               <div class="px-3 py-3" style="width: 100%; display: flex; justify-content:center; align-items:center;">
                 <div class="rounded-full" style="background-color:lightgray; width: 95%;">
                   <div
-                    class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
-                    style="width: ${lines.toLocaleString()/max_line*100 < 10? 10 : lines.toLocaleString()/max_line*99}%; background-color: ${color_choice(tech, 1)};"><p style="color:white">${lines.toLocaleString()} lines</p>
+                    class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full tech_lines" lines=${lines}><p style="color:white">${lines.toLocaleString()} lines</p>
                   </div>
                 </div>
               </div>
@@ -178,6 +177,28 @@ function show_total_lines(commit_data, is_reset=false, specific_tech){
             tagArea.innerHTML += tech_info;
         });
     });
+
+    let current_tech_lines_divs = document.querySelectorAll(".tech_lines");
+    let line_count = 0;
+    let line_sum = 0;
+    for (let current_line_div of current_tech_lines_divs){
+        let line = parseInt(current_line_div.getAttribute('lines'));
+        if (line < 10000){
+            line_sum += line;
+            line_count += 1;
+        }
+    }
+    let new_full_line = line_sum / line_count * 2
+    for (let current_line_div of current_tech_lines_divs){
+        let line = parseInt(current_line_div.getAttribute('lines'));
+        let new_line_percent = line/new_full_line*100;
+        if (new_line_percent >= 100) {
+            new_line_percent = 99;
+        } else if (new_line_percent <= 10){
+            new_line_percent = 10;
+        }
+        current_line_div.setAttribute('style', `width:${new_line_percent}%;`);
+    }
 }
 
 function highlight_cell(event, commits=null){
