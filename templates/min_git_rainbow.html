@@ -31,12 +31,12 @@
     </div>
     {% if top3_tech_data %}
       <div style="width: 35%;">
-        <h1 class="font-bold mb-3" style="font-size: 1rem;">MY Ranking</h1>
+        <h1 class="font-bold mb-3" style="font-size: 1rem;">My Ranking</h1>
         <div class="mt-2">
           {% for tech_data in top3_tech_data %}
             <div class="flex mt-2 bg-white rounded-lg shadow-xs dark:bg-gray-800" style="justify-content: space-between; padding: 1%;">
               <div class="flex align-center">
-                <img style="width: 3rem; height: 3rem;" src="{% get_static_prefix %}img/{{ tech_data.file | replace_special_char }}.png">
+                <img style="width: 3.5rem; height: 3.5rem;" src="{% get_static_prefix %}img/{{ tech_data.file | replace_special_char }}.png">
                 <span class="ml-4 font-bold" style="font-size: 1rem;">{{ tech_data.name }}</span>
               </div>
               <div class="flex" style="align-items: center; justify-content: center; width: 38%;">
