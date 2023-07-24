@@ -68,9 +68,18 @@ def git_rainbow(request, github_id):
         return render(request, 'loading.html', {'github_id': github_id})
     tech_card_data = json.loads(analysis_data.tech_card_data.replace("'", '"'))
     calendar_data = analysis_data.git_calendar_data.replace("'", '"')
+    top3_tech_data = []
+    for tech_data in tech_card_data[:3]:
+        tech_rank_data = make_ranker_data(tech_data['name'])
+        for rank_data in tech_rank_data:
+            if rank_data['github_id'] == github_user.github_id:
+                tech_data['rank'] = rank_data['rank']
+                tech_data['ranker_num'] = tech_rank_data.count()
+                tech_data['rank_percent'] = round(rank_data['rank']/tech_data['ranker_num']*100, 3)
+                top3_tech_data.append(tech_data)
+                break
     context = {'github_user': github_user, 'tech_card_data': tech_card_data, 'calendar_data': calendar_data,
-               'days':len(json.loads(calendar_data).keys())}
-
+               'top3_tech_data': top3_tech_data, 'days': len(json.loads(calendar_data).keys())}
     last_day = github_user.githubcalendar_set.aggregate(last_day=Max('author_date'))['last_day']
     if last_day:
         last_day_commits_data = github_user.githubcalendar_set.filter(author_date=last_day)
@@ -130,7 +139,18 @@ def update_git_rainbow(request):
                                           })
     sava_github_calendar_data(calendar_data, github_user)
     calendar_data = json.loads(calendar_data)
+    top3_tech_data = []
+    for tech_data in tech_card_data[:3]:
+        tech_rank_data = make_ranker_data(tech_data['name'])
+        for rank_data in tech_rank_data:
+            if rank_data['github_id'] == github_user.github_id:
+                tech_data['rank'] = rank_data['rank']
+                tech_data['ranker_num'] = tech_rank_data.count()
+                tech_data['rank_percent'] = round(rank_data['rank']/tech_data['ranker_num']*100, 3)
+                top3_tech_data.append(tech_data)
+                break
     context = {
+        'top3_tech_data': top3_tech_data,
         'github_user': github_user,
         'tech_card_data': tech_card_data,
         'days':len(calendar_data.keys()),
