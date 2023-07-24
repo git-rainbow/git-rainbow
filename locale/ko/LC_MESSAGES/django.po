@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-24 13:10+0900\n"
+"POT-Creation-Date: 2023-07-24 15:40+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -66,19 +66,27 @@ msgstr "돌아가기"
 msgid "Code Crazy"
 msgstr "코드 크레이지"
 
-#: templates/min_git_rainbow.html:31
+#: templates/min_git_rainbow.html:16
+msgid "Sharing"
+msgstr "공유하기"
+
+#: templates/min_git_rainbow.html:54
 msgid "Tech Stack"
 msgstr "기술 스택"
 
-#: templates/min_git_rainbow.html:31
+#: templates/min_git_rainbow.html:54
 msgid "in the last year"
 msgstr "지난 1년 간"
 
-#: templates/min_git_rainbow.html:78
+#: templates/min_git_rainbow.html:64 templates/token_modals.html:98
+msgid "Update"
+msgstr "업데이트"
+
+#: templates/min_git_rainbow.html:100
 msgid "Tech activity"
 msgstr "기술 활동"
 
-#: templates/min_git_rainbow.html:83
+#: templates/min_git_rainbow.html:105
 msgid "Show more activity"
 msgstr "활동 더 보기"
 
@@ -113,10 +121,6 @@ msgstr "\"Github personal access token 입력\""
 #: templates/token_modals.html:91
 msgid "Update with token"
 msgstr "토큰으로 업데이트"
-
-#: templates/token_modals.html:98
-msgid "Update"
-msgstr "업데이트"
 
 #: templates/token_modals.html:103
 msgid "Cancel"

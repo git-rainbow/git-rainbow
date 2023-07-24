@@ -89,7 +89,7 @@
             <div class="flex py-2 bg-white rounded-lg shadow-xs dark:bg-gray-800" style="height: 257px;width: 180px;align-items: center;flex-direction: column;">
               {% if login_user and login_user_rank %}
                 <div style="position: absolute;">
-                  <img id="update_btn" @click="openModal" src="{% static 'img/update-arrows.svg' %}" alt="update" style="padding: 2px; background-color: #866BF2; width: 18px; height:18px; position: relative; top: -5px; left: 75px; border-radius: 50%; font-weight: bold; cursor: pointer;">
+                  <img id="update_btn_img" @click="openModal" src="{% static 'img/update-arrows.svg' %}" alt="update" style="padding: 2px; background-color: #866BF2; width: 18px; height:18px; position: relative; top: -5px; left: 75px; border-radius: 50%; font-weight: bold; cursor: pointer;">
                 </div>
                 {% with login_user as github_user %}
                   {% include 'token_modals.html' %}

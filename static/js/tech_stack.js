@@ -14,7 +14,7 @@ function analyze_developer(github_id, update, is_with_token) {
     let close_btn = document.querySelector("#close_btn");
     if (close_btn)
         close_btn.click();
-    let updateBtn = document.querySelector("#update_btn");
+    let updateBtn = document.querySelector("#update_btn_img");
     if (updateBtn){
         updateBtn.classList.add("rotate-img");
     }
