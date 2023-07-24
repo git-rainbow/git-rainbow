@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% block content %}
   <div id="body">
     <div class="flex h-screen bg-gray-50 dark:bg-gray-900">
@@ -20,7 +21,7 @@
             <p class="text-gray-700 dark:text-gray-300">
               {{message}}
               <span class="text-purple-600 dark:text-purple-300" style="cursor:pointer;" onclick="go_back()">
-                go back
+                {% trans "go back" %}
               </span>
             </p>
           </div>

@@ -6,7 +6,7 @@ function analyze_developer(github_id, update, is_with_token) {
     if (is_with_token){
         let token = document.querySelector("#token_input").value;
         if (token == ''){
-            alert('Please input your token');
+            alert(gettext('Please input your token'));
             return;
         }
         data['ghp_token'] = token;
@@ -61,7 +61,7 @@ function _analyze_developer(data) {
         },
         error: function (data) {
             waiting = false;
-            alert("error occured");
+            alert(gettext("error occured"));
         }
     });
     return waiting;
@@ -69,7 +69,7 @@ function _analyze_developer(data) {
 
 function check_analysis_updating(github_id, status){
     if(status == 'fail') {
-        alert("Analysis failed");
+        alert(gettext("Analysis failed"));
     } else if (status == 'progress') {
         analyze_developer(github_id);
     } 
@@ -105,7 +105,7 @@ function is_valid_githubuser(github_id){
     let error_message;
     const white_space_regex = new RegExp(/\s+/);
     if (white_space_regex.test(github_id) || github_id == '') {
-        error_message = 'Please check Github ID';
+        error_message = gettext('Please check Github ID');
         return {'is_valid': is_valid, 'error_message': error_message};
     } else {
         $.ajax({
@@ -118,10 +118,10 @@ function is_valid_githubuser(github_id){
             if(data.type == 'User'){
                 is_valid = true;
             } else {
-                error_message =  "Please input personal GitHub ID";
+                error_message =  gettext("Please input personal GitHub ID");
             }}
         , error: function (data) {
-            error_message =  "Please check your GitHub ID";
+            error_message =  gettext("Please check your GitHub ID");
         }});
         return {'is_valid': is_valid, 'error_message': error_message};
     }
@@ -147,7 +147,7 @@ function copy_svg_url(github_id){
     textarea.value = svg_url;
     textarea.select();
     window.navigator.clipboard.writeText(textarea.value).then(() => {
-        alert("Copied!");
+        alert(gettext("Copied!"));
         window.open(svg_url, "_blank");
     });
     document.body.removeChild(textarea);

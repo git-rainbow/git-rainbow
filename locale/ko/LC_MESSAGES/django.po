@@ -1,0 +1,123 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-07-24 13:10+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: templates/exception_page.html:24
+msgid "go back"
+msgstr "돌아가기"
+
+#: templates/header.html:18
+msgid "Analyze"
+msgstr "분석하기"
+
+#: templates/header.html:25 templates/index.html:66
+msgid "Admin"
+msgstr "관리자"
+
+#: templates/header.html:27 templates/index.html:68
+msgid "Ranking"
+msgstr "랭킹"
+
+#: templates/index.html:82
+msgid "Show Off"
+msgstr "당신의 기술 스택을"
+
+#: templates/index.html:82
+msgid "Your Tech Stack"
+msgstr "보여주세요"
+
+#: templates/index.html:83
+msgid "Enter GitHub ID"
+msgstr "GitHub 아이디를 입력하고"
+
+#: templates/index.html:83
+msgid "and analyze your skills and experience."
+msgstr "당신의 기술과 경험을 분석하세요"
+
+#: templates/loading.html:9
+msgid "Analyzing &nbsp;GitHub"
+msgstr "Github &nbsp;분석"
+
+#: templates/loading.html:15
+msgid "The first analysis may take up to an hour."
+msgstr "첫 분석은 한시간 정도 걸릴 수 있습니다."
+
+#: templates/loading.html:21
+msgid "Go Back"
+msgstr "돌아가기"
+
+#: templates/min_git_rainbow.html:13
+msgid "Code Crazy"
+msgstr "코드 크레이지"
+
+#: templates/min_git_rainbow.html:31
+msgid "Tech Stack"
+msgstr "기술 스택"
+
+#: templates/min_git_rainbow.html:31
+msgid "in the last year"
+msgstr "지난 1년 간"
+
+#: templates/min_git_rainbow.html:78
+msgid "Tech activity"
+msgstr "기술 활동"
+
+#: templates/min_git_rainbow.html:83
+msgid "Show more activity"
+msgstr "활동 더 보기"
+
+#: templates/ranking.html:24
+msgid "\"Search a tech name\""
+msgstr "\"기술명 검색하기\""
+
+#: templates/ranking.html:150
+msgid "\"Search a GitHub ID\""
+msgstr "GitHub 검색하기"
+
+#: templates/toggle_login.html:10
+msgid "Logout"
+msgstr "로그아웃"
+
+#: templates/toggle_login.html:13
+msgid "Sign in with Github"
+msgstr "깃허브로 로그인"
+
+#: templates/token_modals.html:56
+msgid "GitHub Analysis with your private repositories"
+msgstr "개인 Github 저장소 분석하기 "
+
+#: templates/token_modals.html:70
+msgid "Or, enter New personal access token"
+msgstr "또는, 새로운 personal access token 입력"
+
+#: templates/token_modals.html:79
+msgid "\"Enter Github personal access token\""
+msgstr "\"Github personal access token 입력\""
+
+#: templates/token_modals.html:91
+msgid "Update with token"
+msgstr "토큰으로 업데이트"
+
+#: templates/token_modals.html:98
+msgid "Update"
+msgstr "업데이트"
+
+#: templates/token_modals.html:103
+msgid "Cancel"
+msgstr "취소"

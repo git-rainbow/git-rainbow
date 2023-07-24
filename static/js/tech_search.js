@@ -32,7 +32,7 @@ function find_ranking_user(event, github_id=null) {
     }
 
     if (!github_id){
-        alert('Please input user');
+        alert(gettext('Please input user'));
         return;
     }
 
@@ -55,7 +55,7 @@ function find_ranking_user(event, github_id=null) {
             if(data.exist == true) {
                 location.href = `/ranking/${tech_name}?page=${data.search_user_page_number}&search_user=${data.search_user}`;
             } else {
-                alert(`'${github_id}' does not exist in this tech ranking`);
+                alert(`'${github_id}' ${gettext('does not exist in this tech ranking')}`);
             }
         },
     });
@@ -74,7 +74,7 @@ function show_ranking_user() {
             focus_tag.setAttribute('style', 'opacity: 1;');
             focus_tag.scrollIntoView();
         } else {
-            alert(`${search_user} does not exist in ranking`);
+            alert(`${search_user} ${gettext('does not exist in ranking')}`);
         }
     }
 }

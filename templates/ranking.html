@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static custom_tags %}
+{% load static custom_tags i18n %}
 {% block content %}
   <div id='under_header' onclick="reset_opacity()" class="flex items-center p-6 bg-gray-50 w-full h-full">
     <div style="margin:0 auto;">
@@ -21,7 +21,7 @@
               </div>
               <input style="min-width: 110px;" id="input_tech" onkeyup="search_tech(event)"
                      class="w-full pl-8 pr-2 text-sm text-gray-700 placeholder-gray-600 bg-gray-100 border-0 rounded-md dark:placeholder-gray-500 dark:focus:shadow-outline-gray dark:focus:placeholder-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:placeholder-gray-500 focus:bg-white focus:border-purple-300 focus:outline-none focus:shadow-outline-purple form-input"
-                     type="text" placeholder="Search a tech name" aria-label="Search">
+                     type="text" placeholder={% blocktrans %}"Search a tech name"{% endblocktrans %} aria-label="Search">
             </div>
           </div>
 
@@ -147,7 +147,7 @@
               </div>
               <input style="min-width: 90px;" id="ranking_search_input" onkeydown="find_ranking_user(event)"
                      class="w-full pl-8 pr-2 text-sm text-gray-700 placeholder-gray-600 bg-gray-100 border-0 rounded-md dark:placeholder-gray-500 dark:focus:shadow-outline-gray dark:focus:placeholder-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:placeholder-gray-500 focus:bg-white focus:border-purple-300 focus:outline-none focus:shadow-outline-purple form-input"
-                     type="text" placeholder="Search a GitHub ID" aria-label="Search">
+                     type="text" placeholder={% blocktrans %}"Search a GitHub ID"{% endblocktrans %} aria-label="Search">
             </div>
             <div class="relative focus-within:text-purple-500"
                 style="min-width: 90px; margin-left:2px; white-space:nowrap;">

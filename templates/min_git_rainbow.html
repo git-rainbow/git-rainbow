@@ -1,4 +1,4 @@
-{% load static custom_tags %}
+{% load static custom_tags i18n %}
 {% block content %}
 <script type="text/javascript" src="{% static 'js/profile_calendar.js' %}"></script>
 <div style="margin:0 auto;">
@@ -10,7 +10,7 @@
           <div class="mt-3">
             <button type="button" class="btn btn-danger font-semibold" id="code_crazy_btn" onmousemove="show_desc(event)" onmouseleave="show_desc(event)"
               style="color:rgb(200,30,30);background-color:rgb(253,232,232);border-color:rgb(253,232,232);">
-              Code Crazy <span class="badge badge-danger" style="font-size:90%;margin-left:4px;">{{ days }}%</span>
+              {% trans "Code Crazy" %} <span class="badge badge-danger" style="font-size:90%;margin-left:4px;">{{ days }}%</span>
             </button>
           </div>
         </div>
@@ -47,7 +47,7 @@
   </div>
   <div class="w-full mb-8 md:w-full scroll" style="max-width:1100px">
     <div style="display:flex; justify-content: space-between;">
-      <span class="font-bold mb-2" style="font-size:20px; font-family: 'Noto Sans KR';float: left">Tech Stack<g class="ml-3" style="font-weight: normal;">in the last year</g></span>
+      <span class="font-bold mb-2" style="font-size:20px; font-family: 'Noto Sans KR';float: left">{% trans "Tech Stack" %}<g class="ml-3" style="font-weight: normal;">{% trans "in the last year" %}</g></span>
       <div style="display: flex;cursor: pointer; align-items: center;">
         <a id="github_link" onmousemove="show_desc(event)" onmouseleave="show_desc(event)" href="https://github.com/{{github_user.github_id}}" target="_blank" style="outline:none; color: inherit;"><i class="bi bi-github" style="font-size: 20px; margin-right: 15px;"></i></a>
         {% if not request.user.is_authenticated %}
@@ -94,12 +94,12 @@
       <!--Git grahp(start)-->
       <div class="mt-4">
         <div class="mb-3">
-          <span class="font-bold" style="font-size: 20px;">Tech activity</span>
+          <span class="font-bold" style="font-size: 20px;">{% trans "Tech activity" %}</span>
         </div>
         <div class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800" id="tech_grahp">
         </div>
         <button id="show_more_btn" class="bg-white w-full border border-gray-500 rounded-md flex items-center justify-center px-4 text-center mt-3" style="color: #2977de; height: 40px;">
-            Show more activity
+            {% trans "Show more activity" %}
         </button>
       </div>
       <!--Git grahp(end)-->

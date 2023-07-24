@@ -1,3 +1,4 @@
+{% load i18n %}
 {% if request.user.is_authenticated %}
   <div style="display:flex;">
     {% with request.user.githubuser_set.first as login_user %}
@@ -6,8 +7,8 @@
         <span style="font-weight: 600;">{{login_user.github_id}}</span>
       </div>
     {% endwith %}
-    <a class="nav-link scrollto" style="color: #013289; font-weight: 700;" href="/logout">Logout</a>
+    <a class="nav-link scrollto" style="color: #013289; font-weight: 700;" href="/logout">{% trans "Logout" %}</a>
   </div>
 {% else %}
-  <a href="/login/github" class="nav-link scrollto" style="color: #013289; font-weight: 700;">Sign in with Github</a>
+  <a href="/login/github" class="nav-link scrollto" style="color: #013289; font-weight: 700;">{% trans "Sign in with Github" %}</a>
 {% endif %}

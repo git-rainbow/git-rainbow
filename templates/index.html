@@ -63,9 +63,9 @@
     </div>
       <div class="flex center">
         {% if request.user.is_superuser %}
-          <a class="mr-4" href="/admins" style="color: #013289; font-weight: 700;">Admin</a>
+          <a class="mr-4" href="/admins" style="color: #013289; font-weight: 700;">{% trans "Admin" %}</a>
         {% endif %}
-        <a href="/ranking/Android" style="color: #013289; font-weight: 700; margin-right:50px">Ranking</a>
+        <a href="/ranking/Android" style="color: #013289; font-weight: 700; margin-right:50px">{% trans "Ranking" %}</a>
         {% include 'toggle_login.html' %}
       </div>
     </div>
@@ -79,8 +79,8 @@
     <div class="container" style="margin-top:100px">
       <div style="display: flex; flex-wrap: wrap;">
         <div class="col-lg-6 d-flex flex-column justify-content-center" style="white-space: nowrap">
-          <h1 data-aos="fade-up">Show Off<br><span style="font-family: 'Noto Sans'">Your Tech Stack</span></h1>
-          <h2 data-aos="fade-up" data-aos-delay="400" class="fw-light">Enter GitHub ID<br>and analyze your skills and experience.</h2>
+          <h1 data-aos="fade-up">{% trans "Show Off" %}<br><span style="font-family: 'Noto Sans'">{% trans "Your Tech Stack" %}</span></h1>
+          <h2 data-aos="fade-up" data-aos-delay="400" class="fw-light">{% trans "Enter GitHub ID" %}<br>{% trans "and analyze your skills and experience." %}</h2>
         </div>
         <img class="main_first_img" src="{% static "img/git_rainbow.jpg" %}" style="width: 50%;" data-aos="zoom-out" data-aos-delay="200">
       </div>

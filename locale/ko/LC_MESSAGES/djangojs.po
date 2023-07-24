@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-20 02:31+0000\n"
+"POT-Creation-Date: 2023-07-24 13:28+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,47 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#: static/js/tech_search.js:35
+msgid "Please input user"
+msgstr "유저를 입력해주세요"
+
+#: static/js/tech_search.js:58
+msgid "does not exist in this tech ranking"
+msgstr "유저가 기술 랭킹에 존재하지 않습니다."
+
+#: static/js/tech_search.js:77
+msgid "does not exist in ranking"
+msgstr "유저가 랭킹에 존재하지 않습니다."
+
+#: static/js/tech_stack.js:9
+msgid "Please input your token"
+msgstr "토큰을 입력해주세요"
+
+#: static/js/tech_stack.js:64
+msgid "error occured"
+msgstr "에러가 발생했습니다."
+
+#: static/js/tech_stack.js:72
+msgid "Analysis failed"
+msgstr "분석이 실패했습니다."
+
+#: static/js/tech_stack.js:108
+msgid "Please check Github ID"
+msgstr "Github ID를 체크해주세요"
+
+#: static/js/tech_stack.js:121
+msgid "Please input personal GitHub ID"
+msgstr "유저를 입력해주세요"
+
+#: static/js/tech_stack.js:124
+msgid "Please check your GitHub ID"
+msgstr "Github ID를 확인해주세요"
+
+#: static/js/tech_stack.js:150
+msgid "Copied!"
+msgstr "복사되었습니다!"
+
 #: static/js/tech_stack.js:240
 msgid "How much crazy about coding in the last year (%)"
 msgstr "최근 1년간 코딩에 미쳐있는 정도 (%)"
