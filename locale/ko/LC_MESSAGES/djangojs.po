@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-24 13:28+0900\n"
+"POT-Creation-Date: 2023-07-24 15:47+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -58,6 +58,10 @@ msgstr "Github ID를 확인해주세요"
 msgid "Copied!"
 msgstr "복사되었습니다!"
 
+#: static/js/tech_stack.js:223
+msgid "This service is login required. \n Will you login?"
+msgstr "이 서비스는 로그인이 필요합니다. \n 로그인 하시겠습니까?"
+
 #: static/js/tech_stack.js:240
 msgid "How much crazy about coding in the last year (%)"
 msgstr "최근 1년간 코딩에 미쳐있는 정도 (%)"
@@ -81,7 +85,7 @@ msgstr "최근 1년 동안 활발하게 코딩한 개발자 순위<br> (Code Cra
 
 #: static/js/tech_stack.js:245
 msgid "How much crazy about coding this tech in the last year<br>(100 days: 100%, 365 days: 365%)"
-msgstr "최근 1년간 해당 기술 코딩에 미쳐있는 정도(예: 100일: 100%, 365일: 365%)"
+msgstr "최근 1년간 해당 기술 코딩에 미쳐있는 정도<br>(예: 100일: 100%, 365일: 365%)"
 
 #: static/js/tech_stack.js:246
 msgid "lines of coding about corresponding tech in the last year"

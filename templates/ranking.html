@@ -68,7 +68,7 @@
               <p class="mx-auto mt-2 mb-3 font-semibold ranking-ellipsis" style="font-size:15px"><a href="/{{top3.github_id}}" target="_blank">{{ top3.github_id }}</a></p>
               <button type="button" class="btn btn-danger font-semibold mt-2 mb-1"
                 style="color:rgb(200,30,30);background-color:rgb(253,232,232);border-color:rgb(253,232,232); font-size: 70%; padding: 2%; width: 70%;">
-                Code Crazy <span class="badge badge-danger" style="font-size:100%;margin-left:4px; top: 1px;">{{ top3.tech_code_crazy }}%</span>
+                {% trans "Code Crazy" %} <span class="badge badge-danger" style="font-size:100%;margin-left:4px; top: 1px;">{{ top3.tech_code_crazy }}%</span>
               </button>
               <div class="rounded-full mt-2 mb-1" style="background-color:lightgray; width: 70%;">
                 <div
@@ -115,7 +115,7 @@
                 <img class="mt-2 object-cover w-full h-full rounded-full" src="{{ login_user.avatar_url }}" style="width:64px;height:64px">
                 <p class="mx-auto mb-2 font-semibold ranking-ellipsis" style="font-size:15px"><a href="/{{ login_user.github_id }}" target="_blank">{{ login_user.github_id }}</a></p>
                 <button onclick="alert('You do not have a commit about this tech')" class="px-2 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                  My ranking
+                  {% trans "My ranking" %}
                 </button>
               {% else %}
                 <p class="mx-auto mb-2 font-semibold ranking-ellipsis"></p>
@@ -124,7 +124,7 @@
                    style="width:64px;height:64px">
                 <p class="mx-auto mb-2 font-semibold ranking-ellipsis"></p>
                 <button onclick="go_to_login()" class="px-2 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                  My ranking
+                  {% trans "My ranking" %}
                 </button>
               {% endif %}
             </div>
@@ -153,7 +153,7 @@
                 style="min-width: 90px; margin-left:2px; white-space:nowrap;">
               <div style="position:absolute; top: 30%; right: 30%; width: auto; display: flex;">
                 <p class="text-lg">
-                  {{tech_name}} developers: {{total_rank_count}}
+                  {{tech_name}} {% trans "developers" %}: {{total_rank_count}}
                 </p>
                 <img id="rank_count" onmousemove="show_desc(event)" onmouseleave="show_desc(event)" src="{% static 'img/question-mark.svg' %}" style="width: 25px; height: 25px; margin-left: 10px; padding-top: 5px;">
               </div>
@@ -169,18 +169,18 @@
                   class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800"
                   style="border: 0 solid #d5d6d7!important;">
                   <th id="rank_rank" onmousemove="show_desc(event)" onmouseleave="show_desc(event)" class="px-4 py-3 text-center">
-                    RANK
+                    {% trans "RANK" %}
                   </th>
                   <th class="px-4 py-3 text-center" style="width:150px">GITHUB ID</th>
                   <th></th>
                   <th id="rank_code_crazy" onmousemove="show_desc(event)" onmouseleave="show_desc(event)" class="px-4 py-3 text-center">
-                      Code Crazy
+                    {% trans "Code Crazy" %}
                   </th>
                   <th id="rank_code_lines" onmousemove="show_desc(event);" onmouseleave="show_desc(event)" class="px-4 text-center">
-                    Code Lines
+                    {% trans "Code Lines" %}
                   </th>
                   <th id="rank_major" onmousemove="show_desc(event);" onmouseleave="show_desc(event)" class="px-4 text-center">
-                    Major
+                    {% trans "Major" %}
                   </th>
                 </tr>
                 </thead>
