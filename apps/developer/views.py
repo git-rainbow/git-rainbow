@@ -73,9 +73,9 @@ def git_rainbow(request, github_id):
         tech_rank_data = make_ranker_data(tech_data['name'])
         for rank_data in tech_rank_data:
             if rank_data['github_id'] == github_user.github_id:
-                tech_data['rank'] = rank_data['rank']
+                tech_data['rank'] = rank_data
                 tech_data['ranker_num'] = tech_rank_data.count()
-                tech_data['rank_percent'] = round(rank_data['rank']/tech_data['ranker_num']*100, 3)
+                tech_data['rank_percent'] = round(rank_data['rank']/tech_data['ranker_num']*100, 1)
                 top3_tech_data.append(tech_data)
                 break
     context = {'github_user': github_user, 'tech_card_data': tech_card_data, 'calendar_data': calendar_data,
@@ -144,9 +144,9 @@ def update_git_rainbow(request):
         tech_rank_data = make_ranker_data(tech_data['name'])
         for rank_data in tech_rank_data:
             if rank_data['github_id'] == github_user.github_id:
-                tech_data['rank'] = rank_data['rank']
+                tech_data['rank'] = rank_data
                 tech_data['ranker_num'] = tech_rank_data.count()
-                tech_data['rank_percent'] = round(rank_data['rank']/tech_data['ranker_num']*100, 3)
+                tech_data['rank_percent'] = round(rank_data['rank'] / tech_data['ranker_num'] * 100, 1)
                 top3_tech_data.append(tech_data)
                 break
     context = {
