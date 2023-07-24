@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-24 16:40+0900\n"
+"POT-Creation-Date: 2023-07-24 17:16+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -63,7 +63,7 @@ msgid "Go Back"
 msgstr "돌아가기"
 
 #: templates/min_git_rainbow.html:13 templates/ranking.html:71
-#: templates/ranking.html:177
+#: templates/ranking.html:102 templates/ranking.html:177
 msgid "Code Crazy"
 msgstr "코드 크레이지"
 
@@ -94,6 +94,10 @@ msgstr "활동 더 보기"
 #: templates/ranking.html:24
 msgid "\"Search a tech name\""
 msgstr "\"기술명 검색하기\""
+
+#: templates/ranking.html:111
+msgid "More"
+msgstr "자세히"
 
 #: templates/ranking.html:118 templates/ranking.html:127
 msgid "My ranking"
