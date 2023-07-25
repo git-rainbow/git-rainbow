@@ -261,25 +261,21 @@ def save_tech_ranking_data(request):
 
 
 def sava_github_calendar_data(git_calendar_data, github_user):
-    user_git_calendar_data = github_user.githubcalendar_set.all()
-    last_author_date = user_git_calendar_data.aggregate(last_author_date=Max('author_date'))['last_author_date']
-    if last_author_date:
-        user_git_calendar_data.filter(author_date__gte=last_author_date).delete()
+    github_user.githubcalendar_set.all().delete()
     calendar_data = json.loads(git_calendar_data.replace("'", '"'))
     git_calendar_data_bulk = []
     for author_date, data in calendar_data.items():
         date_format = "%Y-%m-%d"
         datetime_object = datetime.strptime(author_date, date_format)
         datetime_object = pytz.utc.localize(datetime_object)
-        if last_author_date is None or last_author_date <= datetime_object:
-            for tech_name, lines in data.items():
-                github_calendar = GithubCalendar(
-                    github_id=github_user,
-                    author_date=datetime_object,
-                    tech_name=tech_name,
-                    lines=lines
-                )
-                git_calendar_data_bulk.append(github_calendar)
+        for tech_name, lines in data.items():
+            github_calendar = GithubCalendar(
+                github_id=github_user,
+                author_date=datetime_object,
+                tech_name=tech_name,
+                lines=lines
+            )
+            git_calendar_data_bulk.append(github_calendar)
     GithubCalendar.objects.bulk_create(git_calendar_data_bulk)
 
 
