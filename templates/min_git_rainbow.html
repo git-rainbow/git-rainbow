@@ -2,17 +2,18 @@
 {% block content %}
 <script type="text/javascript" src="{% static 'js/profile_calendar.js' %}"></script>
 <div style="margin:0 auto;">
-  <div class="flex">
-    <div class="mb-2" style="flex-grow: 2">
+  <div class="flex" style="max-width: 1060px;">
+    <div style="width: 65%;">
       <div class="flex">
-        <div>
-          <img src="{{github_user.avatar_url}}" class="profile mr-6 profile-image">
+        <div class="mr-2 flex flex-column" style="align-items: center;">
+          <img src="{{github_user.avatar_url}}" class="profile profile-image">
           <div class="mt-3">
             <button type="button" class="btn btn-danger font-semibold mb-1" id="code_crazy_btn" onmousemove="show_desc(event)" onmouseleave="show_desc(event)"
               style="color:rgb(200,30,30);background-color:rgb(253,232,232);border-color:rgb(253,232,232); width:180px;">
               {% trans "Code Crazy" %} <span class="badge badge-danger" style="font-size:90%;margin-left:4px;">{{ days }}%</span>
             </button>
-            <div id="svg_link" onmousemove="show_desc(event)" onmouseleave="show_desc(event)" onclick={% if not request.user.is_authenticated %}"go_to_login()"{% else %}"copy_svg_url('{{github_user.github_id}}')"{% endif %}class="flex justify-center bg-green-100 font-semibold btn" style="width:180px;">
+            <div id="svg_link" onmousemove="show_desc(event)" onmouseleave="show_desc(event)" onclick=
+              {% if not request.user.is_authenticated %}"go_to_login()"{% else %}"copy_svg_url('{{github_user.github_id}}')"{% endif %}class="flex justify-center bg-green-100 font-semibold btn" style="width:180px;">
               <span style="color: #00864c;">{% trans "Sharing" %}</span>
               <img style="width:20px; height: 20px; margin-left: 15px;" src="{% static 'img/share.png' %}" alt="share">
             </div>
