@@ -241,9 +241,9 @@
                           style="width: {{ ranker.code_line_percent }}%; background-color: {{ tech_color }}"><p style="color:white">{{ ranker.total_lines }}</p></div>
                       </div>
                     </td>
-                    <td class="px-5 py-2 text-sm" style="width:100px;border:none!important">
+                    <td class="px-3 py-2 text-sm" style="width:100px;border:none!important">
                       <div class="flex items-center" style="justify-content:center;">
-                        <div class="flex ml-3" style="align-items: center;flex-direction: column;">
+                        <div class="flex" style="align-items: center;flex-direction: column;">
                           <img style="width:45px;height:45px" src="{% get_static_prefix %}img/{{ ranker.top_tech.lower|replace_special_char }}.png">
                           <p class="text-xs text-gray-600">{{ ranker.top_tech }}</p>
                         </div>
