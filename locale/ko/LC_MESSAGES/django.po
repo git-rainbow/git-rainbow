@@ -113,7 +113,7 @@ msgstr "개발자 수"
 
 #: templates/ranking.html:172
 msgid "RANK"
-msgstr "랭크"
+msgstr "순위"
 
 #: templates/ranking.html:180
 msgid "Code Lines"
