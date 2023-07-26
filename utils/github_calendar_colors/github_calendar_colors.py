@@ -55,7 +55,7 @@ github_calendar_colors = {
     'OCaml': '#f5ac63',
     'CMake': '#064f8c',
     'Smalltalk': '#f7c400',
-    'System Verilog': '#2c087e',
+    'SystemVerilog': '#2c087e',
     'Clojure': '#8DD646',
     'Cucumber': '#00a818',
     'Lua': '#7e42ff',
