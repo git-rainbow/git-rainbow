@@ -70,7 +70,7 @@ github_calendar_colors = {
     'React Native': '#80deea',
     'Mongodb': '#4caf50',
     'Groovy': '#619CBC',
-    'JSX': '#4C4C4C',
+    'JSX': '#8650A1',
     'OpenCL': '#E64D29',
     'GLSL': '#4386b5',
     'Perl6': '#ffff00',

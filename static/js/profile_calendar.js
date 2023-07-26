@@ -423,7 +423,7 @@ function color_choice(name, opacity){
         'React Native': `rgba(128, 222, 234, ${opacity})`,
         'Mongodb': `rgba(76, 175, 80, ${opacity})`,
         'Groovy': `rgba(97, 156, 188, ${opacity})`,
-        'JSX': `rgba(76, 76, 76, ${opacity})`,
+        'JSX': `rgba(134, 80, 161, ${opacity})`,
         'OpenCL': `rgba(230, 77, 41, ${opacity})`,
         'GLSL': `rgba(67, 134, 181, ${opacity})`,
         'Perl6': `rgba(255, 255, 0, ${opacity})`,
