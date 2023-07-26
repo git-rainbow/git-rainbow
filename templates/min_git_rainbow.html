@@ -37,7 +37,7 @@
           {% for tech_data in top3_tech_data %}
             <div class="flex mt-2 bg-white rounded-lg shadow-xs dark:bg-gray-800" style="justify-content: space-between; padding: 1%;">
               <div class="flex align-center">
-                <img style="width: 3.5rem; height: 3.5rem;" src="{% get_static_prefix %}img/{{ tech_data.file | replace_special_char }}.png">
+                <img style="width: 3.5rem; height: 3.5rem;" src="{% get_static_prefix %}img/{{ tech_data.file | replace_special_char }}.png" onerror="this.onerror=null; this.src='/static/img/none3.png';">
                 <span class="ml-4 font-bold" style="font-size: 1rem;">{{ tech_data.name }}</span>
               </div>
               <div class="flex" style="align-items: center; justify-content: center; width: 38%;">
@@ -98,7 +98,7 @@
                   <div class="w-full inline-block">
                     <div class="tech_color mt-2 mr-2" style="background-color: {{ tech_data.color }}; float: right; display: block;"></div>
                   </div>
-                  <img src="{% get_static_prefix %}img/{{ tech_data.file | replace_special_char }}.png" class="mx-auto mb-2"/>
+                  <img src="{% get_static_prefix %}img/{{ tech_data.file | replace_special_char }}.png" onerror="this.onerror=null; this.src='/static/img/none3.png';" class="mx-auto mb-2"/>
                   <div class="mb-2 px-2" style="text-align: center; display: flex; flex-direction: column;">
                     {{ tech_data.name }}
                     <span class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full" style="font-size: .75rem; text-align: center; margin: 0 auto; margin-top: 8px;">
