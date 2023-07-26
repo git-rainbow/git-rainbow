@@ -64,7 +64,6 @@ github_calendar_colors = {
     'ActionScript': '#f0f0f0',
     'Haskell': '#5e5086',
     'Slim': '#9BBB7A',
-    'Markdown': '#3b8686',
     'SQLPL': '#E6586C',
     'Makefile': '#000000',
     'React Native': '#80deea',

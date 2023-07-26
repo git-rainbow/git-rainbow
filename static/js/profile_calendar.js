@@ -417,7 +417,6 @@ function color_choice(name, opacity){
         'ActionScript': `rgba(240, 240, 240, ${opacity})`,
         'Haskell': `rgba(94, 80, 134, ${opacity})`,
         'Slim': `rgba(155, 187, 122, ${opacity})`,
-        'Markdown': `rgba(59, 134, 134, ${opacity})`,
         'SQLPL': `rgba(230, 88, 108, ${opacity})`,
         'Makefile': `rgba(0, 0, 0, ${opacity})`,
         'React Native': `rgba(128, 222, 234, ${opacity})`,

@@ -282,6 +282,9 @@ def sava_github_calendar_data(git_calendar_data, github_user):
 def ranking_all(request):
     today = timezone.now()
     year_ago = (today - relativedelta(years=1)).replace(hour=0, minute=0, second=0)
+    tech_with_developer_count = GithubCalendar.objects.values('tech_name').annotate(developer_count=Count('github_id'))
+    sort_techs_in_calendar_tech = sorted(tech_with_developer_count, key=lambda x: x['developer_count'], reverse=True)
+    sorted_github_calendar_colors = {item['tech_name']: github_calendar_colors[item['tech_name']] for item in sort_techs_in_calendar_tech if item['tech_name'] in github_calendar_colors.keys()}
     tech_table_joined = GithubCalendar.objects.filter(author_date__range=[year_ago, today]).values('github_id').annotate(
         tech_code_crazy=Count('github_id'),
         total_lines=Sum('lines'),
@@ -290,7 +293,6 @@ def ranking_all(request):
         rank_point=F('tech_code_crazy') * F('total_lines'),
     ).exclude(total_lines=0)
 
-    sorted_github_calendar_colors = dict(sorted(github_calendar_colors.items(), key=lambda x: x[0].lower()))
     rank_data = dict()
     count = 0
 
@@ -329,7 +331,9 @@ def ranking_all(request):
 
 
 def ranking_tech_stack(request, tech_name='Android'):
-    sorted_github_calendar_colors = dict(sorted(github_calendar_colors.items(), key=lambda x: x[0].lower()))
+    tech_with_developer_count = GithubCalendar.objects.values('tech_name').annotate(developer_count=Count('github_id'))
+    sort_techs_in_calendar_tech = sorted(tech_with_developer_count, key=lambda x: x['developer_count'], reverse=True)
+    sorted_github_calendar_colors = {item['tech_name']: github_calendar_colors[item['tech_name']] for item in sort_techs_in_calendar_tech if item['tech_name'] in github_calendar_colors.keys()}
     if tech_name.lower() == 'c_sharp':
         tech_name = 'C#'
     else:
