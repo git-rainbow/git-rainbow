@@ -1,0 +1,108 @@
+{% load static i18n %}
+<!-- (1) -->
+<section id="hero" class="hero d-flex align-items-center" style="height: 100%;padding-top:150px;padding-bottom:100px">
+  <div class="container mt-8">
+    <div class="row">
+      <div class="col-lg-6 d-flex flex-column justify-content-center" style="white-space: no
+                  wrap">
+        <h1 data-aos="fade-up">{% trans "Your Tech Stack" %}<br><span style="font-family: 'Noto Sans'">{% trans "on GitHub activities" %}</span></h1>
+        <h2 data-aos="fade-up" data-aos-delay="400" class="fw-light">{% trans "Enter GitHub ID and" %}
+          <br>{% trans "get your Git-Rainbow calendar." %}
+        </h2>
+      </div>
+      <div class="w-50 relative" data-aos="zoom-out" data-aos-delay="200">
+        <img src="{% static "img/intro/intro_githubid.png" %}" data-aos="zoom-out" data-aos-delay="800" class="box-shadow gif" style="width:70%;position:relative;z-index: 99;top: 10px;right: 100px">
+        <img src="{% static "img/intro/intro_techstack.png" %}" data-aos="zoom-out" data-aos-delay="1000" class="relative box-shadow" style="max-width:150%;z-index: -100">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- (2) -->
+  <section class="hero d-flex align-items-center" style="padding-top:150px">
+    <div class="container" data-aos="fade-up">
+      <div class="row">
+        <div class="col-lg-6 d-flex flex-column justify-content-center media-margin">
+          <h1 data-aos="fade-up" data-aos-delay="200" style="font-family: 'Noto Sans'">{% trans "GitHub README" %},<br>{% trans "Notion RESUME" %}</h1>
+          <h2 data-aos="fade-up" data-aos-delay="400" class="fw-light">{% trans "Copy-paste Git-Rainbow calendar" %}
+            <br>{% trans "into your README or RESUME" %}
+          </h2>
+        </div>
+        <div class="col-lg-6 mt-3">
+          <img src="{% static "img/intro/intro_notion.png" %}" data-aos="fade-right" data-aos-delay="800" class="img-fluid form-floating box-shadow down-image-notion" style="top:10rem">
+          <img src="{% static "img/intro/intro_github.png" %}" data-aos="fade-left" data-aos-delay="900" class="img-fluid form-floating box-shadow up-image-git">
+        </div>
+      </div>
+    </div>
+  </section>
+
+<!-- (3) -->
+  <section class="hero d-flex align-items-center">
+    <div class="container" data-aos="fade-up">
+      <div class="row">
+        <div class="col-lg-6 d-flex flex-column justify-content-center media-margin">
+          <h1 data-aos="fade-up" data-aos-delay="200" style="font-family: 'Noto Sans'">{% trans "Tech Stack Ranking," %}
+            <br>{% trans "Who are TOP 3 ?" %}</h1>
+            <h2 data-aos="fade-up" data-aos-delay="400" class="fw-light">{% trans "Code Crazy" %}
+              <g class="text-sm" style="color:gray">{% trans "(How crazy about coding)" %}</g>{% trans " and" %}
+            </h2>
+            <h2 data-aos="fade-up" data-aos-delay="400" class="fw-light">{% trans "Coding lines are important for it," %}
+              <br>{% trans "See your rank !" %}</h2>
+          <h6 class="mt-3" style="color:gray">(Unofficial ranking for fun)</h6>
+        </div>
+        <div class="col-lg-6 mt-3" data-aos="zoom-out" data-aos-delay="200">
+          <img src="{% static "img/intro/intro_top3.png" %}" data-aos="fade-right" data-aos-delay="1000" class="box-shadow" style="position: relative; ;z-index: 99;top: 30px;right: 15px;max-width:150%">
+          <img src="{% static "img/intro/intro_ranking.png" %}" data-aos="fade-left" data-aos-delay="800" class="relative box-shadow" style="top: -40px;z-index: -100; left: 80px;max-width: 150%">
+        </div>
+      </div>
+    </div>
+  </section>
+
+<!-- (4) -->
+  <section class="hero d-flex align-items-center">
+    <div class="container" data-aos="fade-up">
+      <div class="row">
+        <div class="col-lg-6 d-flex flex-column justify-content-center media-margin">
+          <h1 data-aos="fade-up" data-aos-delay="200" style="font-family: 'Noto Sans'">{% trans "How crazy are you" %}
+            <br>{% trans "about coding ?" %}
+          </h1>
+          <h2 data-aos="fade-up" data-aos-delay="400" class="fw-light">{% trans "Digitized your tech skills," %}
+            <br>{% trans "What’s your rank ?" %}
+          </h2>
+        </div>
+
+        <div class="col-lg-6 mt-3" data-aos="zoom-out" data-aos-delay="200">
+          <img src="{% static "img/intro/intro_profile.png" %}" data-aos="fade-left" data-aos-delay="1000" class="box-shadow" style="position: relative; ;z-index: 99;top: 100px;right: 150px;max-width:180%">
+          <img src="{% static "img/intro/intro_rainbow.png" %}" data-aos="fade-left" data-aos-delay="800" class="relative box-shadow" style="top: -120px;z-index: -100; left: -70px;max-width: 150%">
+        </div>
+      </div>
+    </div>
+  </section>
+
+<!-- (5) -->
+<section class="d-flex align-items-center font-color-white" style="background-color: black;width: 100%;height: 100vh">
+  <div class="container">
+    <div class="display-icon frame-work">
+      <img data-aos="fade-down-left" data-aos-delay="400" class="icon-size" src="{% static "img/react.png" %}">
+      <img data-aos="fade-down-left" class="icon-size" style="margin-right: 20%" src="{% static "img/django.png" %}">
+      <img data-aos="fade-down-left" class="icon-size" style="margin-right: -10px" src="{% static "img/spring.png" %}">
+    </div>
+    <div style="margin: 0 auto">
+      <div class="d-flex flex-column language_techstack" style="align-items: center">
+        <h1 data-aos="fade-up">{% trans "GitHub Coding more fun" %}</h1>
+        <p data-aos="fade-up" data-aos-delay="400" class="fw-light text-center font-color-white">
+          {% trans "Easily analyze it by tech stack and" %}
+          <br>{% trans "Up your ranking enjoyingly" %}
+        </p>
+      </div>
+      <!-- image -->
+    </div>
+    <div>
+      <div class="display-icon language" style="align-items: flex-start;">
+        <img data-aos="fade-down-left" data-aos-delay="300" class="icon-size" src="{% static "img/javascript.png" %}">
+        <img data-aos="fade-down-left" class="icon-size" style="margin-left: 20%"src="{% static "img/python.png" %}">
+        <img data-aos="fade-down-left" class="icon-size" src="{% static "img/java.png" %}">
+      </div>
+    </div>
+  </div>
+</section>

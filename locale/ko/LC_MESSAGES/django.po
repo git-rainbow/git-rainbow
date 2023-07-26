@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-27 13:47+0900\n"
+"POT-Creation-Date: 2023-07-27 09:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,21 +34,95 @@ msgstr "관리자"
 msgid "Ranking"
 msgstr "랭킹"
 
-#: templates/index.html:82
-msgid "Show Off"
-msgstr "당신의 기술 스택을"
-
-#: templates/index.html:82
+#: templates/intro.html:8
 msgid "Your Tech Stack"
-msgstr "보여주세요"
+msgstr "기술스택 중심"
 
-#: templates/index.html:83
-msgid "Enter GitHub ID"
-msgstr "GitHub 아이디를 입력하고"
+#: templates/intro.html:8
+msgid "on GitHub activities"
+msgstr "Github 활동분석"
 
-#: templates/index.html:83
-msgid "and analyze your skills and experience."
-msgstr "당신의 기술과 경험을 분석하세요"
+#: templates/intro.html:9
+msgid "Enter GitHub ID and"
+msgstr "단한번의 GitHub ID 입력만으로"
+
+#: templates/intro.html:10
+msgid "get your Git-Rainbow calendar."
+msgstr "기술스택 활동내역을 분석할 수 있어요."
+
+#: templates/intro.html:26
+msgid "GitHub README"
+msgstr "GitHub 프로필"
+
+#: templates/intro.html:26
+msgid "Notion RESUME"
+msgstr "Notion 이력서"
+
+#: templates/intro.html:27
+msgid "Copy-paste Git-Rainbow calendar"
+msgstr "Git-Rainbow 캘린더를 복사붙혀넣기 하고"
+
+#: templates/intro.html:28
+msgid "into your README or RESUME"
+msgstr "기술스택을 보여주세요."
+
+#: templates/intro.html:44
+msgid "Tech Stack Ranking,"
+msgstr "기술스택 랭킹"
+
+#: templates/intro.html:45
+msgid "Who are TOP 3 ?"
+msgstr "TOP 3 는 누구 ?"
+
+#: templates/intro.html:46 templates/min_git_rainbow.html:13
+#: templates/ranking.html:56 templates/ranking.html:87
+#: templates/ranking.html:168 templates/ranking_all.html:48
+msgid "Code Crazy"
+msgstr "코드 크레이지"
+
+#: templates/intro.html:47
+msgid "(How crazy about coding)"
+msgstr "(코딩에 미쳐있는정도%)"
+
+#: templates/intro.html:47
+msgid " and"
+msgstr " 와"
+
+#: templates/intro.html:49
+msgid "Coding lines are important for it,"
+msgstr "코딩라인수 기반 기술스택별 랭킹을"
+
+#: templates/intro.html:50
+msgid "See your rank !"
+msgstr "볼 수 있어요!"
+
+#: templates/intro.html:66
+msgid "How crazy are you"
+msgstr "코딩에 얼마나"
+
+#: templates/intro.html:67
+msgid "about coding ?"
+msgstr "미쳐있나요?"
+
+#: templates/intro.html:69
+msgid "Digitized your tech skills,"
+msgstr "수치화 되어 나오는 나의 개발경험,"
+
+#: templates/intro.html:70
+msgid "What’s your rank ?"
+msgstr "나의 기술 스택 순위는 ?"
+
+#: templates/intro.html:92
+msgid "GitHub Coding more fun"
+msgstr "GitHub 코딩을 더 재밌게 하자"
+
+#: templates/intro.html:94
+msgid "Easily analyze it by tech stack and"
+msgstr "기술스택 별로 쉽게 분석해보고"
+
+#: templates/intro.html:95
+msgid "Up your ranking enjoyingly"
+msgstr "나의 랭킹을 재밌게 올려보자!"
 
 #: templates/loading.html:9
 msgid "Analyzing &nbsp;GitHub"
@@ -61,12 +135,6 @@ msgstr "첫 분석은 한시간 정도 걸릴 수 있습니다."
 #: templates/loading.html:21
 msgid "Go Back"
 msgstr "돌아가기"
-
-#: templates/min_git_rainbow.html:13 templates/ranking.html:56
-#: templates/ranking.html:87 templates/ranking.html:168
-#: templates/ranking_all.html:48
-msgid "Code Crazy"
-msgstr "코드 크레이지"
 
 #: templates/min_git_rainbow.html:17
 msgid "Sharing"

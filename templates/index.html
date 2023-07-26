@@ -75,17 +75,7 @@
   </header>
   <!-- End Header -->
 
-  <section id="hero" class="hero d-flex">
-    <div class="container" style="margin-top:100px">
-      <div style="display: flex; flex-wrap: wrap;">
-        <div class="col-lg-6 d-flex flex-column justify-content-center" style="white-space: nowrap">
-          <h1 data-aos="fade-up">{% trans "Show Off" %}<br><span style="font-family: 'Noto Sans'">{% trans "Your Tech Stack" %}</span></h1>
-          <h2 data-aos="fade-up" data-aos-delay="400" class="fw-light">{% trans "Enter GitHub ID" %}<br>{% trans "and analyze your skills and experience." %}</h2>
-        </div>
-        <img class="main_first_img" src="{% static "img/git_rainbow.jpg" %}" style="width: 50%;" data-aos="zoom-out" data-aos-delay="200">
-      </div>
-    </div>
-  </section>
+  {% include 'intro.html' %}
   <div style="position: fixed;bottom: 0;width:100%">
   {% include 'footer.html' %}
   </div>
