@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static custom_tags i18n %}
+{% block content %}
+  <div id='under_header' class="flex items-center p-6 bg-gray-50 w-full h-full">
+    <div style="margin:0 auto;">
+      <div class="grid gap-4 mb-3 md:grid-cols-2 xl:grid-cols-2-2">
+        <div style="min-width:450px">
+          <!-- Search Tech -->
+          {% include 'ranking_side.html' %}
+          <!-- Tech Card Group Start -->
+          <div class="grid gap-4 mb-3 md:grid-cols-2 xl:grid-cols-3">
+            <!-- Card -->
+            {% for tech, color in github_calendar_colors.items %}
+              <div class="flex items-center ml-2 bg-white rounded-lg shadow-xs dark:bg-gray-800 mb-3 pointer tech_list" onclick="window.location.href='/ranking/{{ tech|replace_special_char }}'"
+                   style="width: 125px;height: 50px; {% if tech == tech_name %} border: 2px solid {{ color }} {% endif %}">
+                <img class="mr-8" style="width:45px;height:45px" src="{% get_static_prefix %}img/{{ tech.lower|replace_special_char }}.png">
+                <p class="pl-2 py-2 text-xs">{{ tech }}</p>
+              </div>
+            {% endfor %}
+          </div>
+          <!-- Tech Card Group End -->
+        </div>
+        <div style="width: 720px;">
+          <!-- Selected Tech & Top3 Group Start -->
+          {% for tech_name, tech_rank_data in rank_data.items %}
+            <div class="grid gap-4 pt-3 pb-3 pl-3 mb-3" style="grid-template-columns: 0.6fr 1fr 1fr 1fr; background-color: #EEEEEE;">
+              <!-- Selected Tech Card -->
+              <div class="flex mb-3 bg-white rounded-lg shadow-xs dark:bg-gray-800 mr-2"
+                 style="height: 190px;width: 126px;align-items: center;flex-direction: column;">
+                <div class="w-full inline-block">
+                  <div div class="tech_color mt-2 mr-2"
+                     style="background-color: {{ tech_rank_data.color }}; float: right; display: block;"></div>
+                </div>
+                <img class="mx-auto mb-2" src="{% get_static_prefix %}img/{{ tech_name.lower|replace_special_char }}.png" style="margin-top: 25px;">
+                <p class="mx-auto mb-2 text-sm" id="tech_title">{{ tech_name }}</p>
+              </div>
+              {% for top3 in tech_rank_data.top3_data %}
+              <div class="flex bg-white rounded-lg shadow-xs dark:bg-gray-800"
+                  style="height: 257px;width: 180px;align-items: center;flex-direction: column;">
+                <div class="flex mt-1">
+                  <img style="width:30px;height:30px;" src="{% get_static_prefix %}img/rank_{{ top3.rank }}.png">
+                  <p class="font-semibold ranking-ellipsis flex" style="font-size:15px; align-content: flex-start;">Top {{ top3.rank }}</p>
+                </div>
+                <img class="object-cover w-full h-full rounded-full mt-1" src="{{ top3.avatar_url }}" style="width:64px;height:64px">
+                <p class="mx-auto mt-2 mb-3 font-semibold ranking-ellipsis" style="font-size:15px"><a href="/{{top3.github_id}}" target="_blank">{{ top3.github_id }}</a></p>
+                <button type="button" class="btn btn-danger font-semibold mt-2 mb-1"
+                  style="color:rgb(200,30,30);background-color:rgb(253,232,232);border-color:rgb(253,232,232); font-size: 70%; padding: 2%; width: 70%;">
+                  {% trans "Code Crazy" %} <span class="badge badge-danger" style="font-size:100%;margin-left:4px; top: 1px;">{{ top3.tech_code_crazy }}%</span>
+                </button>
+                <div class="rounded-full mt-2 mb-1" style="background-color:lightgray; width: 70%;">
+                  <div
+                    class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
+                    style="width: {{ top3.code_line_percent }}%; background-color: {{ tech_rank_data.color }}"><p style="color:white">{{ top3.total_lines }}</p>
+                  </div>
+                </div>
+                <div class="flex mt-2 mb-1" style="align-items: center;flex-direction: row; justify-content: space-around; width: 50%;">
+                  <img style="width:30px;height:30px;" src="{% get_static_prefix %}img/{{ top3.top_tech.lower|replace_special_char }}.png">
+                  <p class="text-xs text-gray-600">{{ top3.top_tech }}</p>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

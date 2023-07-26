@@ -21,6 +21,7 @@ urlpatterns = [
     path('', views.main_page),
     path('update-ranking', views.save_tech_ranking_data),
     path('update-git-rainbow', views.update_git_rainbow),
+    path('ranking/all', views.ranking_all),
     path('ranking', views.ranking_tech_stack),
     path('ranking/<str:tech_name>', views.ranking_tech_stack),
     path('find-user-page', views.find_user_page),

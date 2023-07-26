@@ -279,6 +279,55 @@ def sava_github_calendar_data(git_calendar_data, github_user):
     GithubCalendar.objects.bulk_create(git_calendar_data_bulk)
 
 
+def ranking_all(request):
+    today = timezone.now()
+    year_ago = (today - relativedelta(years=1)).replace(hour=0, minute=0, second=0)
+    tech_table_joined = GithubCalendar.objects.filter(author_date__range=[year_ago, today]).values('github_id').annotate(
+        tech_code_crazy=Count('github_id'),
+        total_lines=Sum('lines'),
+        avatar_url=F('github_id__avatar_url'),
+        analysisdata=F('github_id__analysisdata__tech_card_data'),
+        rank_point=F('tech_code_crazy') * F('total_lines'),
+    ).exclude(total_lines=0)
+
+    sorted_github_calendar_colors = dict(sorted(github_calendar_colors.items(), key=lambda x: x[0].lower()))
+    rank_data = dict()
+    count = 0
+
+    for tech_name, color in sorted_github_calendar_colors.items():
+        tech_rank_data = tech_table_joined.filter(tech_name__iexact=tech_name).annotate(
+            rank=Window(expression=Rank(), order_by=F('rank_point').desc()),
+        ).order_by('rank')
+        tech_rank_data = tech_rank_data[0:3]
+
+        for ranker in tech_rank_data:
+            user_avg_lines = tech_rank_data.aggregate(avg_lines=Avg('total_lines'))['avg_lines'] * 2
+            code_line_percent = round(ranker['total_lines'] / user_avg_lines * 100, 2)
+            if code_line_percent < 50:
+                code_line_percent = 50
+            elif code_line_percent > 95:
+                code_line_percent = 95
+            ranker['code_line_percent'] = code_line_percent
+            if ranker['analysisdata'] == '[]':
+                ranker['top_tech'] = 'none'
+            else:
+                ranker['top_tech'] = json.loads(ranker['analysisdata'].replace("'", '"'))[0]['name']
+        
+        top3_data = tech_rank_data[0:3]
+        top3_data = tech_rank_data
+        rank_data[tech_name] = {'color': color, 'top3_data':top3_data}
+
+        count +=1
+        if count == 10:
+            break
+
+    context = {
+        'github_calendar_colors': sorted_github_calendar_colors,
+        'rank_data': rank_data
+    }
+    return render(request, 'ranking_all.html', context=context)
+
+
 def ranking_tech_stack(request, tech_name='Android'):
     sorted_github_calendar_colors = dict(sorted(github_calendar_colors.items(), key=lambda x: x[0].lower()))
     if tech_name.lower() == 'c_sharp':
