@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-24 17:16+0900\n"
+"POT-Creation-Date: 2023-07-26 16:41+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,7 +22,7 @@ msgstr ""
 msgid "go back"
 msgstr "돌아가기"
 
-#: templates/header.html:18
+#: templates/header.html:18 templates/index.html:59
 msgid "Analyze"
 msgstr "분석하기"
 
@@ -62,66 +62,75 @@ msgstr "첫 분석은 한시간 정도 걸릴 수 있습니다."
 msgid "Go Back"
 msgstr "돌아가기"
 
-#: templates/min_git_rainbow.html:13 templates/ranking.html:71
-#: templates/ranking.html:102 templates/ranking.html:177
+#: templates/min_git_rainbow.html:13 templates/ranking.html:56
+#: templates/ranking.html:87 templates/ranking.html:168
+#: templates/ranking_all.html:48
 msgid "Code Crazy"
 msgstr "코드 크레이지"
 
-#: templates/min_git_rainbow.html:16
+#: templates/min_git_rainbow.html:17
 msgid "Sharing"
 msgstr "공유하기"
 
-#: templates/min_git_rainbow.html:54
+#: templates/min_git_rainbow.html:35
+msgid "My Ranking"
+msgstr "나의 랭킹"
+
+#: templates/min_git_rainbow.html:76
 msgid "Tech Stack"
 msgstr "기술 스택"
 
-#: templates/min_git_rainbow.html:54
+#: templates/min_git_rainbow.html:76
 msgid "in the last year"
 msgstr "최근 1년"
 
-#: templates/min_git_rainbow.html:64 templates/token_modals.html:98
+#: templates/min_git_rainbow.html:86 templates/token_modals.html:98
 msgid "Update"
 msgstr "업데이트"
 
-#: templates/min_git_rainbow.html:100
+#: templates/min_git_rainbow.html:122
 msgid "Tech activity"
 msgstr "기술 활동"
 
-#: templates/min_git_rainbow.html:105
+#: templates/min_git_rainbow.html:127
 msgid "Show more activity"
 msgstr "활동 더 보기"
 
-#: templates/ranking.html:24
-msgid "\"Search a tech name\""
-msgstr "\"기술명 검색하기\""
-
-#: templates/ranking.html:111
+#: templates/ranking.html:96
 msgid "More"
 msgstr "자세히"
 
-#: templates/ranking.html:118 templates/ranking.html:127
+#: templates/ranking.html:109 templates/ranking.html:118
 msgid "My ranking"
 msgstr "나의 랭킹"
 
-#: templates/ranking.html:150
+#: templates/ranking.html:141
 msgid "\"Search a GitHub ID\""
 msgstr "\"GitHub ID 검색하기\""
 
-#: templates/ranking.html:156
+#: templates/ranking.html:147
 msgid "developers"
 msgstr "개발자 수"
 
-#: templates/ranking.html:172
+#: templates/ranking.html:163
 msgid "RANK"
 msgstr "순위"
 
-#: templates/ranking.html:180
+#: templates/ranking.html:171
 msgid "Code Lines"
 msgstr "코딩 라인수"
 
-#: templates/ranking.html:183
+#: templates/ranking.html:174
 msgid "Major"
 msgstr "주요기술"
+
+#: templates/ranking_side.html:14
+msgid "\"Search a tech name\""
+msgstr "\"기술명 검색하기\""
+
+#: templates/ranking_side.html:18
+msgid "Show total rank"
+msgstr "전체 랭킹 보기"
 
 #: templates/toggle_login.html:10
 msgid "Logout"
