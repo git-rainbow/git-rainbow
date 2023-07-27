@@ -158,6 +158,11 @@ def update_git_rainbow(request):
         'status': core_status,
         'calendar_data': calendar_data
     }
+    last_day = github_user.githubcalendar_set.aggregate(last_day=Max('author_date'))['last_day']
+    if last_day:
+        last_day_commits_data = github_user.githubcalendar_set.filter(author_date=last_day)
+        last_tech_data = str({last_day.strftime("%Y-%m-%d"): {data['tech_name']: data['lines'] for data in last_day_commits_data.values()}}).replace("'", '"')
+        json_data["last_tech_data"] = last_tech_data
     content = loader.render_to_string(
         'min_git_rainbow.html',
         context,

@@ -53,7 +53,8 @@ function _analyze_developer(data) {
                 }
                 // Don't change template in ranking page - finish
                 $("#under_header").html(data.content);
-                show_profile_calendar(data.calendar_data)
+                show_profile_calendar(data.calendar_data);
+                show_total_lines(JSON.parse(data.last_tech_data), true);
             } else if(data.status == 'fail') {
                 waiting = false;
                 alert(`status: fail, reaseon: ${data.reason}`);

@@ -114,8 +114,14 @@ function show_total_lines(commit_data, is_reset=false, specific_tech){
     current_data = commit_data;
     let full_sort_recent_list = Object.entries(commit_data).reverse();
     let sort_recent_list = full_sort_recent_list.slice(show_more_index*3, show_more_index*3+3)
+    let new_show_more_btn = document.querySelector("#show_more_btn")
     if (full_sort_recent_list.length <= 3*show_more_index+3){
-        show_more_btn.classList.add('hidden');
+        new_show_more_btn.classList.add('hidden');
+    } else if(new_show_more_btn.classList.contains('hidden')) {
+        new_show_more_btn.classList.remove('hidden');
+        new_show_more_btn.addEventListener('click', function(){
+            show_total_lines(current_data, false, true)
+        });
     }
 
     if (specific_tech && !show_more_index) {
