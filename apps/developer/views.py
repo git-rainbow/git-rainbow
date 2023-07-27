@@ -15,8 +15,7 @@ from django.utils import timezone
 
 from apps.tech_stack.models import GithubUser, AnalysisData, GithubCalendar, Ranking
 from apps.tech_stack.utils import core_repo_list
-from config.local_settings import token_list
-from utils.github_api import request_github_profile
+from utils.github_api.github_api import request_github_profile
 from utils.github_calendar.github_calendar import generate_github_calendar
 from utils.github_calendar_colors.github_calendar_colors import github_calendar_colors
 from utils.github_id.github_id import check_github_id
