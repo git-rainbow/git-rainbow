@@ -324,7 +324,7 @@ def ranking_all(request):
     return render(request, 'ranking_all.html', context=context)
 
 
-def ranking_tech_stack(request, tech_name='Android'):
+def ranking_tech_stack(request, tech_name):
     tech_with_developer_count = GithubCalendar.objects.values('tech_name').annotate(developer_count=Count('github_id'))
     sort_techs_in_calendar_tech = sorted(tech_with_developer_count, key=lambda x: x['developer_count'], reverse=True)
     sorted_github_calendar_colors = {item['tech_name']: github_calendar_colors[item['tech_name']] for item in sort_techs_in_calendar_tech if item['tech_name'] in github_calendar_colors.keys()}
