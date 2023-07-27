@@ -251,3 +251,18 @@ function show_desc(event){
     desc_box.innerHTML = desc_object[target.id];
     desc_box.setAttribute('style', `left: ${event.pageX-desc_box.clientWidth/2}px; top: ${event.pageY-desc_box.clientHeight-20}px`);
 }
+
+function show_more_ranking(event){
+    let hidden_tech_rankings = document.querySelectorAll(".tech-rankings.hidden");
+    let count = 0;
+    for (let i=0; i < hidden_tech_rankings.length; i++){
+        hidden_tech_rankings[i].classList.remove('hidden');
+        count ++;
+        if (count == 10){
+            break;
+        }
+    }
+    if(document.querySelectorAll(".tech-rankings.hidden").length==0){
+        event.currentTarget.classList.add('hidden');
+    };
+}

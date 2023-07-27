@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-26 16:41+0900\n"
+"POT-Creation-Date: 2023-07-27 13:47+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -123,6 +123,10 @@ msgstr "코딩 라인수"
 #: templates/ranking.html:174
 msgid "Major"
 msgstr "주요기술"
+
+#: templates/ranking_all.html:65
+msgid "Show more rank"
+msgstr "랭크 더보기"
 
 #: templates/ranking_side.html:14
 msgid "\"Search a tech name\""
