@@ -38,8 +38,8 @@
               <div class="flex bg-white rounded-lg shadow-xs dark:bg-gray-800"
                   style="height: 257px;width: 180px;align-items: center;flex-direction: column;">
                 <div class="flex mt-1">
-                  <img style="width:30px;height:30px;" src="{% get_static_prefix %}img/rank_{{ top3.rank }}.png">
-                  <p class="font-semibold ranking-ellipsis flex" style="font-size:15px; align-content: flex-start;">Top {{ top3.rank }}</p>
+                  <img style="width:30px;height:30px;" src="{% get_static_prefix %}img/rank_{{ forloop.counter }}.png">
+                  <p class="font-semibold ranking-ellipsis flex" style="font-size:15px; align-content: flex-start;">Top {{ forloop.counter }}</p>
                 </div>
                 <img class="object-cover w-full h-full rounded-full mt-1" src="{{ top3.avatar_url }}" style="width:64px;height:64px">
                 <p class="mx-auto mt-2 mb-3 font-semibold ranking-ellipsis" style="font-size:15px"><a href="/{{top3.github_id}}" target="_blank">{{ top3.github_id }}</a></p>

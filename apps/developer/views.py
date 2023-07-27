@@ -287,23 +287,23 @@ def ranking_all(request):
     sorted_github_calendar_colors = {item['tech_name']: github_calendar_colors[item['tech_name']] for item in sort_techs_in_calendar_tech if item['tech_name'] in github_calendar_colors.keys()}
     tech_table_joined = GithubCalendar.objects.filter(author_date__range=[year_ago, today]).values('github_id').annotate(
         tech_code_crazy=Count('github_id'),
+        tech_name=F('tech_name'),
         total_lines=Sum('lines'),
         avatar_url=F('github_id__avatar_url'),
         analysisdata=F('github_id__analysisdata__tech_card_data'),
         rank_point=F('tech_code_crazy') * F('total_lines'),
     ).exclude(total_lines=0)
 
+    RANK_COUNT_TO_SHOW = 3
     rank_data = dict()
-    count = 0
 
     for tech_name, color in sorted_github_calendar_colors.items():
-        tech_rank_data = tech_table_joined.filter(tech_name__iexact=tech_name).annotate(
-            rank=Window(expression=Rank(), order_by=F('rank_point').desc()),
-        ).order_by('rank')
-        tech_rank_data = tech_rank_data[0:3]
-
-        for ranker in tech_rank_data:
-            user_avg_lines = tech_rank_data.aggregate(avg_lines=Avg('total_lines'))['avg_lines'] * 2
+        tech_name = tech_name.lower()
+        tech_rank_data = [i for i in tech_table_joined if i['tech_name'].lower() == tech_name]
+        tech_rank_data.sort(key=lambda x: x['rank_point'], reverse=True)
+        top3_data = tech_rank_data[0:RANK_COUNT_TO_SHOW]
+        user_avg_lines = sum(i['total_lines'] for i in top3_data)/RANK_COUNT_TO_SHOW
+        for ranker in top3_data:
             code_line_percent = round(ranker['total_lines'] / user_avg_lines * 100, 2)
             if code_line_percent < 50:
                 code_line_percent = 50
@@ -314,14 +314,8 @@ def ranking_all(request):
                 ranker['top_tech'] = 'none'
             else:
                 ranker['top_tech'] = json.loads(ranker['analysisdata'].replace("'", '"'))[0]['name']
-        
-        top3_data = tech_rank_data[0:3]
-        top3_data = tech_rank_data
-        rank_data[tech_name] = {'color': color, 'top3_data':top3_data}
 
-        count +=1
-        if count == 10:
-            break
+        rank_data[tech_name] = {'color': color, 'top3_data':top3_data}
 
     context = {
         'github_calendar_colors': sorted_github_calendar_colors,
