@@ -7,6 +7,7 @@ import requests
 from dateutil.relativedelta import relativedelta
 from django.core.paginator import Paginator
 from django.db.models import Sum, F, Count, Max, Avg, OuterRef, Subquery, Window
+from django.db.models import Case, IntegerField, Value, When
 from django.db.models.functions import Rank
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
@@ -222,10 +223,12 @@ def make_ranker_data(tech_name):
     now_tech_ranker = GithubCalendar.objects.filter(tech_name__iexact=tech_name, author_date__range=[year_ago, today]).values('github_id').annotate(
         tech_code_crazy=Count('github_id'),
         total_lines=Sum('lines'),
+        # For ranking, max lines is limited to 10,000 lines on one tech per a day
+        max_total_lines=Sum(Case(When(lines__gte=10000, then=Value(10000)), default='lines', output_field=IntegerField())),
         avatar_url=F('github_id__avatar_url'),
         analysisdata=F('github_id__analysisdata__tech_card_data'),
-        # Ranking in order of Crazy (days/365 %) X Coding lines
-        rank_point=F('tech_code_crazy') * F('total_lines'),
+        # Ranking in order of Crazy (days/365 %) x Max coding lines
+        rank_point=F('tech_code_crazy') * F('max_total_lines'),
         midnight_rank=Subquery(Ranking.objects.filter(tech_name=OuterRef('tech_name'), github_id=OuterRef('github_id')).values('midnight_rank')),
         rank=Window(expression=Rank(), order_by=F('rank_point').desc()),
     ).exclude(total_lines=0).order_by('rank')
