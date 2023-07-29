@@ -444,13 +444,29 @@ function github_calendar_colors(name, opacity){
     return colors[name]
 }
 
-function fill_color(tech_lines) {
+function top_tech_lines(tech_lines) {
+    let lines = 0
+    let tech_name = ""
 
+    for (const tech in tech_lines) {
+        if (github_calendar_colors(tech,0) == null)
+            continue
+        if (tech_lines[tech] > lines) {
+            tech_name = tech
+            lines = tech_lines[tech]
+        }
+    }
+
+    return { tech_name, lines }
+}
+
+function fill_color(tech_lines) {
     if (!tech_lines)
         return '#F1F1F1FF'
-    else if (github_calendar_colors(Object.keys(tech_lines)[0],1.0)){
-        let tech_name = Object.keys(tech_lines)[0]
-        let lines = Object.values(tech_lines)[0]
+
+    let { tech_name, lines } = top_tech_lines(tech_lines)
+
+    if (tech_name != ""){
         if (lines > 99){
             let color = github_calendar_colors(tech_name,1.0)
             return color
@@ -468,7 +484,6 @@ function fill_color(tech_lines) {
             return color
         }
     } else {
-        let lines = Object.values(tech_lines)[0]
         if (lines > 99){
             return 'rgba(7,141,169,1.0)'
         } else if (lines > 74){
