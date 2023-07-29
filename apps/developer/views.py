@@ -224,11 +224,18 @@ def make_ranker_data(tech_name):
         tech_code_crazy=Count('github_id'),
         total_lines=Sum('lines'),
         # For ranking, max lines is limited to 10,000 lines on one tech per a day
-        max_total_lines=Sum(Case(When(lines__gte=10000, then=Value(10000)), default='lines', output_field=IntegerField())),
+        #
+        # Coding lines point:
+        #       1 ~   999 lines:  1 point
+        #    1000 ~  1999 lines:  2 point
+        #    2000 ~  2999 lines:  3 point
+        #    ...
+        #    8999 ~ 10000 lines: 10 point
+        lines_point=Sum(Case(When(lines__gte=10000, then=Value(10)), default=F('lines')/1000+1, output_field=IntegerField())),
         avatar_url=F('github_id__avatar_url'),
         analysisdata=F('github_id__analysisdata__tech_card_data'),
-        # Ranking in order of Crazy (days/365 %) x Max coding lines
-        rank_point=F('tech_code_crazy') * F('max_total_lines'),
+        # Ranking in order of Crazy (days/365 %) x Coding lines point
+        rank_point=F('tech_code_crazy') * F('lines_point'),
         midnight_rank=Subquery(Ranking.objects.filter(tech_name=OuterRef('tech_name'), github_id=OuterRef('github_id')).values('midnight_rank')),
         rank=Window(expression=Rank(), order_by=F('rank_point').desc()),
     ).exclude(total_lines=0).order_by('rank')
