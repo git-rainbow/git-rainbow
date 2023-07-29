@@ -202,7 +202,7 @@ function show_total_lines(commit_data, is_reset=false, specific_tech){
         } else if (new_line_percent <= 10){
             new_line_percent = 10;
         }
-        current_line_div.setAttribute('style', `width:${new_line_percent}%; background-color:${color_choice(current_line_div.getAttribute('tech'), 1)};`);
+        current_line_div.setAttribute('style', `width:${new_line_percent}%; background-color:${github_calendar_colors(current_line_div.getAttribute('tech'), 1)};`);
     }
 }
 

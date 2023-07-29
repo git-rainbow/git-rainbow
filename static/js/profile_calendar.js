@@ -351,7 +351,7 @@ function profile_calendar() {
   }
   /* jshint ignore:end */
 
-function color_choice(name, opacity){
+function github_calendar_colors(name, opacity){
         const colors = {
         'Django': `rgba(0,77,64,${opacity})`,
         'React':  `rgba(128,222,234,${opacity})`,
@@ -444,31 +444,31 @@ function color_choice(name, opacity){
     return colors[name]
 }
 
-function fill_color(counts) {
+function fill_color(tech_lines) {
 
-    if (!counts)
+    if (!tech_lines)
         return '#F1F1F1FF'
-    else if (color_choice(Object.keys(counts)[0],1.0)){
-        let tech_name = Object.keys(counts)[0]
-        let lines = Object.values(counts)[0]
+    else if (github_calendar_colors(Object.keys(tech_lines)[0],1.0)){
+        let tech_name = Object.keys(tech_lines)[0]
+        let lines = Object.values(tech_lines)[0]
         if (lines > 99){
-            let color = color_choice(tech_name,1.0)
+            let color = github_calendar_colors(tech_name,1.0)
             return color
         } else if (lines > 74){
-            let color = color_choice(tech_name,0.86)
+            let color = github_calendar_colors(tech_name,0.86)
             return color
         } else if (lines > 49){
-            let color = color_choice(tech_name,0.72)
+            let color = github_calendar_colors(tech_name,0.72)
             return color
         } else if (lines > 24){
-            let color = color_choice(tech_name,0.58)
+            let color = github_calendar_colors(tech_name,0.58)
             return color
         } else {
-            let color = color_choice(tech_name,0.44)
+            let color = github_calendar_colors(tech_name,0.44)
             return color
         }
     } else {
-        let lines = Object.values(counts)[0]
+        let lines = Object.values(tech_lines)[0]
         if (lines > 99){
             return 'rgba(7,141,169,1.0)'
         } else if (lines > 74){
