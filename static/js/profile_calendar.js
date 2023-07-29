@@ -352,7 +352,7 @@ function profile_calendar() {
   /* jshint ignore:end */
 
 function github_calendar_colors(name, opacity){
-        const colors = {
+    const colors = {
         'Django': `rgba(0,77,64,${opacity})`,
         'React':  `rgba(128,222,234,${opacity})`,
         'Android': `rgba(150,195,98,${opacity})`,
@@ -440,22 +440,29 @@ function github_calendar_colors(name, opacity){
         'Redis': `rgba(189, 32, 31, ${opacity})`,
         'M4Sugar': `rgba(224, 226, 227, ${opacity})`,
         'Kubernetes': `rgba(2, 119, 189, ${opacity})`,
+        "NOT TECH" : `rgba(7, 141, 169, ${opacity})`,
     }
     return colors[name]
 }
 
 function top_tech_lines(tech_lines) {
     let lines = 0
-    let tech_name = ""
+    let tech_name = "NOT TECH"
+    let not_tech_lines = 0
 
     for (const tech in tech_lines) {
-        if (github_calendar_colors(tech,0) == null)
+        if (github_calendar_colors(tech,0) == null) {
+            not_tech_lines = tech_lines[tech]
             continue
+        }
         if (tech_lines[tech] > lines) {
             tech_name = tech
             lines = tech_lines[tech]
         }
     }
+
+    if (tech_name == "NOT TECH")
+        lines = not_tech_lines
 
     return { tech_name, lines }
 }
@@ -466,34 +473,14 @@ function fill_color(tech_lines) {
 
     let { tech_name, lines } = top_tech_lines(tech_lines)
 
-    if (tech_name != ""){
-        if (lines > 99){
-            let color = github_calendar_colors(tech_name,1.0)
-            return color
-        } else if (lines > 74){
-            let color = github_calendar_colors(tech_name,0.86)
-            return color
-        } else if (lines > 49){
-            let color = github_calendar_colors(tech_name,0.72)
-            return color
-        } else if (lines > 24){
-            let color = github_calendar_colors(tech_name,0.58)
-            return color
-        } else {
-            let color = github_calendar_colors(tech_name,0.44)
-            return color
-        }
-    } else {
-        if (lines > 99){
-            return 'rgba(7,141,169,1.0)'
-        } else if (lines > 74){
-            return 'rgba(7,141,169,0.86)'
-        } else if (lines > 49){
-            return 'rgba(7,141,169,0.72)'
-        } else if (lines > 24){
-            return 'rgba(7,141,169,0.58)'
-        } else {
-            return 'rgba(7,141,169,0.44)'
-        }
-    }
+    if (lines > 99)
+        return github_calendar_colors(tech_name,1.0)
+    else if (lines > 74)
+        return github_calendar_colors(tech_name,0.86)
+    else if (lines > 49)
+        return github_calendar_colors(tech_name,0.72)
+    else if (lines > 24)
+        return github_calendar_colors(tech_name,0.58)
+    else
+        return github_calendar_colors(tech_name,0.44)
 }
