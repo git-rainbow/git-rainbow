@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static custom_tags i18n %}
+{% load static custom_tags i18n humanize %}
 {% block content %}
   <div id='under_header' class="flex items-center p-6 bg-gray-50 w-full h-full">
     <div style="margin:0 auto;">
@@ -50,7 +50,7 @@
                 <div class="rounded-full mt-2 mb-1" style="background-color:lightgray; width: 70%;">
                   <div
                     class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
-                    style="width: {{ top3.code_line_percent }}%; background-color: {{ tech_rank_data.color }}"><p style="color:white">{{ top3.total_lines }}</p>
+                    style="width: {{ top3.code_line_percent }}%; background-color: {{ tech_rank_data.color }}"><p style="color:white">{{ top3.total_lines|intcomma }}</p>
                   </div>
                 </div>
                 <div class="flex mt-2 mb-1" style="align-items: center;flex-direction: row; justify-content: space-around; width: 50%;">
