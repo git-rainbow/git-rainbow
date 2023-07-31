@@ -304,7 +304,8 @@ def ranking_all(request):
         total_lines=Sum('lines'),
         avatar_url=F('github_id__avatar_url'),
         analysisdata=F('github_id__analysisdata__tech_card_data'),
-        rank_point=F('tech_code_crazy') * F('total_lines'),
+        lines_point=Sum(Case(When(lines__gte=10000, then=Value(10)), default=F('lines')/1000+1, output_field=IntegerField())),
+        rank_point=F('tech_code_crazy') * F('lines_point'),
     ).exclude(total_lines=0)
 
     RANK_COUNT_TO_SHOW = 3
