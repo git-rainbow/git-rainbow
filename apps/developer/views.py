@@ -296,9 +296,8 @@ def sava_github_calendar_data(git_calendar_data, github_user):
 def ranking_all(request):
     today = timezone.now()
     year_ago = (today - relativedelta(years=1)).replace(hour=0, minute=0, second=0)
-    tech_with_developer_count = GithubCalendar.objects.values('tech_name').annotate(developer_count=Count('github_id', distinct=True))
-    sort_techs_in_calendar_tech = sorted(tech_with_developer_count, key=lambda x: x['developer_count'], reverse=True)
-    sorted_github_calendar_colors = {item['tech_name']: github_calendar_colors[item['tech_name']] for item in sort_techs_in_calendar_tech if item['tech_name'] in github_calendar_colors.keys()}
+    tech_with_developer_count = GithubCalendar.objects.filter(tech_name__in=github_calendar_colors.keys()).values('tech_name').annotate(developer_count=Count('github_id', distinct=True))
+    sorted_github_calendar_colors = sorted(tech_with_developer_count, key=lambda x: x['developer_count'], reverse=True)
     tech_table_joined = GithubCalendar.objects.filter(author_date__range=[year_ago, today]).values('github_id').annotate(
         tech_code_crazy=Count('github_id'),
         tech_name=F('tech_name'),
@@ -311,8 +310,8 @@ def ranking_all(request):
     RANK_COUNT_TO_SHOW = 3
     rank_data = dict()
 
-    for tech_name, color in sorted_github_calendar_colors.items():
-        tech_name = tech_name.lower()
+    for tech in sorted_github_calendar_colors:
+        tech_name = tech['tech_name'].lower()
         tech_rank_data = [i for i in tech_table_joined if i['tech_name'].lower() == tech_name]
         tech_rank_data.sort(key=lambda x: x['rank_point'], reverse=True)
         top3_data = tech_rank_data[0:RANK_COUNT_TO_SHOW]
@@ -329,7 +328,7 @@ def ranking_all(request):
             else:
                 ranker['top_tech'] = json.loads(ranker['analysisdata'].replace("'", '"'))[0]['name']
 
-        rank_data[tech_name] = {'color': color, 'top3_data':top3_data}
+        rank_data[tech_name] = {'color': github_calendar_colors[tech['tech_name']], 'top3_data':top3_data}
 
     context = {
         'github_calendar_colors': sorted_github_calendar_colors,
@@ -339,15 +338,14 @@ def ranking_all(request):
 
 
 def ranking_tech_stack(request, tech_name):
-    tech_with_developer_count = GithubCalendar.objects.values('tech_name').annotate(developer_count=Count('github_id', distinct=True))
-    sort_techs_in_calendar_tech = sorted(tech_with_developer_count, key=lambda x: x['developer_count'], reverse=True)
-    sorted_github_calendar_colors = {item['tech_name']: github_calendar_colors[item['tech_name']] for item in sort_techs_in_calendar_tech if item['tech_name'] in github_calendar_colors.keys()}
+    tech_with_developer_count = GithubCalendar.objects.filter(tech_name__in=github_calendar_colors.keys()).values('tech_name').annotate(developer_count=Count('github_id', distinct=True))
+    sorted_github_calendar_colors = sorted(tech_with_developer_count, key=lambda x: x['developer_count'], reverse=True)
     if tech_name.lower() == 'c_sharp':
         tech_name = 'C#'
     else:
-        for key in sorted_github_calendar_colors.keys():
-            if key.lower() == tech_name.lower():
-                tech_name = key
+        for tech in sorted_github_calendar_colors:
+            if tech['tech_name'].lower() == tech_name.lower():
+                tech_name = tech['tech_name']
                 break
 
     now_ranker_data = make_ranker_data(tech_name)
@@ -359,7 +357,7 @@ def ranking_tech_stack(request, tech_name):
     context = {
         'github_calendar_colors': sorted_github_calendar_colors,
         'tech_name': tech_name,
-        'tech_color': sorted_github_calendar_colors.get(tech_name),
+        'tech_color': github_calendar_colors[tech_name],
         'top_ranker': now_ranker_data[:3],
         'now_ranker_data': page_rank_data,
         'total_rank_count': format(total_rank_count, ','),
