@@ -253,7 +253,7 @@ def make_ranker_data(tech_name):
         elif code_line_percent > 95:
             code_line_percent = 95
         ranker['code_line_percent'] = code_line_percent
-        if ranker['analysisdata'] == '[]':
+        if ranker['analysisdata'] == None or ranker['analysisdata'] == '[]':
             ranker['top_tech'] = 'none'
         else:
             ranker['top_tech'] = json.loads(ranker['analysisdata'].replace("'", '"'))[0]['name']
