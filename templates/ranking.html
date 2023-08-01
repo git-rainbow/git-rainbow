@@ -105,7 +105,7 @@
                 <p class="mx-auto font-semibold ranking-ellipsis" style="margin-bottom: 1.3rem;"></p>
                 <img class="mt-2 mb-2 object-cover w-full h-full rounded-full" src="{{ login_user.avatar_url }}" style="width:64px;height:64px">
                 <p class="mx-auto font-semibold ranking-ellipsis" style="font-size:15px"><a href="/{{ login_user.github_id }}" target="_blank">{{ login_user.github_id }}</a></p>
-                <button onclick="alert('You do not have a commit about this tech')" class="px-2 py-1 mt-6 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                <button onclick="alert_not_exist(event)" class="px-2 py-1 mt-6 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                   {% trans "My ranking" %}
                 </button>
               {% else %}

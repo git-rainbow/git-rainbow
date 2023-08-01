@@ -22,6 +22,10 @@ function search_tech(event) {
     }, 300);
 }
 
+function alert_not_exist(event){
+    alert('You do not have a commit about this tech');
+}
+
 function find_ranking_user(event, github_id=null) {
     if (event.type != "click" && !(event.keyCode && event.keyCode == 13)){
         return;
