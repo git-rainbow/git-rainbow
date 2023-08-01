@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-24 15:47+0900\n"
+"POT-Creation-Date: 2023-08-01 10:36+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,15 +18,19 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: static/js/tech_search.js:35
+#: static/js/tech_search.js:26
+msgid "You do not have a commit about this tech"
+msgstr "이 기술에 대해 커밋이 없습니다"
+
+#: static/js/tech_search.js:40
 msgid "Please input user"
 msgstr "유저를 입력해주세요"
 
-#: static/js/tech_search.js:58
+#: static/js/tech_search.js:63
 msgid "does not exist in this tech ranking"
 msgstr "유저가 기술 랭킹에 존재하지 않습니다."
 
-#: static/js/tech_search.js:77
+#: static/js/tech_search.js:82
 msgid "does not exist in ranking"
 msgstr "유저가 랭킹에 존재하지 않습니다."
 
@@ -34,67 +38,67 @@ msgstr "유저가 랭킹에 존재하지 않습니다."
 msgid "Please input your token"
 msgstr "토큰을 입력해주세요"
 
-#: static/js/tech_stack.js:64
+#: static/js/tech_stack.js:65
 msgid "error occured"
 msgstr "에러가 발생했습니다."
 
-#: static/js/tech_stack.js:72
+#: static/js/tech_stack.js:73
 msgid "Analysis failed"
 msgstr "분석이 실패했습니다."
 
-#: static/js/tech_stack.js:108
+#: static/js/tech_stack.js:109
 msgid "Please check Github ID"
 msgstr "Github ID를 체크해주세요"
 
-#: static/js/tech_stack.js:121
+#: static/js/tech_stack.js:122
 msgid "Please input personal GitHub ID"
 msgstr "유저를 입력해주세요"
 
-#: static/js/tech_stack.js:124
+#: static/js/tech_stack.js:125
 msgid "Please check your GitHub ID"
 msgstr "Github ID를 확인해주세요"
 
-#: static/js/tech_stack.js:150
+#: static/js/tech_stack.js:151
 msgid "Copied!"
 msgstr "복사되었습니다!"
 
-#: static/js/tech_stack.js:223
+#: static/js/tech_stack.js:224
 msgid "This service is login required. \n Will you login?"
 msgstr "이 서비스는 로그인이 필요합니다. \n 로그인 하시겠습니까?"
 
-#: static/js/tech_stack.js:240
+#: static/js/tech_stack.js:241
 msgid "How much crazy about coding in the last year (%)"
 msgstr "최근 1년간 코딩에 미쳐있는 정도 (%)"
 
-#: static/js/tech_stack.js:241
+#: static/js/tech_stack.js:242
 msgid "Github profile page"
 msgstr "GitHub 프로필 페이지"
 
-#: static/js/tech_stack.js:242
+#: static/js/tech_stack.js:243
 msgid "Copy embeding link for README or Notion"
 msgstr "README 또는 Notion 등에 임베딩 링크 복사"
 
-#: static/js/tech_stack.js:243
+#: static/js/tech_stack.js:244
 msgid "Update current work"
 msgstr "최근작업 업데이트 하기"
 
-#: static/js/tech_stack.js:244
+#: static/js/tech_stack.js:245
 #, javascript-format
 msgid "Ranking of developers actively coded over the past year<br>(Code Crazy % X Code Lines)"
 msgstr "최근 1년 동안 활발하게 코딩한 개발자 순위<br> (Code Crazy % X Code Lines)"
 
-#: static/js/tech_stack.js:245
+#: static/js/tech_stack.js:246
 msgid "How much crazy about coding this tech in the last year<br>(100 days: 100%, 365 days: 365%)"
 msgstr "최근 1년간 해당 기술 코딩에 미쳐있는 정도<br>(예: 100일: 100%, 365일: 365%)"
 
-#: static/js/tech_stack.js:246
+#: static/js/tech_stack.js:247
 msgid "lines of coding about corresponding tech in the last year"
 msgstr "최근 1년간 해당 기술 코딩 라인 수 "
 
-#: static/js/tech_stack.js:247
+#: static/js/tech_stack.js:248
 msgid "Main technology for this GitHub user"
 msgstr "해당 GitHub 유저의 메인 기술 (주요 기술)"
 
-#: static/js/tech_stack.js:248
+#: static/js/tech_stack.js:249
 msgid "It is automatically updated every 1 day of the month"
 msgstr "매주 월요일 마다 전체 순위를 갱신합니다."

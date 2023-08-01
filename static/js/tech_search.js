@@ -23,7 +23,7 @@ function search_tech(event) {
 }
 
 function alert_not_exist(event){
-    alert('You do not have a commit about this tech');
+    alert(gettext('You do not have a commit about this tech'));
 }
 
 function find_ranking_user(event, github_id=null) {
