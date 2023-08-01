@@ -148,169 +148,173 @@
             </div>
           </div>
 
-          <!-- Table -->
-          <div class="overflow-hidden rounded-lg shadow-xs" style="margin-left: auto !important;">
-            <div class="w-full overflow-x-auto">
-              <table class="w-full whitespace-no-wrap">
-                <thead>
-                <tr
-                  class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800"
-                  style="border: 0 solid #d5d6d7!important;">
-                  <th id="rank_rank" onmousemove="show_desc(event)" onmouseleave="show_desc(event)" class="px-4 py-3 text-center">
-                    {% trans "RANK" %}
-                  </th>
-                  <th class="px-4 py-3 text-center" style="width:150px">GITHUB ID</th>
-                  <th></th>
-                  <th id="rank_code_crazy" onmousemove="show_desc(event)" onmouseleave="show_desc(event)" class="px-4 py-3 text-center">
-                    {% trans "Code Crazy" %}
-                  </th>
-                  <th id="rank_code_lines" onmousemove="show_desc(event);" onmouseleave="show_desc(event)" class="px-4 text-center">
-                    {% trans "Code Lines" %}
-                  </th>
-                  <th id="rank_major" onmousemove="show_desc(event);" onmouseleave="show_desc(event)" class="px-4 text-center">
-                    {% trans "Major" %}
-                  </th>
-                </tr>
-                </thead>
-                <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-                  {% for ranker in now_ranker_data %}
-                  <tr id="{{ ranker.github_id }}" class="user_tr text-gray-700 dark:text-gray-400" style="border: 0.5 solid #d5d6d7!important;">
-                    <td style="width:50px;border:none!important; text-align: center;">
-                      <p class="font-bold text-sm text-gray-600 dark:text-gray-400">
-                        {{ ranker.rank }}
-                      </p>
-                    </td>
-                    <td class="px-3 py-3" style="width:150px;border:none!important">
-                      <div class="flex items-center text-sm">
-                        <!-- Avatar with inset shadow -->
-                        <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block" style="min-width:32px;">
-                          <img class="object-cover w-full h-full rounded-full"
-                               src="{{ ranker.avatar_url }}" alt="" loading="lazy">
-                          <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
-                        </div>
-                        <div class="ranking-ellipsis">
-                          <a class="font-semibold" href="/{{ ranker.github_id }}" target="_blank">{{ ranker.github_id }}</a>
-                        </div>
-                    </td>
-                    <td style="border:none!important;">
-                      <div class="flex items-center text-sm">
-                        {% if ranker.change_rank > 0 %}
-                          <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="red" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
-                            <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+          {% if exist_search_user is False %}
+            <div class="text-center text-2xl mt-16 text-red-700">'{{search_user}}' {% trans "does not exsit in this tech ranking" %}</div>
+          {% else %}
+            <!-- Table -->
+            <div class="overflow-hidden rounded-lg shadow-xs" style="margin-left: auto !important;">
+              <div class="w-full overflow-x-auto">
+                <table class="w-full whitespace-no-wrap">
+                  <thead>
+                    <tr
+                      class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800"
+                      style="border: 0 solid #d5d6d7!important;">
+                      <th id="rank_rank" onmousemove="show_desc(event)" onmouseleave="show_desc(event)" class="px-4 py-3 text-center">
+                        {% trans "RANK" %}
+                      </th>
+                      <th class="px-4 py-3 text-center" style="width:150px">GITHUB ID</th>
+                      <th></th>
+                      <th id="rank_code_crazy" onmousemove="show_desc(event)" onmouseleave="show_desc(event)" class="px-4 py-3 text-center">
+                        {% trans "Code Crazy" %}
+                      </th>
+                      <th id="rank_code_lines" onmousemove="show_desc(event);" onmouseleave="show_desc(event)" class="px-4 text-center">
+                        {% trans "Code Lines" %}
+                      </th>
+                      <th id="rank_major" onmousemove="show_desc(event);" onmouseleave="show_desc(event)" class="px-4 text-center">
+                        {% trans "Major" %}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+                    {% for ranker in now_ranker_data %}
+                    <tr id="{{ ranker.github_id }}" class="user_tr text-gray-700 dark:text-gray-400" style="border: 0.5 solid #d5d6d7!important;">
+                      <td style="width:50px;border:none!important; text-align: center;">
+                        <p class="font-bold text-sm text-gray-600 dark:text-gray-400">
+                          {{ ranker.rank }}
+                        </p>
+                      </td>
+                      <td class="px-3 py-3" style="width:150px;border:none!important">
+                        <div class="flex items-center text-sm">
+                          <!-- Avatar with inset shadow -->
+                          <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block" style="min-width:32px;">
+                            <img class="object-cover w-full h-full rounded-full"
+                                src="{{ ranker.avatar_url }}" alt="" loading="lazy">
+                            <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
+                          </div>
+                          <div class="ranking-ellipsis">
+                            <a class="font-semibold" href="/{{ ranker.github_id }}" target="_blank">{{ ranker.github_id }}</a>
+                          </div>
+                      </td>
+                      <td style="border:none!important;">
+                        <div class="flex items-center text-sm">
+                          {% if ranker.change_rank > 0 %}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="red" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+                              <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+                            </svg>
+                          {% elif ranker.change_rank < 0 %}
+                          <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="blue" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
                           </svg>
-                        {% elif ranker.change_rank < 0 %}
-                         <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="blue" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                          <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                         </svg>
-                        {% else %}
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#96C362" class="bi bi-circle-fill" viewBox="0 0 16 16" style="margin-left: 6px; margin-right: 7px;">
-                            <circle cx="8" cy="8" r="8"/>
-                          </svg>
-                        {% endif %}
-                        <div class="ml-2" >{{ ranker.change_rank }}</div>
-                      </div>
-                    </td>
-                    <td class="text-sm text-center" style="border:none!important">
-                      <span
-                        class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
-                        {{ ranker.tech_code_crazy }}%
-                      </span>
-                    </td>
-                    <td style="border:none!important">
-                      <div class="w-full rounded-full" style="background-color:lightgray">
-                        <div
-                          class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
-                          style="width: {{ ranker.code_line_percent }}%; background-color: {{ tech_color }}"><p style="color:white">{{ ranker.total_lines }}</p></div>
-                      </div>
-                    </td>
-                    <td class="px-3 py-2 text-sm" style="width:100px;border:none!important">
-                      <div class="flex items-center" style="justify-content:center;">
-                        <div class="flex" style="align-items: center;flex-direction: column;">
-                          <img style="width:45px;height:45px" src="{% get_static_prefix %}img/{{ ranker.top_tech.lower|replace_special_char }}.png">
-                          <p class="text-xs text-gray-600">{{ ranker.top_tech }}</p>
+                          {% else %}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#96C362" class="bi bi-circle-fill" viewBox="0 0 16 16" style="margin-left: 6px; margin-right: 7px;">
+                              <circle cx="8" cy="8" r="8"/>
+                            </svg>
+                          {% endif %}
+                          <div class="ml-2" >{{ ranker.change_rank }}</div>
                         </div>
-                      </div>
-                    </td>
-                  </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div>
-            <div class="grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800">
-              <span class="col-span-2"></span>
-              <!-- Pagination -->
-              <span class="flex col-span-4 mt-2 sm:mt-auto sm:justify-end">
-                <nav aria-label="Table navigation">
-                  <ul class="inline-flex items-center">
-                    {% if now_ranker_data.has_previous %}
+                      </td>
+                      <td class="text-sm text-center" style="border:none!important">
+                        <span
+                          class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
+                          {{ ranker.tech_code_crazy }}%
+                        </span>
+                      </td>
+                      <td style="border:none!important">
+                        <div class="w-full rounded-full" style="background-color:lightgray">
+                          <div
+                            class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
+                            style="width: {{ ranker.code_line_percent }}%; background-color: {{ tech_color }}"><p style="color:white">{{ ranker.total_lines }}</p></div>
+                        </div>
+                      </td>
+                      <td class="px-3 py-2 text-sm" style="width:100px;border:none!important">
+                        <div class="flex items-center" style="justify-content:center;">
+                          <div class="flex" style="align-items: center;flex-direction: column;">
+                            <img style="width:45px;height:45px" src="{% get_static_prefix %}img/{{ ranker.top_tech.lower|replace_special_char }}.png">
+                            <p class="text-xs text-gray-600">{{ ranker.top_tech }}</p>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+              <div class="grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800">
+                <span class="col-span-2"></span>
+                <!-- Pagination -->
+                <span class="flex col-span-4 mt-2 sm:mt-auto sm:justify-end">
+                  <nav aria-label="Table navigation">
+                    <ul class="inline-flex items-center">
+                      {% if now_ranker_data.has_previous %}
+                        <li>
+                          <button class="px-3 py-1 rounded-md rounded-l-lg focus:outline-none focus:shadow-outline-purple"
+                                  aria-label="Previous" onclick="window.location.href='?page={{ now_ranker_data.previous_page_number }}'">
+                            <svg aria-hidden="true" class="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                              <path
+                                d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                                clip-rule="evenodd" fill-rule="evenodd">
+                              </path>
+                            </svg>
+                          </button>
+                        </li>
+                      {% endif %}
                       <li>
-                        <button class="px-3 py-1 rounded-md rounded-l-lg focus:outline-none focus:shadow-outline-purple"
-                                aria-label="Previous" onclick="window.location.href='?page={{ now_ranker_data.previous_page_number }}'">
-                          <svg aria-hidden="true" class="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                        <button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple" onclick="window.location.href='?page=1'">
+                          <p {% if now_ranker_data.number == 1 %}style="color: blue; font-weight: bolder"{% endif %}>1</p>
+                        </button>
+                      </li>
+                      {% if now_ranker_data.paginator.count > 50 %}
+                        <li>
+                          <button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple" onclick="window.location.href='?page=2'">
+                              <p {% if now_ranker_data.number == 2 %}style="color: blue; font-weight: bolder"{% endif %}>2</p>
+                          </button>
+                        </li>
+                      {% endif %}
+                      {% if now_ranker_data.number >= 6 %}
+                        <li>
+                          <p>...</p>
+                        </li>
+                      {% endif %}
+                    {% for num in now_ranker_data.paginator.page_range %}
+                      {% if num == now_ranker_data.number %}
+                        {% if num >= 3 %}
+                          <li>
+                            <button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
+                              <p style="color: blue; font-weight: bolder">{{ num }}</p>
+                            </button>
+                          </li>
+                        {% endif %}
+                      {% else %}
+                        {% if now_ranker_data.number|add:"-2" <= num and num <= now_ranker_data.number|add:"2" %}
+                          {% if num >= 3 %}
+                          <li>
+                            <button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple" onclick="window.location.href='?page={{ num }}'">
+                              {{ num }}
+                            </button>
+                          </li>
+                          {% endif %}
+                        {% endif %}
+                      {% endif %}
+                    {% endfor %}
+                    {% if now_ranker_data.has_next %}
+                      <li>
+                        <button class="px-3 py-1 rounded-md rounded-r-lg focus:outline-none focus:shadow-outline-purple"
+                                aria-label="Next" onclick="window.location.href='?page={{ now_ranker_data.next_page_number }}'">
+                          <svg class="w-4 h-4 fill-current" aria-hidden="true" viewBox="0 0 20 20">
                             <path
-                              d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                              d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
                               clip-rule="evenodd" fill-rule="evenodd">
                             </path>
                           </svg>
                         </button>
                       </li>
                     {% endif %}
-                    <li>
-                      <button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple" onclick="window.location.href='?page=1'">
-                        <p {% if now_ranker_data.number == 1 %}style="color: blue; font-weight: bolder"{% endif %}>1</p>
-                      </button>
-                    </li>
-                    {% if now_ranker_data.paginator.count > 50 %}
-                      <li>
-                        <button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple" onclick="window.location.href='?page=2'">
-                            <p {% if now_ranker_data.number == 2 %}style="color: blue; font-weight: bolder"{% endif %}>2</p>
-                        </button>
-                      </li>
-                    {% endif %}
-                    {% if now_ranker_data.number >= 6 %}
-                      <li>
-                        <p>...</p>
-                      </li>
-                    {% endif %}
-                  {% for num in now_ranker_data.paginator.page_range %}
-                    {% if num == now_ranker_data.number %}
-                      {% if num >= 3 %}
-                        <li>
-                          <button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
-                            <p style="color: blue; font-weight: bolder">{{ num }}</p>
-                          </button>
-                        </li>
-                      {% endif %}
-                    {% else %}
-                      {% if now_ranker_data.number|add:"-2" <= num and num <= now_ranker_data.number|add:"2" %}
-                        {% if num >= 3 %}
-                        <li>
-                          <button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple" onclick="window.location.href='?page={{ num }}'">
-                            {{ num }}
-                          </button>
-                        </li>
-                        {% endif %}
-                      {% endif %}
-                    {% endif %}
-                  {% endfor %}
-                  {% if now_ranker_data.has_next %}
-                    <li>
-                      <button class="px-3 py-1 rounded-md rounded-r-lg focus:outline-none focus:shadow-outline-purple"
-                              aria-label="Next" onclick="window.location.href='?page={{ now_ranker_data.next_page_number }}'">
-                        <svg class="w-4 h-4 fill-current" aria-hidden="true" viewBox="0 0 20 20">
-                          <path
-                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                            clip-rule="evenodd" fill-rule="evenodd">
-                          </path>
-                        </svg>
-                      </button>
-                    </li>
-                  {% endif %}
-                  </ul>
-                </nav>
-              </span>
+                    </ul>
+                  </nav>
+                </span>
+              </div>
             </div>
-          </div>
+          {% endif %}
         </div>
       </div>
       <!-- First Row End -->

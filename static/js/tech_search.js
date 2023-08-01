@@ -57,11 +57,11 @@ function find_ranking_user(event, github_id=null, tech_name=null) {
     $.ajax({
         url: '/find-user-page'
         ,method: 'POST'
-        ,data: {'tech_name': tech_name, 'search_user': github_id}
+        ,data: {'tech_name': tech_name, 'github_id': github_id}
         ,async: false
         ,success: function (data) {
             if(data.exist == true) {
-                location.href = `/ranking/${tech_name}?page=${data.search_user_page_number}&search_user=${data.search_user}`;
+                location.href = `/ranking/${tech_name}?github_id=${github_id}`;
             } else {
                 alert(`'${github_id}' ${gettext('does not exist in this tech ranking')}`);
             }
@@ -71,7 +71,7 @@ function find_ranking_user(event, github_id=null, tech_name=null) {
 
 function show_ranking_user() {
     const queryParams = new URLSearchParams(location.search);
-    const search_user = queryParams.get('search_user');
+    const search_user = queryParams.get('github_id');
     if (search_user){
         const user_trs = document.querySelectorAll('.user_tr');
         let focus_tag = document.getElementById(`${search_user}`);
@@ -81,8 +81,6 @@ function show_ranking_user() {
             }
             focus_tag.setAttribute('style', 'opacity: 1;');
             focus_tag.scrollIntoView();
-        } else {
-            alert(`${search_user} ${gettext('does not exist in ranking')}`);
         }
     }
 }

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-27 09:05+0000\n"
+"POT-Creation-Date: 2023-08-01 16:40+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -168,17 +168,21 @@ msgstr "활동 더 보기"
 msgid "More"
 msgstr "자세히"
 
-#: templates/ranking.html:109 templates/ranking.html:118
+#: templates/ranking.html:106 templates/ranking.html:115
 msgid "My ranking"
 msgstr "나의 랭킹"
 
-#: templates/ranking.html:141
+#: templates/ranking.html:138
 msgid "\"Search a GitHub ID\""
 msgstr "\"GitHub ID 검색하기\""
 
-#: templates/ranking.html:147
+#: templates/ranking.html:144
 msgid "developers"
 msgstr "개발자 수"
+
+#: templates/ranking.html:152
+msgid "does not exsit in this tech ranking"
+msgstr "이(가) 이 기술 랭킹에 존재하지 않습니다"
 
 #: templates/ranking.html:163
 msgid "RANK"

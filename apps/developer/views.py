@@ -353,6 +353,20 @@ def ranking_tech_stack(request, tech_name):
     now_ranker_data = make_ranker_data(tech_name)
     page_number = request.GET.get('page')
     items_per_page = 50
+    search_user = request.GET.get('github_id')
+    exist_search_user = None
+    if search_user:
+        if not GithubCalendar.objects.filter(tech_name__iexact=tech_name, github_id=search_user).exists():
+            exist_search_user = False
+        else:
+            exist_search_user = True
+            search_user_page_number = 0
+            for data in now_ranker_data:
+                if data.get('github_id') == search_user:
+                    search_user_rank = data.get('row_num')
+                    search_user_page_number = search_user_rank//items_per_page + 1
+                    break
+            page_number = search_user_page_number
     paginator = Paginator(now_ranker_data, items_per_page)
     page_rank_data = paginator.get_page(page_number)
     total_rank_count = now_ranker_data.count()
@@ -363,6 +377,8 @@ def ranking_tech_stack(request, tech_name):
         'top_ranker': now_ranker_data[:3],
         'now_ranker_data': page_rank_data,
         'total_rank_count': format(total_rank_count, ','),
+        'search_user': search_user,
+        'exist_search_user': exist_search_user,
     }
     if request.user.is_authenticated:
         context['login_user'] = request.user.githubuser_set.first()
@@ -382,21 +398,6 @@ def find_user_page(request):
         return render(request, 'exception_page.html', {'error': 403, 'message': 'Not allowed method'})   
 
     tech_name, search_user = request.POST.values()
-    now_ranker_data = make_ranker_data(tech_name)
-    
-    items_per_page = 50
-    search_user_page_number = 0
-    exist = None
-    for data in now_ranker_data:
-        if data.get('github_id') == search_user:
-            search_user_rank = data.get('row_num')
-            search_user_page_number = search_user_rank//items_per_page + 1
-            exist = True
-            break
-    result = {
-        'exist': exist,
-        'tech_name': tech_name,
-        'search_user': search_user,
-        'search_user_page_number': search_user_page_number
-    }
-    return JsonResponse(result)
+    if not GithubCalendar.objects.filter(tech_name__iexact=tech_name, github_id=search_user).exists():
+        return JsonResponse({'exist': False})
+    return JsonResponse({'exist': True})
