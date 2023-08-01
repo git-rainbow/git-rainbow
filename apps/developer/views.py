@@ -8,7 +8,7 @@ from dateutil.relativedelta import relativedelta
 from django.core.paginator import Paginator
 from django.db.models import Sum, F, Count, Max, Avg, OuterRef, Subquery, Window
 from django.db.models import Case, IntegerField, Value, When
-from django.db.models.functions import Rank
+from django.db.models.functions import Rank, RowNumber
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.template import loader
@@ -238,6 +238,7 @@ def make_ranker_data(tech_name):
         rank_point=F('tech_code_crazy') * F('lines_point'),
         midnight_rank=Subquery(Ranking.objects.filter(tech_name=OuterRef('tech_name'), github_id=OuterRef('github_id')).values('midnight_rank')),
         rank=Window(expression=Rank(), order_by=F('rank_point').desc()),
+        row_num=Window(expression=RowNumber(), order_by=F('rank_point').desc()),
     ).exclude(total_lines=0).order_by('rank')
 
     if now_tech_ranker:
@@ -307,7 +308,7 @@ def ranking_all(request):
         lines_point=Sum(Case(When(lines__gte=10000, then=Value(10)), default=F('lines')/1000+1, output_field=IntegerField())),
         rank_point=F('tech_code_crazy') * F('lines_point'),
     ).exclude(total_lines=0)
-
+    tech_table_joined = list(tech_table_joined)
     RANK_COUNT_TO_SHOW = 3
     rank_data = dict()
 
@@ -388,7 +389,7 @@ def find_user_page(request):
     exist = None
     for data in now_ranker_data:
         if data.get('github_id') == search_user:
-            search_user_rank = data.get('rank')
+            search_user_rank = data.get('row_num')
             search_user_page_number = search_user_rank//items_per_page + 1
             exist = True
             break
