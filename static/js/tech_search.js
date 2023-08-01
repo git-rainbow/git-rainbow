@@ -23,10 +23,12 @@ function search_tech(event) {
 }
 
 function alert_not_exist(event){
+    event.stopPropagation();
     alert(gettext('You do not have a commit about this tech'));
 }
 
-function find_ranking_user(event, github_id=null) {
+function find_ranking_user(event, github_id=null, tech_name=null) {
+    event.stopPropagation();
     if (event.type != "click" && !(event.keyCode && event.keyCode == 13)){
         return;
     }
@@ -40,7 +42,9 @@ function find_ranking_user(event, github_id=null) {
         return;
     }
 
-    let tech_name = document.querySelector("#tech_title").innerHTML;
+    if (!tech_name){
+        tech_name = document.querySelector("#tech_title").innerHTML;
+    }
 
     $.ajaxSetup({
         beforeSend: function (xhr, settings) {

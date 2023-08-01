@@ -35,7 +35,7 @@
         <h1 class="font-bold mb-3" style="font-size: 1rem;">{% trans "My Ranking" %}</h1>
         <div class="mt-2">
           {% for tech_data in top3_tech_data %}
-            <div class="flex mt-2 bg-white rounded-lg shadow-xs dark:bg-gray-800" style="justify-content: space-between; padding: 1%;">
+            <div onclick="find_ranking_user(event, '{{github_user.github_id}}', '{{tech_data.name}}')" class="flex mt-2 bg-white rounded-lg shadow-xs dark:bg-gray-800" style="justify-content: space-between; padding: 1%; cursor:pointer;">
               <div class="flex align-center">
                 <img style="width: 3.5rem; height: 3.5rem;" src="{% get_static_prefix %}img/{{ tech_data.file | replace_special_char }}.png" onerror="this.onerror=null; this.src='/static/img/none3.png';">
                 <span class="ml-4 font-bold" style="font-size: 1rem;">{{ tech_data.name }}</span>

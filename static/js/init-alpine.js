@@ -55,6 +55,7 @@ function data() {
     trapEmailCleanup: null,
     trapProjectCleanup: null,
     openModal() {
+      event.stopPropagation();
       this.isModalOpen = true
       this.trapCleanup = focusTrap(document.querySelector('#modal'))
     },
