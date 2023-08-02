@@ -1,4 +1,4 @@
-{% load static i18n %}
+{% load static custom_tags i18n %}
 <div class="flex mb-3" style="min-width:450px;align-content:flex-end;flex-wrap:wrap;">
   <div class="relative focus-within:text-purple-500"
        style="width: 95%; min-width: 110px; display: flex; margin: 0 auto; justify-content: center;">
@@ -18,3 +18,16 @@
     {% trans "Show total rank" %}
   </div>
 </div>
+<!-- Tech Card Group Start -->
+<div class="grid gap-4 mb-3 md:grid-cols-2 xl:grid-cols-3">
+  <!-- Card -->
+  {% for tech in github_calendar_colors %}
+    <div class="flex items-center ml-2 bg-white rounded-lg shadow-xs dark:bg-gray-800 mb-3 pointer tech_list" onclick="window.location.href='/ranking/{{ tech.tech_name|replace_special_char }}'"
+          style="width: 125px;height: 50px; {% if tech.tech_name == tech_name %} border: 2px solid {{ tech_color }} {% endif %}">
+      <img class="mr-8" style="width:45px;height:45px" src="{% get_static_prefix %}img/{{ tech.tech_name.lower|replace_special_char }}.png">
+      <p class="pl-2 py-2 text-xs">{{ tech.tech_name }}</p>
+    </div>
+  {% endfor %}
+</div>
+<!-- Tech Card Group End -->
+<script type="text/javascript" src="{% static "js/tech_search.js" %}"></script>

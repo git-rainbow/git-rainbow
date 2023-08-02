@@ -7,18 +7,6 @@
         <div style="min-width:450px">
           <!-- Search Tech -->
           {% include 'ranking_side.html' %}
-          <!-- Tech Card Group Start -->
-          <div class="grid gap-4 mb-3 md:grid-cols-2 xl:grid-cols-3">
-            <!-- Card -->
-            {% for tech, tech_rank_data in rank_data.items %}
-              <div class="flex items-center ml-2 bg-white rounded-lg shadow-xs dark:bg-gray-800 mb-3 pointer tech_list" onclick="window.location.href='/ranking/{{ tech|replace_special_char }}'"
-                   style="width: 125px;height: 50px;">
-                <img class="mr-8" style="width:45px;height:45px" src="{% get_static_prefix %}img/{{ tech.lower|replace_special_char }}.png">
-                <p class="pl-2 py-2 text-xs">{{ tech }}</p>
-              </div>
-            {% endfor %}
-          </div>
-          <!-- Tech Card Group End -->
         </div>
         <div style="width: 720px;">
           <!-- Selected Tech & Top3 Group Start -->
@@ -68,5 +56,4 @@
       </div>
     </div>
   </div>
-  <script type="text/javascript" src="{% static "js/tech_search.js" %}"></script>
 {% endblock %}
