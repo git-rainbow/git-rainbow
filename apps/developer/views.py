@@ -330,7 +330,7 @@ def ranking_all(request):
             else:
                 ranker['top_tech'] = json.loads(ranker['analysisdata'].replace("'", '"'))[0]['name']
 
-        rank_data[tech_name] = {'color': github_calendar_colors[tech['tech_name']], 'top3_data':top3_data}
+        rank_data[tech['tech_name']] = {'color': github_calendar_colors[tech['tech_name']], 'top3_data':top3_data}
 
     context = {
         'github_calendar_colors': sorted_github_calendar_colors,
