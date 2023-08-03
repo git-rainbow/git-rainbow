@@ -10,6 +10,7 @@ from apps.tech_stack.repo_list import repo_list
 from config.local_settings import CORE_URL
 from utils.github_calendar_colors import github_calendar_colors
 
+from apps.tech_stack.models import GithubRepo
 
 def make_tech_card_data(tech_stack_files):
     tech_name_list = tech_stack_files.exclude(tech_type__in = ['Data', 'Other']).distinct().values_list('tech_name', flat=True)
@@ -49,9 +50,23 @@ def make_calendar_data(tech_files):
     return calendar_data
 
 
-def core_repo_list(user_data):
-    user_data['repo_dict_list'] = json.dumps(repo_list(user_data['github_id'], user_data.get('ghp_token')))
+def core_repo_list(user_data, user_status):
+    repo_list_result = repo_list(user_data['github_id'], user_data.get('ghp_token'))
+    user_data['repo_dict_list'] = json.dumps(repo_list_result)
     core_url = CORE_URL + "/core/tech-stack"
     data = user_data
     response = requests.post(core_url, data=data).json()
+    if user_status != 'progress':
+        for repo in repo_list_result:
+            GithubRepo.objects.update_or_create(
+                github_id_id=user_data['github_id'],
+                repo_url=repo['repo_url'],
+                defaults={
+                    'branch': repo['main_branch'],
+                    'description': repo['description'],
+                    'added_type': 'Auto',
+                    'status': 'reachable',
+                    'is_private': repo['is_private']
+                }
+            )
     return response

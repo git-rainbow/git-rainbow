@@ -88,7 +88,9 @@ def repo_list(github_id, ghp_token=None):
                         {
                             'name_with_owner': private_repo['full_name'],
                             'main_branch': private_repo['default_branch'],
-                            'description': private_repo['description']
+                            'description': private_repo['description'],
+                            'is_private': True,
+                            'ghp_token': ghp_token
                         }
                 }
                 user_repo_list.update(repo_data)
@@ -114,11 +116,15 @@ def repo_list(github_id, ghp_token=None):
         name_with_owner = user_repo_dict["name_with_owner"]
         main_branch = user_repo_dict["main_branch"]
         description = user_repo_dict["description"]
+        is_private = user_repo_dict.get('is_private', False)
+        ghp_token = user_repo_dict.get('ghp_token')
         repo_author = {
             "name_with_owner": name_with_owner,
             "main_branch": main_branch,
             "description": description,
-            "repo_url": repo_url
+            "repo_url": repo_url,
+            "is_private": is_private,
+            'ghp_token': ghp_token
         }
         repo_dict_list.append(repo_author)
 

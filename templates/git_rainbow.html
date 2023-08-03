@@ -5,6 +5,7 @@
   {% include 'min_git_rainbow.html' %}
 </div>
 <script type="text/javascript" src="{% static "js/tech_search.js" %}"></script>
+<script type="text/javascript" src="{% static "js/tech_stack.js" %}"></script>
 <script>
     show_profile_calendar(JSON.parse('{{calendar_data|safe}}'));
     check_analysis_updating("{{github_user.github_id}}", "{{github_user.status}}");

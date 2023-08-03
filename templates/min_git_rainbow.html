@@ -74,17 +74,29 @@
   <div class="w-full mb-8 md:w-full scroll" style="max-width:1100px">
     <div style="display:flex; justify-content: space-between;">
       <span class="font-bold" style="padding-top:10px;font-size:20px; font-family: 'Noto Sans KR';float: left">{% trans "Tech Stack" %}<g class="ml-3" style="font-weight: normal; font-size: 15px;">{% trans "in the last year" %}</g></span>
-      <div id="update_btn" class="btn mt-2 mb-1" onmousemove="show_desc(event)" onmouseleave="show_desc(event)" style="display: flex;cursor: pointer; align-items: center; background-color: #d9d2e9;"
-        {% if not request.user.is_authenticated %}
-          onclick="go_to_login()"
-        {% elif request.user.github_id == github_user.github_id %}
-          @click="openModal"
-        {% else %}
-          onclick="analyze_developer('{{github_user.github_id}}', true)"
-        {% endif %}
-      >
-        <span class="font-semibold" style="color:#866CF3">{% trans "Update" %}</span>
-        <img id="update_btn_img" src="{% static 'img/update-arrows.svg' %}" alt="update" style="margin-left: 5px; padding: 2px; background-color: #866BF2; width: 18px; height:18px; border-radius: 50%; font-weight: bold; cursor: pointer;">
+      <div class="flex">
+        <div id="repository_add_btn" class="btn mt-2 mb-1" style="display: flex;cursor: pointer; align-items: center; background-color: #bae6f2;"
+          {% if not request.user.is_authenticated %}
+            onclick="go_to_login()"
+          {% elif request.user.github_id == github_user.github_id %}
+            @click="openModal"
+          {% else %}
+            onclick="alert(`{% trans 'You can use this service only if it is your own Github ID' %}`)"
+          {% endif %}
+          >
+            <span class="font-semibold" style="color:#4e4e4e">{% trans "Git repository" %}</span>
+            <img id="repository_add_img" src="{% static 'img/add.png' %}" alt="add" style="margin-left: 5px; padding: 2px; width: 18px; height:18px; font-weight: bold; cursor: pointer; opacity: 0.6">
+        </div>
+        <div id="update_btn" class="btn mt-2 mb-1 ml-2" onmousemove="show_desc(event)" onmouseleave="show_desc(event)" style="display: flex;cursor: pointer; align-items: center; background-color: #d9d2e9;"
+          {% if not request.user.is_authenticated %}
+            onclick="go_to_login()"
+          {% else %}
+            onclick="analyze_developer('{{github_user.github_id}}', true)"
+          {% endif %}
+        >
+          <span class="font-semibold" style="color:#866CF3">{% trans "Update" %}</span>
+          <img id="update_btn_img" src="{% static 'img/update-arrows.svg' %}" alt="update" style="margin-left: 5px; padding: 2px; background-color: #866BF2; width: 18px; height:18px; border-radius: 50%; font-weight: bold; cursor: pointer;">
+        </div>
       </div>
     </div>
     <div id="graph_box" class="flex-1 md:w-full w-full h-full overflow-hidden bg-white rounded-lg shadow-xs p-6">

@@ -14,7 +14,7 @@ from django.http import JsonResponse
 from django.template import loader
 from django.utils import timezone
 
-from apps.tech_stack.models import GithubUser, AnalysisData, GithubCalendar, Ranking
+from apps.tech_stack.models import GithubUser, AnalysisData, GithubCalendar, Ranking, GithubRepo
 from apps.tech_stack.utils import core_repo_list
 from utils.github_api.github_api import request_github_profile
 from utils.github_calendar.github_calendar import generate_github_calendar
@@ -125,6 +125,21 @@ def check_user_token(github_id, token):
         return {'status':'success'}
 
 
+def save_repo_url(request):
+    if request.method != 'POST':
+        return JsonResponse({"status": "fail", "reason": "Not allowed method"})
+
+    repo_url = request.POST.get("repo_url")
+    try:
+        res_code = requests.get(repo_url).status_code
+        if res_code == 200:
+            github_id = request.user.github_id
+            GithubRepo.objects.update_or_create(github_id_id=github_id, repo_url=repo_url, defaults={'added_type':'by_user'})
+    except Exception as e:
+        res_code = 404
+    return JsonResponse({"status": res_code})
+
+
 def update_git_rainbow(request):
     if request.method != 'POST':
         return JsonResponse({"status": "fail", 'reason': 'Not allowed method'})
@@ -137,13 +152,14 @@ def update_git_rainbow(request):
     user_data['update'] = bool(request.POST.get('update') == 'true')
     ghp_token = request.POST.get('ghp_token')
     user_data['ghp_token'] = ghp_token
+    user_status = github_user.status
 
     if ghp_token:
         check_user_token_result = check_user_token(github_id, ghp_token)
         if check_user_token_result.get('status') == 'fail':
             return JsonResponse(check_user_token_result)
 
-    core_response = core_repo_list(user_data)
+    core_response = core_repo_list(user_data, user_status)
     core_status = core_response['status']
     github_user.status = core_status
     github_user.save()

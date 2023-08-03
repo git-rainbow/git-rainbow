@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-01 10:36+0900\n"
+"POT-Creation-Date: 2023-08-03 10:26+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,87 +18,111 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: static/js/tech_search.js:26
+#: static/js/tech_search.js:27
 msgid "You do not have a commit about this tech"
 msgstr "이 기술에 대해 커밋이 없습니다"
 
-#: static/js/tech_search.js:40
+#: static/js/tech_search.js:41
 msgid "Please input user"
 msgstr "유저를 입력해주세요"
 
-#: static/js/tech_search.js:63
+#: static/js/tech_search.js:66
 msgid "does not exist in this tech ranking"
 msgstr "유저가 기술 랭킹에 존재하지 않습니다."
-
-#: static/js/tech_search.js:82
-msgid "does not exist in ranking"
-msgstr "유저가 랭킹에 존재하지 않습니다."
 
 #: static/js/tech_stack.js:9
 msgid "Please input your token"
 msgstr "토큰을 입력해주세요"
 
-#: static/js/tech_stack.js:65
+#: static/js/tech_stack.js:13
+msgid "It is not starts with \"ghp\""
+msgstr "\"ghp로 시작하지 않는 token입니다\""
+
+#: static/js/tech_stack.js:17
+msgid "Token length is invalid"
+msgstr "토큰의 길이가 부적합합니다."
+
+#: static/js/tech_stack.js:44
+msgid "Please input your public repository"
+msgstr "공개된 저장소를 입력해주세요"
+
+#: static/js/tech_stack.js:48
+msgid "Your repository did not start with \"https://\""
+msgstr "저장소가 \"https://\"로 시작하지 않습니다"
+
+#: static/js/tech_stack.js:52
+msgid "Your repository did not end with \".git\""
+msgstr "저장소가 \".git\"으로 끝나지 않습니다"
+
+#: static/js/tech_stack.js:71
+msgid "Your repository url has been saved"
+msgstr "저장소가 저장되었습니다"
+
+#: static/js/tech_stack.js:73
+msgid "Invalid URL"
+msgstr "유효하지않은 URL입니다."
+
+#: static/js/tech_stack.js:112
 msgid "error occured"
 msgstr "에러가 발생했습니다."
 
-#: static/js/tech_stack.js:73
+#: static/js/tech_stack.js:120
 msgid "Analysis failed"
 msgstr "분석이 실패했습니다."
 
-#: static/js/tech_stack.js:109
+#: static/js/tech_stack.js:156
 msgid "Please check Github ID"
 msgstr "Github ID를 체크해주세요"
 
-#: static/js/tech_stack.js:122
+#: static/js/tech_stack.js:169
 msgid "Please input personal GitHub ID"
 msgstr "유저를 입력해주세요"
 
-#: static/js/tech_stack.js:125
+#: static/js/tech_stack.js:172
 msgid "Please check your GitHub ID"
 msgstr "Github ID를 확인해주세요"
 
-#: static/js/tech_stack.js:151
+#: static/js/tech_stack.js:198
 msgid "Copied!"
 msgstr "복사되었습니다!"
 
-#: static/js/tech_stack.js:224
+#: static/js/tech_stack.js:271
 msgid "This service is login required. \n Will you login?"
 msgstr "이 서비스는 로그인이 필요합니다. \n 로그인 하시겠습니까?"
 
-#: static/js/tech_stack.js:241
+#: static/js/tech_stack.js:288
 msgid "How much crazy about coding in the last year (%)"
 msgstr "최근 1년간 코딩에 미쳐있는 정도 (%)"
 
-#: static/js/tech_stack.js:242
+#: static/js/tech_stack.js:289
 msgid "Github profile page"
 msgstr "GitHub 프로필 페이지"
 
-#: static/js/tech_stack.js:243
+#: static/js/tech_stack.js:290
 msgid "Copy embeding link for README or Notion"
 msgstr "README 또는 Notion 등에 임베딩 링크 복사"
 
-#: static/js/tech_stack.js:244
+#: static/js/tech_stack.js:291
 msgid "Update current work"
 msgstr "최근작업 업데이트 하기"
 
-#: static/js/tech_stack.js:245
+#: static/js/tech_stack.js:292
 #, javascript-format
 msgid "Ranking of developers actively coded over the past year<br>(Code Crazy % X Code Lines)"
 msgstr "최근 1년 동안 활발하게 코딩한 개발자 순위<br> (Code Crazy % X Code Lines)"
 
-#: static/js/tech_stack.js:246
+#: static/js/tech_stack.js:293
 msgid "How much crazy about coding this tech in the last year<br>(100 days: 100%, 365 days: 365%)"
 msgstr "최근 1년간 해당 기술 코딩에 미쳐있는 정도<br>(예: 100일: 100%, 365일: 365%)"
 
-#: static/js/tech_stack.js:247
+#: static/js/tech_stack.js:294
 msgid "lines of coding about corresponding tech in the last year"
 msgstr "최근 1년간 해당 기술 코딩 라인 수 "
 
-#: static/js/tech_stack.js:248
+#: static/js/tech_stack.js:295
 msgid "Main technology for this GitHub user"
 msgstr "해당 GitHub 유저의 메인 기술 (주요 기술)"
 
-#: static/js/tech_stack.js:249
+#: static/js/tech_stack.js:296
 msgid "It is automatically updated every 1 day of the month"
 msgstr "매주 월요일 마다 전체 순위를 갱신합니다."

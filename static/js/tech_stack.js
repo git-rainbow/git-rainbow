@@ -9,6 +9,14 @@ function analyze_developer(github_id, update, is_with_token) {
             alert(gettext('Please input your token'));
             return;
         }
+        if (!token.startsWith('ghp')){
+            alert(gettext('It is not starts with "ghp"'));
+            return;
+        }
+        if (token.length != 40){
+            alert(gettext('Token length is invalid'));
+            return;
+        }
         data['ghp_token'] = token;
     }
     let close_btn = document.querySelector("#close_btn");
@@ -27,6 +35,45 @@ function analyze_developer(github_id, update, is_with_token) {
             }
         }
     }, 3000);
+}
+
+
+function save_public_repo(){
+    let repo_url = document.querySelector("#public_repo_input").value;
+    if (repo_url == ''){
+        alert(gettext('Please input your public repository'));
+        return;
+    }
+    if (!repo_url.startsWith("https://")){
+        alert(gettext('Your repository did not start with "https://"'));
+        return;
+    }
+    if (!repo_url.endsWith(".git")){
+        alert(gettext('Your repository did not end with ".git"'));
+        return;
+    }
+
+    $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+
+    $.ajax({
+        url: '/save-repo-url'
+        ,method: 'POST'
+        ,async: false
+        ,data: {'repo_url': repo_url}
+        ,success: function (data) {
+            if (data.status == 200) {
+                alert(gettext("Your repository url has been saved"));
+            } else {
+                alert(gettext("Invalid URL"));
+            }
+        }
+    });
 }
 
 function _analyze_developer(data) {

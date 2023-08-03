@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load i18n custom_tags %}
 <div
   x-show="isModalOpen"
   x-transition:enter="transition ease-out duration-150"
@@ -20,9 +20,10 @@
     x-transition:leave-end="opacity-0  transform translate-y-1/2"
     @click.away="closeModal"
     @keydown.escape="closeModal"
-    class="w-full px-6 py-4 overflow-hidden bg-white rounded-t-lg dark:bg-gray-800 sm:rounded-lg sm:m-4 sm:max-w-xl"
+    class="px-6 py-4 overflow-hidden bg-white rounded-t-lg dark:bg-gray-800 sm:rounded-lg sm:m-4"
     role="dialog"
     id="modal"
+    style="width: 860px;"
   >
     <!-- Remove header if you don't want a close icon. Use modal body to place modal tile. -->
     <header class="flex justify-end">
@@ -50,59 +51,65 @@
     <!-- Modal body -->
     <div class="mt-4 mb-6">
       <!-- Modal title -->
-      <p
-        class="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-300"
-      >
-        {% trans "GitHub Analysis with your private repositories" %}
+      <p class="mb-2 text-2xl font-semibold text-gray-700 dark:text-gray-300">
+        {% trans "Git repositories" %}
       </p>
-      <!-- Modal description -->
-      <div style="margin-bottom: 12px;">
-        <p class="text-sm text-gray-700 dark:text-gray-400">
-          Github personal access token
-        </p>
-          <a href="https://github.com/settings/tokens" class="text-sm text-gray-700 dark:text-gray-400">
-            https://github.com/settings/tokens
-          </a>
-        </p>
-      </div>
-      <div style="margin-bottom: 12px;">
-        <p class="text-sm text-gray-700 dark:text-gray-400">
-          {% trans "Or, enter New personal access token" %}
-        </p>
-        <p>
-          <a href="https://github.com/settings/tokens/new" class="text-sm text-gray-700 dark:text-gray-400">
-            https://github.com/settings/tokens/new
-          </a>
-        </p>
-      </div>
+      <p class="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-300">
+        {% trans "Using token" %}
+      </p>
+      <hr style="margin-bottom: 15px; width: 83%;">
       <div>
-        <input id="token_input" type="text" placeholder={% blocktrans %}"Enter Github personal access token"{% endblocktrans %} style="width: 100%; height: 70px; padding: 10px; border-width:1px;"/>
+        <input id="token_input" type="text" placeholder={% blocktrans %}"Enter Github personal access token"{% endblocktrans %} style="width: 83%; height: 70px; padding: 10px; border-width: 1px;"/>
+        <button onclick="analyze_developer('{{github_user.github_id}}', true, true)" class="ml-1 p-2 font-medium leading-5 text-center transition-colors duration-150 border border-transparent" style="background-color: #A4C2F4;border-radius: 10px; height: 70px; width:125px;">
+          {% trans "Add repository" %}
+        </button>
+        <div><span class="text-xs text-red-600 dark:text-red-400"></span></div>
+      </div>
+      <br>
+      <p class="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-300">
+        {% trans "Public" %}
+      </p>
+      <hr style="margin-bottom: 15px; width: 83%;">
+      <div>
+        <input id="public_repo_input" type="text" placeholder={% blocktrans %}"Git Repository URL"{% endblocktrans %} style="width: 83%; height: 70px; padding: 10px; border-width:1px;"/>
+        <button onclick="save_public_repo()" class="ml-1 p-2 font-medium leading-5 text-center transition-colors duration-150 border border-transparent" style="background-color: #fd9bad;border-radius: 10px; height: 70px; width:125px; ">
+          {% trans "Add" %}
+        </button>
+      </div>
+      <br>
+      <p class="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-300">
+        {% trans "All repositories" %}
+      </p>
+      <hr style="margin-bottom: 15px; width: 83%;">
+      <div class="w-full mb-8 overflow-hidden rounded-lg shadow-xs">
+        <div style="height: 250px;" class="w-full overflow-x-auto">
+          <table class="w-full whitespace-no-wrap">
+            <thead>
+                <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                  <th class="px-1 py-2">No.</th>
+                  <th class="px-1 py-2">{% trans "Git project name" %}</th>
+                  <th class="px-1 py-2">{% trans "Git repository URL" %}</th>
+                  <th class="px-1 py-2">{% trans "Type" %}</th>
+                  <th class="px-1 py-2">{% trans "Status" %}</th>
+                  <th class="px-1 py-2">{% trans "Is private" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+              {% for repo in github_user.githubrepo_set.all %}
+                <tr class="text-gray-700 dark:text-gray-400">
+                  <td class="px-1 py-2">{{forloop.counter}}</td>
+                  <td class="px-1 py-2">{{repo.repo_url|get_repo_name}}</td>
+                  <td class="px-1 py-2"><a href="{{repo.repo_url}}">{{repo.repo_url}}</a></td>
+                  <td class="px-1 py-2">{{repo.added_type}}</td>
+                  <td class="px-1 py-2">{{repo.status}}</td>
+                  <td class="px-1 py-2">{{repo.is_private}}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
-    <footer
-      class="flex flex-col items-center justify-end px-6 py-3 -mx-6 -mb-4 space-y-4 sm:space-y-0 sm:space-x-6 sm:flex-row bg-gray-50 dark:bg-gray-800"
-    >
-    
-      <button
-        onclick="analyze_developer('{{github_user.github_id}}', true, true)"
-        class="w-full px-3 py-3 text-sm font-medium leading-5 text-gray-700 transition-colors duration-150 border border-gray-300 rounded-lg dark:text-gray-400 sm:px-4 sm:py-2 sm:w-auto active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 transition-colors"
-        style="background-color: #81fbb6;"
-      >
-        {% trans "Update with token" %}
-      </button>
-      <button
-        onclick="analyze_developer('{{github_user.github_id}}', true)"
-        class="w-full px-3 py-3 text-sm font-medium leading-5 text-gray-700 transition-colors duration-150 border border-gray-300 rounded-lg dark:text-gray-400 sm:px-4 sm:py-2 sm:w-auto active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 transition-colors"
-        style="background-color: #A4C2F4;"
-      >
-        {% trans "Update" %}
-      </button>
-      <button @click="closeModal"
-        class="w-full px-3 py-3 text-sm font-medium leading-5 transition-colors duration-150 border border-transparent rounded-lg sm:w-auto sm:px-4 sm:py-2"
-      >
-        {% trans "Cancel" %}
-      </button>
-    </footer>
   </div>
 </div>
 <!-- End of modal backdrop -->
