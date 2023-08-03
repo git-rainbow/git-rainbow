@@ -63,9 +63,6 @@
           <div onclick={% if login_user %}"window.open('/{{login_user.github_id}}', '_blank')"{% else %}"go_to_login()"{% endif %} style="cursor: pointer;">
             <div class="flex py-2 bg-white rounded-lg shadow-xs dark:bg-gray-800" style="height: 257px;width: 180px;align-items: center;flex-direction: column;">
               {% if login_user and login_user_rank %}
-                <div style="position: absolute;">
-                  <img id="update_btn_img" @click="openModal" src="{% static 'img/update-arrows.svg' %}" alt="update" style="padding: 2px; background-color: #866BF2; width: 18px; height:18px; position: relative; top: -5px; left: 75px; border-radius: 50%; font-weight: bold; cursor: pointer;">
-                </div>
                 <p class="mx-auto mb-2 font-semibold ranking-ellipsis" style="font-size:15px">Rank {{ login_user_rank }}</p>
                 <img class="mt-2 object-cover w-full h-full rounded-full" src="{{ login_user.avatar_url }}" style="width:64px;height:64px">
                 <p class="mx-auto mb-3 font-semibold ranking-ellipsis" style="font-size:15px">{{ login_user.github_id }}</p>
@@ -83,9 +80,6 @@
                   {% trans "More" %}
                 </button>
               {% elif login_user and not login_user_rank %}
-                <div style="position: absolute;">
-                  <img id="update_btn_img" @click="openModal" src="{% static 'img/update-arrows.svg' %}" alt="update" style="padding: 2px; background-color: #866BF2; width: 18px; height:18px; position: relative; top: -5px; left: 75px; border-radius: 50%; font-weight: bold; cursor: pointer;">
-                </div>
                 <p class="mx-auto font-semibold ranking-ellipsis" style="margin-bottom: 1.3rem;"></p>
                 <img class="mt-2 mb-2 object-cover w-full h-full rounded-full" src="{{ login_user.avatar_url }}" style="width:64px;height:64px">
                 <p class="mx-auto font-semibold ranking-ellipsis" style="font-size:15px"><a href="/{{ login_user.github_id }}" target="_blank">{{ login_user.github_id }}</a></p>
