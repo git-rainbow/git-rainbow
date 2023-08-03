@@ -38,9 +38,9 @@
               </div>
               <img class="object-cover w-full h-full rounded-full mt-1" src="{{ top3.avatar_url }}" style="width:64px;height:64px">
               <p class="mx-auto mt-2 mb-3 font-semibold ranking-ellipsis" style="font-size:15px">{{ top3.github_id }}</p>
-              <button type="button" class="btn btn-danger font-semibold mt-2 mb-1"
+              <button type="button" class="btn btn-danger font-semibold mt-2 mb-1" title="{{ top3.tech_code_crazy }}%"
                 style="color:rgb(200,30,30);background-color:rgb(253,232,232);border-color:rgb(253,232,232); font-size: 70%; padding: 2%; width: 70%;">
-                {% trans "Code Crazy" %} <span class="badge badge-danger" style="font-size:100%;margin-left:4px; top: 1px;">{{ top3.tech_code_crazy }}%</span>
+                {% trans "Code Crazy" %} <span class="badge badge-danger" style="font-size:100%;margin-left:4px; top: 1px;">{{ top3.int_code_crazy }}%</span>
               </button>
               <div class="rounded-full mt-2 mb-1" style="background-color:lightgray; width: 70%;">
                 <div
@@ -69,9 +69,9 @@
                 <p class="mx-auto mb-2 font-semibold ranking-ellipsis" style="font-size:15px">Rank {{ login_user_rank }}</p>
                 <img class="mt-2 object-cover w-full h-full rounded-full" src="{{ login_user.avatar_url }}" style="width:64px;height:64px">
                 <p class="mx-auto mb-3 font-semibold ranking-ellipsis" style="font-size:15px">{{ login_user.github_id }}</p>
-                <button type="button" class="btn btn-danger font-semibold mt-2 mb-1"
+                <button type="button" class="btn btn-danger font-semibold mt-2 mb-1" title="{{ login_user_data.tech_code_crazy }}%"
                         style="color:rgb(200,30,30);background-color:rgb(253,232,232);border-color:rgb(253,232,232); font-size: 70%; padding: 2%; width: 70%;">
-                  {% trans "Code Crazy" %} <span class="badge badge-danger" style="font-size:100%;margin-left:4px; top: 0.5px;">{{ login_user_data.tech_code_crazy }}%</span>
+                  {% trans "Code Crazy" %} <span class="badge badge-danger" style="font-size:100%;margin-left:4px; top: 0.5px;">{{ login_user_data.int_code_crazy }}%</span>
                 </button>
                 <div class="rounded-full mt-2 mb-1" style="background-color:lightgray; width: 70%;">
                   <div
@@ -201,9 +201,9 @@
                         </div>
                       </td>
                       <td class="text-sm text-center" style="border:none!important">
-                        <span
+                        <span title="{{ ranker.tech_code_crazy }}%"
                           class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
-                          {{ ranker.tech_code_crazy }}%
+                          {{ ranker.int_code_crazy }}%
                         </span>
                       </td>
                       <td style="border:none!important">

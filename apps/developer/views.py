@@ -6,7 +6,7 @@ import requests
 
 from dateutil.relativedelta import relativedelta
 from django.core.paginator import Paginator
-from django.db.models import Sum, F, Count, Max, Avg, OuterRef, Subquery, Window
+from django.db.models import Sum, F, Count, Max, Avg, OuterRef, Subquery, Window, FloatField, ExpressionWrapper
 from django.db.models import Case, IntegerField, Value, When
 from django.db.models.functions import Rank, RowNumber
 from django.shortcuts import render, redirect
@@ -219,26 +219,20 @@ def git_rainbow_svg(request, github_id):
 def make_ranker_data(tech_name):
     today = timezone.now()
     year_ago = (today - relativedelta(years=1)).replace(hour=0, minute=0, second=0)
-
     now_tech_ranker = GithubCalendar.objects.filter(tech_name__iexact=tech_name, author_date__range=[year_ago, today]).values('github_id').annotate(
-        tech_code_crazy=Count('github_id'),
         total_lines=Sum('lines'),
-        # For ranking, max lines is limited to 10,000 lines on one tech per a day
-        #
-        # Coding lines point:
-        #       1 ~   999 lines:  1 point
-        #    1000 ~  1999 lines:  2 point
-        #    2000 ~  2999 lines:  3 point
-        #    ...
-        #    8999 ~ 10000 lines: 10 point
-        lines_point=Sum(Case(When(lines__gte=10000, then=Value(10)), default=F('lines')/1000+1, output_field=IntegerField())),
+        tech_code_crazy=Sum(Case(
+                When(lines__range=[300, 1000], then=(3+0.001*(F('lines')-300))),
+                When(lines__gt=1000, then=Value(3.7)),
+                default=F('lines')*0.01,
+                output_field=FloatField()
+        )),
+        int_code_crazy=ExpressionWrapper(F('tech_code_crazy'), output_field=IntegerField()),
         avatar_url=F('github_id__avatar_url'),
         analysisdata=F('github_id__analysisdata__tech_card_data'),
-        # Ranking in order of Crazy (days/365 %) x Coding lines point
-        rank_point=F('tech_code_crazy') * F('lines_point'),
         midnight_rank=Subquery(Ranking.objects.filter(tech_name=OuterRef('tech_name'), github_id=OuterRef('github_id')).values('midnight_rank')),
-        rank=Window(expression=Rank(), order_by=F('rank_point').desc()),
-        row_num=Window(expression=RowNumber(), order_by=F('rank_point').desc()),
+        rank=Window(expression=Rank(), order_by=F('tech_code_crazy').desc()),
+        row_num=Window(expression=RowNumber(), order_by=F('tech_code_crazy').desc()),
     ).exclude(total_lines=0).order_by('rank')
 
     if now_tech_ranker:
@@ -299,23 +293,31 @@ def ranking_all(request):
     year_ago = (today - relativedelta(years=1)).replace(hour=0, minute=0, second=0)
     tech_with_developer_count = GithubCalendar.objects.filter(tech_name__in=github_calendar_colors.keys()).values('tech_name').annotate(developer_count=Count('github_id', distinct=True))
     sorted_github_calendar_colors = sorted(tech_with_developer_count, key=lambda x: x['developer_count'], reverse=True)
-    tech_table_joined = GithubCalendar.objects.filter(author_date__range=[year_ago, today]).values('github_id').annotate(
-        tech_code_crazy=Count('github_id'),
+    tech_table_joined = list(GithubCalendar.objects.filter(author_date__range=[year_ago, today]).values('github_id').annotate(
         tech_name=F('tech_name'),
         total_lines=Sum('lines'),
+        tech_code_crazy=Sum(Case(
+            When(lines__range=[300, 1000], then=(3 + 0.001 * (F('lines') - 300))),
+            When(lines__gt=1000, then=Value(3.7)),
+            default=F('lines') * 0.01,
+            output_field=FloatField()
+        )),
+        int_code_crazy=ExpressionWrapper(F('tech_code_crazy'), output_field=IntegerField()),
         avatar_url=F('github_id__avatar_url'),
         analysisdata=F('github_id__analysisdata__tech_card_data'),
-        lines_point=Sum(Case(When(lines__gte=10000, then=Value(10)), default=F('lines')/1000+1, output_field=IntegerField())),
-        rank_point=F('tech_code_crazy') * F('lines_point'),
-    ).exclude(total_lines=0)
-    tech_table_joined = list(tech_table_joined)
+        midnight_rank=Subquery(
+            Ranking.objects.filter(tech_name=OuterRef('tech_name'), github_id=OuterRef('github_id')).values(
+                'midnight_rank')),
+        rank=Window(expression=Rank(), order_by=F('tech_code_crazy').desc()),
+        row_num=Window(expression=RowNumber(), order_by=F('tech_code_crazy').desc()),
+    ).exclude(total_lines=0))
     RANK_COUNT_TO_SHOW = 3
     rank_data = dict()
 
     for tech in sorted_github_calendar_colors:
         tech_name = tech['tech_name'].lower()
         tech_rank_data = [i for i in tech_table_joined if i['tech_name'].lower() == tech_name]
-        tech_rank_data.sort(key=lambda x: x['rank_point'], reverse=True)
+        tech_rank_data.sort(key=lambda x: x['tech_code_crazy'], reverse=True)
         top3_data = tech_rank_data[0:RANK_COUNT_TO_SHOW]
         user_avg_lines = sum(i['total_lines'] for i in top3_data)/RANK_COUNT_TO_SHOW
         for ranker in top3_data:
