@@ -10,7 +10,7 @@
           <div class="mt-3">
             <button type="button" class="btn btn-danger font-semibold mb-1" id="code_crazy_btn" onmousemove="show_desc(event)" onmouseleave="show_desc(event)"
               style="color:rgb(200,30,30);background-color:rgb(253,232,232);border-color:rgb(253,232,232); width:185px;">
-              {% trans "Code Crazy" %} <span class="badge badge-danger" style="font-size:90%;margin-left:4px;">{{ days }}%</span>
+              {% trans "Code Crazy" %} <span class="badge badge-danger" title="{{ code_crazy }}%" style="font-size:90%;margin-left:4px;">{{ int_code_crazy }}%</span>
             </button>
             <div id="svg_link" onmousemove="show_desc(event)" onmouseleave="show_desc(event)" onclick=
               {% if not request.user.is_authenticated %}"go_to_login()"{% else %}"copy_svg_url('{{github_user.github_id}}')"{% endif %}class="flex justify-center bg-green-100 font-semibold btn" style="width:185px;">

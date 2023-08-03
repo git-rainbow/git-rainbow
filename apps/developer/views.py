@@ -46,6 +46,28 @@ def update_or_create_github_user(github_id, ghp_token=None):
     return {'status': 'success', 'github_user': github_user}
 
 
+def make_user_code_crazy(github_id):
+    code_crazy = 0
+    LOW_LIMIT = 300
+    HIGH_LIMIT = 1000
+    LOW_MULTIPLIER = 0.01
+    HIGH_MULTIPLIER = 0.001
+    BASIC_POINTS = 3
+    MAX_POINTS = 3.7
+    user_commit_data = GithubCalendar.objects.filter(github_id_id=github_id).values('author_date').annotate(total_lines=Sum('lines'))
+    for day_data in user_commit_data:
+        total_lines = day_data['total_lines']
+        if total_lines <= LOW_LIMIT:
+            code_crazy += total_lines * LOW_MULTIPLIER
+        elif LOW_LIMIT < total_lines < HIGH_LIMIT:
+            code_crazy += BASIC_POINTS + HIGH_MULTIPLIER * (total_lines - LOW_LIMIT)
+        else:
+            code_crazy += MAX_POINTS
+    code_crazy = round(code_crazy, 3)
+    int_code_crazy = int(code_crazy)
+    return code_crazy, int_code_crazy
+
+
 def git_rainbow(request, github_id):
     error_code = 400
     is_github_id_valid = check_github_id(github_id)
@@ -78,8 +100,11 @@ def git_rainbow(request, github_id):
                 tech_data['rank_percent'] = round(rank_data['rank']/tech_data['ranker_num']*100, 1)
                 top3_tech_data.append(tech_data)
                 break
+
+    code_crazy, int_code_crazy = make_user_code_crazy(github_user.github_id)
+
     context = {'github_user': github_user, 'tech_card_data': tech_card_data, 'calendar_data': calendar_data,
-               'top3_tech_data': top3_tech_data, 'days': len(json.loads(calendar_data).keys())}
+               'top3_tech_data': top3_tech_data, 'int_code_crazy': int_code_crazy, 'code_crazy': code_crazy}
     last_day = github_user.githubcalendar_set.aggregate(last_day=Max('author_date'))['last_day']
     if last_day:
         last_day_commits_data = github_user.githubcalendar_set.filter(author_date=last_day)
@@ -149,11 +174,15 @@ def update_git_rainbow(request):
                 tech_data['rank_percent'] = round(rank_data['rank'] / tech_data['ranker_num'] * 100, 1)
                 top3_tech_data.append(tech_data)
                 break
+
+    code_crazy, int_code_crazy = make_user_code_crazy(github_user.github_id)
+
     context = {
         'top3_tech_data': top3_tech_data,
         'github_user': github_user,
         'tech_card_data': tech_card_data,
-        'days':len(calendar_data.keys()),
+        'code_crazy': code_crazy,
+        'int_code_crazy': int_code_crazy
     }
     json_data = {
         'status': core_status,
@@ -397,7 +426,7 @@ def ranking_tech_stack(request, tech_name):
 
 def find_user_page(request):
     if request.method != 'POST':
-        return render(request, 'exception_page.html', {'error': 403, 'message': 'Not allowed method'})   
+        return render(request, 'exception_page.html', {'error': 403, 'message': 'Not allowed method'})
 
     tech_name, search_user = request.POST.values()
     if not GithubCalendar.objects.filter(tech_name__iexact=tech_name, github_id=search_user).exists():
