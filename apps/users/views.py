@@ -2,7 +2,7 @@ import requests
 from django.shortcuts import render, redirect
 from django.contrib import auth
 from django.contrib.auth.hashers import make_password
-from config.local_settings import GH_ID, GH_SECRET, GH_AUTHORIZE_URL, GH_OATH_API_URL
+from config.local_settings import GH_ID, GH_SECRET, GH_AUTHORIZE_URL, GH_OATH_API_URL, GH_REDIRECT_URL
 
 from .models import User
 from apps.tech_stack.models import GithubUser
@@ -10,7 +10,15 @@ from apps.tech_stack.utils import core_repo_list
 
 
 def github_login(request):
-    return redirect(GH_AUTHORIZE_URL)
+    next = ''
+    for k, v in request.GET.items():
+        if next == '':
+            next += f'{k}={v}?'
+        else:
+            next += f'{k}={v}|'
+
+    add_next_location = GH_AUTHORIZE_URL.replace(GH_REDIRECT_URL, f'{GH_REDIRECT_URL}?{next[:-1]}')
+    return redirect(add_next_location)
 
 
 def github_callback(request):
@@ -63,7 +71,8 @@ def github_callback(request):
         github_user.status = 'requested'
         github_user.save()
         core_repo_list({"github_id": github_id, "after": "", "tech_stack": True})
-    return redirect(f'/{github_id}')
+    next = request.GET.get('next').replace('|', '&')
+    return redirect(f'{next}')
 
 
 def logout(request):

@@ -270,7 +270,10 @@ function admin_tech_list_manage(action){
 function go_to_login() {
     let confirmed = confirm(gettext('This service is login required. \n Will you login?'));
     if (confirmed){
-        location.href = '/login/github';
+        let now_path = window.location.pathname;
+        let query_str = (window.location.search).slice(1);
+        let next_location = `?next=${now_path}&${query_str}`;
+        location.href = '/login/github'+next_location;
     }
 }
 
