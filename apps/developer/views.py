@@ -84,7 +84,7 @@ def git_rainbow(request, github_id):
 
     if not analysis_data:
         user_data = {"github_id": github_id, "tech_stack": True}
-        core_response = core_repo_list(user_data)
+        core_response = core_repo_list(user_data, github_user.status)
         github_user.status = core_response['status']
         github_user.save()
         return render(request, 'loading.html', {'github_id': github_id})
@@ -232,7 +232,7 @@ def git_rainbow_svg(request, github_id):
         calendar_data = json.loads(analysis_data.git_calendar_data.replace("'", '"'))
     else:
         user_data = {"github_id": github_id, "tech_stack": True}
-        core_response = core_repo_list(user_data)
+        core_response = core_repo_list(user_data, github_user.status)
         github_user.status = core_response['status']
         github_user.save()
         tech_card_data = core_response.get('tech_card_data')
