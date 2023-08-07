@@ -57,9 +57,6 @@
             <!-- Top1 End -->
 
             <!-- My Ranking Start -->
-          {% with login_user as github_user %}
-            {% include 'token_modals.html' %}
-          {% endwith %}
           <div onclick={% if login_user %}"window.open('/{{login_user.github_id}}', '_blank')"{% else %}"go_to_login()"{% endif %} style="cursor: pointer;">
             <div class="flex py-2 bg-white rounded-lg shadow-xs dark:bg-gray-800" style="height: 257px;width: 180px;align-items: center;flex-direction: column;">
               {% if login_user and login_user_rank %}
