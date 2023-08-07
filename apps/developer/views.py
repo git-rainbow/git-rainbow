@@ -82,7 +82,7 @@ def git_rainbow(request, github_id):
             return render(request, 'exception_page.html', {'error': error_code, 'message': user_result.get('reason')})
         github_user = user_result['github_user']
 
-    user_data = {"github_id": github_id, "tech_stack": True, "update": True}
+    user_data = {"github_id": github_id, "tech_stack": True, "action": "update"}
     core_response = core_repo_list(user_data, github_user.status)
     github_user.status = core_response['status']
     github_user.save()
@@ -149,7 +149,7 @@ def update_git_rainbow(request):
 
     github_id = github_user.github_id
     user_data = {"github_id": github_id, "tech_stack": True}
-    user_data['update'] = bool(request.POST.get('update') == 'true')
+    user_data['action'] = request.POST.get('action')
     ghp_token = request.POST.get('ghp_token')
     user_data['ghp_token'] = ghp_token
     user_status = github_user.status

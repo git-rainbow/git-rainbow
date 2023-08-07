@@ -1,7 +1,7 @@
-function analyze_developer(github_id, update, is_with_token) {
+function analyze_developer(github_id, action, is_with_token) {
     let data = {
         'github_id': github_id,
-        'update': update
+        'action': action
     }
     if (is_with_token){
         let token = document.querySelector("#token_input").value;
@@ -119,7 +119,7 @@ function check_analysis_updating(github_id, status){
     if(status == 'fail') {
         alert(gettext("Analysis failed"));
     } else if (status == 'progress') {
-        analyze_developer(github_id);
+        analyze_developer(github_id, 'update');
     } 
 }
 

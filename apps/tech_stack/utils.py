@@ -51,7 +51,7 @@ def make_calendar_data(tech_files):
 
 
 def core_repo_list(user_data, user_status):
-    repo_list_result = repo_list(user_data['github_id'], user_data.get('ghp_token'))
+    repo_list_result = repo_list(user_data['github_id'], user_data['action'], user_data.get('ghp_token'))
     user_data['repo_dict_list'] = json.dumps(repo_list_result)
     core_url = CORE_URL + "/core/tech-stack"
     data = user_data

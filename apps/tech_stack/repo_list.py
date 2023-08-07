@@ -66,7 +66,7 @@ def get_repo_list(variables, token):
         raise
 
 
-def repo_list(github_id, ghp_token=None):
+def repo_list(github_id, action, ghp_token=None):
     today = datetime.today()
     gql_today = today.isoformat()
     from_year_ago = today - relativedelta(years=1)
@@ -124,7 +124,8 @@ def repo_list(github_id, ghp_token=None):
             "description": description,
             "repo_url": repo_url,
             "is_private": is_private,
-            'ghp_token': ghp_token
+            'ghp_token': ghp_token,
+            "action": action,
         }
         repo_dict_list.append(repo_author)
 

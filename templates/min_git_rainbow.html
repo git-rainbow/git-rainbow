@@ -91,7 +91,7 @@
           {% if not request.user.is_authenticated %}
             onclick="go_to_login()"
           {% else %}
-            onclick="analyze_developer('{{github_user.github_id}}', true)"
+            onclick="analyze_developer('{{github_user.github_id}}', 'reset')"
           {% endif %}
         >
           <span class="font-semibold" style="color:#866CF3">{% trans "Update" %}</span>
