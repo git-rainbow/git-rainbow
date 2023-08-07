@@ -77,4 +77,11 @@ def github_callback(request):
 
 def logout(request):
     auth.logout(request)
-    return redirect('/')
+    next = ''
+    for k, v in request.GET.items():
+        if next == '':
+            next += f'{v}?'
+        else:
+            next += f'{k}={v}&'
+
+    return redirect(next[:-1])

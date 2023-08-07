@@ -7,7 +7,7 @@
         <span style="font-weight: 600;">{{login_user.github_id}}</span>
       </div>
     {% endwith %}
-    <a class="nav-link scrollto" style="color: #013289; font-weight: 700;" href="/logout">{% trans "Logout" %}</a>
+    <a class="nav-link scrollto" style="color: #013289; font-weight: 700;" href="/logout?next={{ request.path }}&{{ request.META.QUERY_STRING }}">{% trans "Logout" %}</a>
   </div>
 {% else %}
   <a href="/login/github?next={{ request.path }}&{{ request.META.QUERY_STRING }}" class="nav-link scrollto" style="color: #013289; font-weight: 700;">{% trans "Sign in with Github" %}</a>
