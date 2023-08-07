@@ -49,3 +49,10 @@ class Ranking(models.Model):
     tech_name = models.CharField(max_length=50)
     midnight_rank = models.IntegerField()
     updated_date = models.DateTimeField(auto_now=True)
+
+
+class TechStack(models.Model):
+    tech_name = models.CharField(max_length=50)
+    tech_type = models.CharField(max_length=50)
+    tech_color = models.CharField(max_length=50)
+    developer_count = models.IntegerField()
