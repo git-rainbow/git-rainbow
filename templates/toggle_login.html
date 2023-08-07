@@ -2,7 +2,7 @@
 {% if request.user.is_authenticated %}
   <div style="display:flex;">
     {% with request.user.githubuser_set.first as login_user %}
-      <div style="margin-right: 30px; display: flex; align-items:center; text-align: center; justify-content: center;">
+      <div onclick="window.open('/Taeung', '_blank')" style="margin-right: 30px; display: flex; align-items:center; text-align: center; justify-content: center;cursor: pointer;">
         <img src="{{login_user.avatar_url}}" alt="avatar" style="width:20px; height:20px; margin-right: 5px; margin-top: 3px;">
         <span style="font-weight: 600;">{{login_user.github_id}}</span>
       </div>
