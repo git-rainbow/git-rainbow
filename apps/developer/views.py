@@ -6,7 +6,7 @@ import requests
 
 from dateutil.relativedelta import relativedelta
 from django.core.paginator import Paginator
-from django.db.models import Sum, F, Count, Max, Avg, OuterRef, Subquery, Window, FloatField, ExpressionWrapper
+from django.db.models import Sum, F, Count, Max, Avg, OuterRef, Subquery, Window, FloatField, ExpressionWrapper, CharField
 from django.db.models import Case, IntegerField, Value, When
 from django.db.models.functions import Rank, RowNumber
 from django.shortcuts import render, redirect
@@ -14,7 +14,7 @@ from django.http import JsonResponse
 from django.template import loader
 from django.utils import timezone
 
-from apps.tech_stack.models import GithubUser, AnalysisData, GithubCalendar, Ranking, GithubRepo
+from apps.tech_stack.models import GithubUser, AnalysisData, GithubCalendar, Ranking, GithubRepo, TechStack
 from apps.tech_stack.utils import core_repo_list
 from utils.github_api.github_api import request_github_profile
 from utils.github_calendar.github_calendar import generate_github_calendar
@@ -274,7 +274,11 @@ def make_ranker_data(tech_name):
         )),
         int_code_crazy=ExpressionWrapper(F('tech_code_crazy'), output_field=IntegerField()),
         avatar_url=F('github_id__avatar_url'),
-        analysisdata=F('github_id__analysisdata__tech_card_data'),
+        top_tech=Case(
+            When(github_id__toptech__tech_name__isnull=True, then=Value('None')),
+            default=F('github_id__toptech__tech_name'),
+            output_field=CharField()
+        ),
         midnight_rank=Subquery(Ranking.objects.filter(tech_name=OuterRef('tech_name'), github_id=OuterRef('github_id')).values('midnight_rank')),
         rank=Window(expression=Rank(), order_by=F('tech_code_crazy').desc()),
         row_num=Window(expression=RowNumber(), order_by=F('tech_code_crazy').desc()),
@@ -293,10 +297,6 @@ def make_ranker_data(tech_name):
         elif code_line_percent > 95:
             code_line_percent = 95
         ranker['code_line_percent'] = code_line_percent
-        if ranker['analysisdata'] == None or ranker['analysisdata'] == '[]':
-            ranker['top_tech'] = 'none'
-        else:
-            ranker['top_tech'] = json.loads(ranker['analysisdata'].replace("'", '"'))[0]['name']
         ranker['total_lines'] = format(ranker['total_lines'], ',')
     return now_tech_ranker
 
@@ -336,9 +336,8 @@ def sava_github_calendar_data(git_calendar_data, github_user):
 def ranking_all(request):
     today = timezone.now()
     year_ago = (today - relativedelta(years=1)).replace(hour=0, minute=0, second=0)
-    tech_with_developer_count = GithubCalendar.objects.filter(tech_name__in=github_calendar_colors.keys()).values('tech_name').annotate(developer_count=Count('github_id', distinct=True))
-    sorted_github_calendar_colors = sorted(tech_with_developer_count, key=lambda x: x['developer_count'], reverse=True)
-    tech_table_joined = list(GithubCalendar.objects.filter(author_date__range=[year_ago, today]).values('github_id').annotate(
+    sorted_github_calendar_colors = TechStack.objects.order_by('-developer_count').values('tech_name', 'tech_color')
+    tech_table_joined = list(GithubCalendar.objects.filter(author_date__range=[year_ago, today], tech_name__in=sorted_github_calendar_colors.values('tech_name')).values('github_id').annotate(
         tech_name=F('tech_name'),
         total_lines=Sum('lines'),
         tech_code_crazy=Sum(Case(
@@ -349,13 +348,13 @@ def ranking_all(request):
         )),
         int_code_crazy=ExpressionWrapper(F('tech_code_crazy'), output_field=IntegerField()),
         avatar_url=F('github_id__avatar_url'),
-        analysisdata=F('github_id__analysisdata__tech_card_data'),
-        midnight_rank=Subquery(
-            Ranking.objects.filter(tech_name=OuterRef('tech_name'), github_id=OuterRef('github_id')).values(
-                'midnight_rank')),
-        rank=Window(expression=Rank(), order_by=F('tech_code_crazy').desc()),
-        row_num=Window(expression=RowNumber(), order_by=F('tech_code_crazy').desc()),
-    ).exclude(total_lines=0))
+        top_tech=Case(
+            When(github_id__toptech__tech_name__isnull=True, then=Value('None')),
+            default=F('github_id__toptech__tech_name'),
+            output_field=CharField()
+        )
+    ))
+
     RANK_COUNT_TO_SHOW = 3
     rank_data = dict()
 
@@ -372,12 +371,8 @@ def ranking_all(request):
             elif code_line_percent > 95:
                 code_line_percent = 95
             ranker['code_line_percent'] = code_line_percent
-            if ranker['analysisdata'] == '[]':
-                ranker['top_tech'] = 'none'
-            else:
-                ranker['top_tech'] = json.loads(ranker['analysisdata'].replace("'", '"'))[0]['name']
 
-        rank_data[tech['tech_name']] = {'color': github_calendar_colors[tech['tech_name']], 'top3_data':top3_data}
+        rank_data[tech['tech_name']] = {'color': tech['tech_color'], 'top3_data':top3_data}
 
     context = {
         'github_calendar_colors': sorted_github_calendar_colors,
