@@ -10,3 +10,13 @@ def group_list(request):
     }
 
     return render(request, 'group_list.html', context)
+
+
+def create_group(request):
+    ranking_side = draw_ranking_side()
+
+    context = { 'group' : True,
+                'ranking_side': ranking_side
+    }
+
+    return render(request, 'new_group.html', context)

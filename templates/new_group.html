@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% load static custom_tags i18n %}
+{% block content %}
+<div id='under_header' class="flex items-center p-6 bg-gray-50 w-full h-full">
+  <div style="margin:0 auto;">
+
+    <!-- First Row Start -->
+    <div class="grid gap-4 mb-3 md:grid-cols-2 xl:grid-cols-2-2">
+      <div style="min-width:450px">
+
+        <!-- Search Tech -->
+        {% include 'ranking_side.html' %}
+      </div>
+
+      <div>
+        <div class="ml-3 text-2xl font-semibold text-gray-600 dark:text-gray-300">
+          {% trans "New Group Coding" %}
+        </div>
+        <h3 class="h6 border-bottom mb-3" style="height: 14px; border: none;">
+        </h3>
+        <div class="flex">
+          <div>
+            <h4 class="ml-3 mb-2 text-lg font-semibold text-gray-600 dark:text-gray-300">
+              {% trans "Group Name" %}
+            </h4>
+            <div class="flex" style="align-items: center;">
+              <div class="relative focus-within:text-purple-500"
+                   style="width:500px; margin-left:2px">
+                <input class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input">
+              </div>
+              <p class="text-sm font-semibold ml-2 text-gray-400">0/30</p>
+            </div>
+          </div>
+          <div class="flex" style="flex-direction: column;" style="width:120px">
+            <div class="relative hidden ml-5 rounded-lg md:block" style="width:120px;height:120px">
+              <img class="object-cover w-full h-full rounded-lg" src="https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?ixlib=rb-1.2.1&amp;q=80&amp;fm=jpg&amp;crop=entropy&amp;cs=tinysrgb&amp;w=200&amp;fit=max&amp;ixid=eyJhcHBfaWQiOjE3Nzg0fQ" alt="" loading="lazy">
+              <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
+            </div>
+            <button class="ml-5 mt-2 px-2 py-1 text-lg font-medium leading-5 text-gray transition-colors duration-150 bg-white border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+              Upload
+            </button>
+          </div>
+        </div>
+
+        <h4 class="ml-3 mb-2 text-lg font-semibold text-gray-600 dark:text-gray-300">
+          {% trans "Description" %}
+        </h4>
+        <textarea class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 form-textarea focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray"
+                  rows="3" style="width:500px">
+        </textarea>
+
+        <h4 class="ml-3 mb-3 mt-5 text-lg font-semibold text-gray-600 dark:text-gray-300">
+          {% trans "Type" %}
+        </h4>
+
+        <div class="flex" style="align-items: center;">
+          <div class="mt-2 ml-3">
+            <label class="inline-flex items-center text-gray-600 dark:text-gray-400">
+              <input type="radio" class="text-purple-600 form-radio focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray" name="accountType" value="public" checked>
+              <span class="ml-2">{% trans "Public" %}</span>
+            </label>
+            <label class="inline-flex items-center ml-6 text-gray-600 dark:text-gray-400">
+              <input type="radio" class="text-purple-600 form-radio focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray" name="accountType" value="private">
+              <span class="ml-2">{% trans "Private" %}</span>
+            </label>
+          </div>
+
+          <div class="ml-4 relative focus-within:text-purple-500"
+               style="width:200px; margin-left:2px">
+
+            <input class="block w-full text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                   placeholder="Code to join">
+          </div>
+          <p class="text-sm font-semibold ml-2 text-gray-400">0/8</p>
+        </div>
+
+        <div class="flex mt-5 mb-2" style="align-items: center;justify-content: space-between;width:500px">
+          <h4 class="ml-3 text-lg font-semibold text-gray-600 dark:text-gray-300">
+            {% trans "Git Repository URL" %}
+          </h4>
+          <div id="repository_add_btn" class="btn rounded-lg shadow-xs" style="width:44px;height:44px;display: flex;cursor: pointer;align-items: center;background-color: white;">
+            <img id="repository_add_img" src="/static/img/add.png" alt="add" style="padding: 2px; width: 18px; height:18px; font-weight: bold; cursor: pointer; opacity: 0.6">
+          </div>
+        </div>
+        <div class="relative focus-within:text-purple-500"
+             style="width:500px; margin-left:2px">
+
+          <input class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input">
+        </div>
+
+        <h4 class="ml-3 mb-3 mt-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
+          {% trans "Topics" %}
+        </h4>
+        <div class="mb-5" style="width:500px">
+          <input type="text" name="tags" value="Tags1, Tags2" class="tagify w-full leading-5 relative text-sm py-2 px-2 rounded text-gray-800 bg-white border border-gray-300 overflow-x-auto focus:outline-none focus:border-gray-400 focus:ring-0 dark:text-gray-300 dark:bg-blue-500 dark:border-gray-700 dark:focus:border-gray-600" minlength="2">
+        </div>
+
+        <div class="flex" style="width:500px;justify-content: flex-end;">
+          <button class="px-4 py-2 text-lg font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple" style="background-color:green">
+            Create
+          </button>
+          <button class="ml-2 px-4 py-2 text-lg font-medium leading-5 text-gray transition-colors duration-150 bg-white border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- First Row End -->
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify"></script>
+<script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.polyfills.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css" rel="stylesheet" type="text/css" />
+<script>
+ show_ranking_user();
+ {% if login_user %}
+ check_analysis_updating("{{login_user.github_id}}", "{{login_user.status}}");
+ {% endif %}
+
+ //The DOM element you wish to replace with Tagify
+ var input = document.querySelector('input[name=tags]');
+
+ // initialize Tagify on the above input node reference
+ new Tagify(input)
+</script>
+{% endblock %}
