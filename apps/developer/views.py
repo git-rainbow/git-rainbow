@@ -382,8 +382,8 @@ def ranking_all(request):
 
 
 def ranking_tech_stack(request, tech_name):
-    tech_with_developer_count = GithubCalendar.objects.filter(tech_name__in=github_calendar_colors.keys()).values('tech_name').annotate(developer_count=Count('github_id', distinct=True))
-    sorted_github_calendar_colors = sorted(tech_with_developer_count, key=lambda x: x['developer_count'], reverse=True)
+    current_tech = TechStack.objects.filter(tech_name__iexact=tech_name).first()
+    sorted_github_calendar_colors = TechStack.objects.values('tech_name', 'tech_color').order_by('-developer_count')
     if tech_name.lower() == 'c_sharp':
         tech_name = 'C#'
     else:
@@ -411,14 +411,13 @@ def ranking_tech_stack(request, tech_name):
             page_number = search_user_page_number
     paginator = Paginator(now_ranker_data, items_per_page)
     page_rank_data = paginator.get_page(page_number)
-    total_rank_count = now_ranker_data.count()
     context = {
         'github_calendar_colors': sorted_github_calendar_colors,
         'tech_name': tech_name,
-        'tech_color': github_calendar_colors[tech_name],
+        'tech_color': current_tech.tech_color,
         'top_ranker': now_ranker_data[:3],
         'now_ranker_data': page_rank_data,
-        'total_rank_count': format(total_rank_count, ','),
+        'total_rank_count': format(current_tech.developer_count, ','),
         'search_user': search_user,
         'exist_search_user': exist_search_user,
     }
