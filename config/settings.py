@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'apps.users',
     'apps.tech_stack',
     'apps.admins',
+    'apps.group',
     'mathfilters',
 ]
 

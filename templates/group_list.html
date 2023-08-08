@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load static custom_tags i18n %}
+{% block content %}
+<div id='under_header' class="flex items-center p-6 bg-gray-50 w-full h-full">
+  <div style="margin:0 auto;">
+
+    <!-- First Row Start -->
+    <div class="grid gap-4 mb-3 md:grid-cols-2 xl:grid-cols-2-2">
+      <div style="min-width:450px">
+
+        <!-- Search Tech -->
+        {% include 'ranking_side.html' %}
+      </div>
+
+      <div>
+        <div class="mb-2 ml-2 text-2xl font-semibold text-gray-600 dark:text-gray-300">
+          {% trans "Group Coding" %}
+        </div>
+        <!-- Search GitHub User -->
+        <div class="flex mb-3" style="width:600px;align-content:flex-end;flex-wrap:wrap;justify-content:space-between;">
+          <div class="relative focus-within:text-purple-500"
+               style="width:300px; margin-left:2px">
+            <div style="position:absolute; top: 30%; left: 2.0%;">
+              <svg class="w-4 h-4" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                      d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                      clip-rule="evenodd"></path>
+              </svg>
+            </div>
+
+            <input style="min-width: 90px;"
+                   class="w-full pl-8 pr-2 text-sm text-gray-700 placeholder-gray-600 bg-gray-100 border-0 rounded-md dark:placeholder-gray-500 dark:focus:shadow-outline-gray dark:focus:placeholder-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:placeholder-gray-500 focus:bg-white focus:border-purple-300 focus:outline-none focus:shadow-outline-purple form-input"
+                   type="text" placeholder={% blocktrans %}"Search Groups"{% endblocktrans %} aria-label="Search">
+          </div>
+          <div id="repository_add_btn" class="btn" style="display: flex;cursor: pointer; align-items: center; background-color: #bae6f2;">
+            <img id="repository_add_img" src="/static/img/add.png" alt="add" style="padding: 2px; width: 18px; height:18px; font-weight: bold; cursor: pointer; opacity: 0.6">
+          </div>
+        </div>
+        <!-- Table -->
+        <div class="overflow-hidden rounded-lg shadow-xs" style="max-width:600px">
+          <div class="w-full overflow-x-auto">
+            <table class="w-full whitespace-no-wrap">
+
+              <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+                <tr>
+                  <td class="px-6 py-3">
+                    <div class="flex items-center" style="justify-content: space-between;">
+                      <div>
+                        <p class="font-semibold text-lg">Algorithm Study Group A</p>
+                        <p class="text-xs text-gray-600 dark:text-gray-400">
+                          <div class="flex flex-wrap mb-3">
+                            <div class="rounded-full px-2 py-1 mr-2 mt-2 text-sm"
+                                 style="background-color: #DDF4FF; color:#2476DD;white-space : nowrap">
+                              AI
+                            </div>
+                            <div class="rounded-full px-2 py-1 mr-2 mt-2 text-sm"
+                                 style="background-color: #DDF4FF; color:#2476DD;white-space : nowrap">
+                              Web
+                            </div>
+
+                            <div class="rounded-full px-2 py-1 mr-2 mt-2 text-sm"
+                                 style="background-color: #DDF4FF; color:#2476DD;white-space : nowrap">
+                              Frontend
+                            </div>
+                          </div>
+                        </p>
+                        <div class="flex mt-2">
+                          <div class="relative hidden w-8 h-8 mr-2 rounded-full md:block" style="min-width:32px;">
+                            <img class="object-cover w-full h-full rounded-full" src="https://avatars.githubusercontent.com/u/81942?v=4" alt="" loading="lazy">
+                            <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
+                          </div>
+                          <p class="text-sm mt-2 text-gray-600 dark:text-gray-400">
+                            12 {% trans "people" %} &nbsp;|&nbsp; Updated 2 days ago
+                          </p>
+                        </div>
+                      </div>
+                      <!-- Avatar with inset shadow -->
+                      <div class="relative hidden ml-3 rounded-lg md:block" style="width:90px;height:90px">
+                        <img class="object-cover w-full h-full rounded-lg" src="https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?ixlib=rb-1.2.1&amp;q=80&amp;fm=jpg&amp;crop=entropy&amp;cs=tinysrgb&amp;w=200&amp;fit=max&amp;ixid=eyJhcHBfaWQiOjE3Nzg0fQ" alt="" loading="lazy">
+                        <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- Table End -->
+        <div class="flex items-center justify-center mt-2 bg-white rounded-lg shadow-xs dark:bg-gray-800 pointer font-bold" style="width: 600px; height: 35px;">
+          Show more groups
+        </div>
+      </div>
+    </div>
+    <!-- First Row End -->
+  </div>
+</div>
+<script>
+ show_ranking_user();
+ {% if login_user %}
+ check_analysis_updating("{{login_user.github_id}}", "{{login_user.status}}");
+ {% endif %}
+</script>
+{% endblock %}

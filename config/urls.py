@@ -28,6 +28,7 @@ urlpatterns = [
     path('', include('apps.admins.urls')),
     path('', include('apps.users.urls')),
     path('', include('apps.developer.urls')),
+    path('', include('apps.group.urls')),
 ]
 
 urlpatterns += i18n_patterns(

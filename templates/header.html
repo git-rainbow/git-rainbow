@@ -5,6 +5,7 @@
       <g style="color:red">R</g><g style="color:orange">a</g><g style="color:rgb(255,214,0)">i</g><g style="color:green">n</g><g style="color:dodgerblue">b</g><g style="color:darkblue">o</g><g style="color:blueviolet">w</g>
     </a>
     <div>
+      {% if not group %}
       <div class="relative focus-within:text-purple-500" style="width: 100%; min-width: 110px; display: flex; margin: 0 auto; justify-content: center;">
         <div style="position:absolute; top: 30%; left: 3%;">
           <svg class="w-4 h-4" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
@@ -19,11 +20,15 @@
         </button>
       </div>
       <g id='error_text' style="color: red; font-size: 1em;"></g>
+      {% endif %}
     </div>
       <div class="flex align-center">
         {% if request.user.is_superuser %}
           <a class="mr-4" href="/admins" style="color: #013289; font-weight: 700;">{% trans "Admin" %}</a>
         {% endif %}
+        <a class="mr-4" href="/group/list" style="color: #013289; font-weight: 700;">
+          {% trans "Group Coding" %}
+        </a>
         <a class="mr-4" href="/ranking/all" style="color: #013289; font-weight: 700;">{% trans "Crazy Ranking" %}</a>
         {% include 'toggle_login.html' %}
       </div>
