@@ -19,3 +19,8 @@ def get_tech_img_base64(tech):
 @register.filter
 def get_repo_name(repo_url):
     return urlparse(repo_url[:-4]).path[1:]
+
+
+@register.filter
+def get_item(dictionary, key):
+    return dictionary.get(key)

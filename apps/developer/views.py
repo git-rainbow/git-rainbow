@@ -14,7 +14,7 @@ from django.http import JsonResponse
 from django.template import loader
 from django.utils import timezone
 
-from apps.tech_stack.models import GithubUser, AnalysisData, GithubCalendar, Ranking, GithubRepo, TechStack
+from apps.tech_stack.models import GithubUser, AnalysisData, GithubCalendar, Ranking, GithubRepo, TechStack, TopTech
 from apps.tech_stack.utils import core_repo_list
 from utils.github_api.github_api import request_github_profile
 from utils.github_calendar.github_calendar import generate_github_calendar
@@ -337,8 +337,7 @@ def ranking_all(request):
     today = timezone.now()
     year_ago = (today - relativedelta(years=1)).replace(hour=0, minute=0, second=0)
     sorted_github_calendar_colors = TechStack.objects.order_by('-developer_count').values('tech_name', 'tech_color')
-    tech_table_joined = list(GithubCalendar.objects.filter(author_date__range=[year_ago, today], tech_name__in=sorted_github_calendar_colors.values('tech_name')).values('github_id').annotate(
-        tech_name=F('tech_name'),
+    tech_table_joined = list(GithubCalendar.objects.filter(author_date__gte=year_ago, tech_name__in=sorted_github_calendar_colors.values('tech_name')).values('github_id', 'tech_name').annotate(
         total_lines=Sum('lines'),
         tech_code_crazy=Sum(Case(
             When(lines__range=[300, 1000], then=(3 + 0.001 * (F('lines') - 300))),
@@ -347,17 +346,11 @@ def ranking_all(request):
             output_field=FloatField()
         )),
         int_code_crazy=ExpressionWrapper(F('tech_code_crazy'), output_field=IntegerField()),
-        avatar_url=F('github_id__avatar_url'),
-        top_tech=Case(
-            When(github_id__toptech__tech_name__isnull=True, then=Value('None')),
-            default=F('github_id__toptech__tech_name'),
-            output_field=CharField()
-        )
     ))
 
     RANK_COUNT_TO_SHOW = 3
     rank_data = dict()
-
+    ranker_github_id_set = set()
     for tech in sorted_github_calendar_colors:
         tech_name = tech['tech_name'].lower()
         tech_rank_data = [i for i in tech_table_joined if i['tech_name'].lower() == tech_name]
@@ -365,6 +358,7 @@ def ranking_all(request):
         top3_data = tech_rank_data[0:RANK_COUNT_TO_SHOW]
         user_avg_lines = sum(i['total_lines'] for i in top3_data)/RANK_COUNT_TO_SHOW
         for ranker in top3_data:
+            ranker_github_id_set.add(ranker['github_id'])
             code_line_percent = round(ranker['total_lines'] / user_avg_lines * 100, 2)
             if code_line_percent < 50:
                 code_line_percent = 50
@@ -373,10 +367,14 @@ def ranking_all(request):
             ranker['code_line_percent'] = code_line_percent
 
         rank_data[tech['tech_name']] = {'color': tech['tech_color'], 'top3_data':top3_data}
-
+    ranker_github_data_list = GithubUser.objects.values('github_id', 'avatar_url', 'toptech__tech_name').filter(github_id__in=ranker_github_id_set)
+    rank_avatar_url_dict = {ranker['github_id']: ranker['avatar_url'] for ranker in ranker_github_data_list}
+    ranker_toptech_dict = {ranker['github_id']: str(ranker['toptech__tech_name']) for ranker in ranker_github_data_list}
     context = {
         'github_calendar_colors': sorted_github_calendar_colors,
-        'rank_data': rank_data
+        'rank_data': rank_data,
+        'rank_avatar_url_dict': rank_avatar_url_dict,
+        'ranker_toptech_dict': ranker_toptech_dict,
     }
     return render(request, 'ranking_all.html', context=context)
 

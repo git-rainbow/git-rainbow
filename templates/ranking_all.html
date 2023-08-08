@@ -29,7 +29,7 @@
                   <img style="width:30px;height:30px;" src="{% get_static_prefix %}img/rank_{{ forloop.counter }}.png">
                   <p class="font-semibold ranking-ellipsis flex" style="font-size:15px; align-content: flex-start;">Top {{ forloop.counter }}</p>
                 </div>
-                <img class="object-cover w-full h-full rounded-full mt-1" src="{{ top3.avatar_url }}" style="width:64px;height:64px">
+                <img class="object-cover w-full h-full rounded-full mt-1" src="{{ rank_avatar_url_dict|get_item:top3.github_id }}" style="width:64px;height:64px">
                 <p class="mx-auto mt-2 mb-3 font-semibold ranking-ellipsis" style="font-size:15px"><a href="/{{top3.github_id}}" target="_blank">{{ top3.github_id }}</a></p>
                 <button type="button" class="btn btn-danger font-semibold mt-2 mb-1" title="{{ top3.tech_code_crazy }}%"
                   style="color:rgb(200,30,30);background-color:rgb(253,232,232);border-color:rgb(253,232,232); font-size: 70%; padding: 2%; width: 70%;">
@@ -42,8 +42,8 @@
                   </div>
                 </div>
                 <div class="flex mt-2 mb-1" style="align-items: center;flex-direction: row; justify-content: space-around; width: 50%;">
-                  <img style="width:30px;height:30px;" src="{% get_static_prefix %}img/{{ top3.top_tech.lower|replace_special_char }}.png">
-                  <p class="text-xs text-gray-600">{{ top3.top_tech }}</p>
+                  <img style="width:30px;height:30px;" src="{% get_static_prefix %}img/{{ ranker_toptech_dict|get_item:top3.github_id|replace_special_char|lower }}.png">
+                  <p class="text-xs text-gray-600">{{ ranker_toptech_dict|get_item:top3.github_id }}</p>
                 </div>
               </div>
               {% endfor %}
