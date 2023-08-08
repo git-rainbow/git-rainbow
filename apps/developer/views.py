@@ -180,6 +180,15 @@ def update_git_rainbow(request):
                                           })
     save_github_calendar_data(calendar_data, github_user)
     calendar_data = json.loads(calendar_data)
+
+    tech_set = set()
+    for tech_dict in calendar_data.values():
+        tech_set.update(tech_dict.keys())
+    update_tech_stack_table(tech_set)
+
+    if tech_card_data:
+        TopTech.objects.update_or_create(github_id=github_user, defaults={'tech_name': tech_card_data[0]['name']})
+
     top3_tech_data = []
     for tech_data in tech_card_data[:3]:
         tech_rank_data = make_ranker_data(tech_data['name'])
@@ -259,6 +268,17 @@ def git_rainbow_svg(request, github_id):
                                                       'tech_card_width': tech_card_width,
                                                       'github_calendar_svg': svg_inner_html[0]},
                   content_type='image/svg+xml')
+
+
+def update_tech_stack_table(tech_set: set):
+    today = timezone.now()
+    year_ago = (today - relativedelta(years=1)).replace(hour=0, minute=0, second=0)
+    techs_with_dev_count = GithubCalendar.objects.filter(tech_name__in=tech_set, lines__gt=0, author_date__gte=year_ago).values('tech_name').annotate(developer_count=Count('github_id', distinct=True))
+    techs_dev_count_dict = {data['tech_name']:data['developer_count'] for data in techs_with_dev_count}
+    tech_stack_list = TechStack.objects.filter(tech_name__in=tech_set)
+    for tech in tech_stack_list:
+        tech.developer_count = techs_dev_count_dict[tech.tech_name]
+    TechStack.objects.bulk_update(tech_stack_list, ['developer_count'])
 
 
 def make_ranker_data(tech_name):
