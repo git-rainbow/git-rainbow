@@ -178,7 +178,7 @@ def update_git_rainbow(request):
                                               'git_calendar_data': calendar_data,
                                               'tech_card_data': tech_card_data
                                           })
-    sava_github_calendar_data(calendar_data, github_user)
+    save_github_calendar_data(calendar_data, github_user)
     calendar_data = json.loads(calendar_data)
     top3_tech_data = []
     for tech_data in tech_card_data[:3]:
@@ -314,7 +314,7 @@ def save_tech_ranking_data(request):
     return JsonResponse({'status': 'success'})
 
 
-def sava_github_calendar_data(git_calendar_data, github_user):
+def save_github_calendar_data(git_calendar_data, github_user):
     github_user.githubcalendar_set.all().delete()
     calendar_data = json.loads(git_calendar_data.replace("'", '"'))
     git_calendar_data_bulk = []
