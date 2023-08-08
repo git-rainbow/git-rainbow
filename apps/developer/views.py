@@ -383,6 +383,9 @@ def ranking_all(request):
 
 def ranking_tech_stack(request, tech_name):
     current_tech = TechStack.objects.filter(tech_name__iexact=tech_name).first()
+    if current_tech is None:
+        return render(request, 'exception_page.html', {'error': 403, 'message': f'{tech_name} is not in service at this time'})
+
     sorted_github_calendar_colors = TechStack.objects.values('tech_name', 'tech_color').order_by('-developer_count')
     if tech_name.lower() == 'c_sharp':
         tech_name = 'C#'
