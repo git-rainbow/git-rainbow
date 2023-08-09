@@ -13,6 +13,7 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.template import loader
 from django.utils import timezone
+from collections import defaultdict
 
 from apps.tech_stack.models import GithubUser, AnalysisData, GithubCalendar, Ranking, GithubRepo, TechStack, TopTech
 from apps.tech_stack.utils import core_repo_list
@@ -353,11 +354,35 @@ def save_github_calendar_data(git_calendar_data, github_user):
     GithubCalendar.objects.bulk_create(git_calendar_data_bulk)
 
 
+def draw_ranking_side(is_all=True)->dict:
+    tech_stack_with_order = TechStack.objects.annotate(
+        tech_type_order=Case(
+            When(tech_type='Frontend', then=1),
+            When(tech_type='Backend', then=2),
+            When(tech_type='Mobile', then=3),
+            When(tech_type='Database', then=4),
+            When(tech_type='Devops', then=5),
+            default=6,
+            output_field=IntegerField()
+        )
+    ).order_by('tech_type_order','-developer_count').values('tech_name', 'tech_color', 'tech_type', 'developer_count')
+    ranking_side = defaultdict(list)
+    for tech in tech_stack_with_order:
+        ranking_side[tech['tech_type']].append({'tech_name':tech['tech_name'], 'tech_color':tech['tech_color']})
+    ranking_side = dict(ranking_side)
+
+    if is_all:
+        sorted_github_calendar_colors = {tech_dict['tech_name']:tech_dict['tech_color'] for tech_dict_list in ranking_side.values() for tech_dict in tech_dict_list}
+        return ranking_side, sorted_github_calendar_colors
+
+    return ranking_side
+
+
 def ranking_all(request):
     today = timezone.now()
     year_ago = (today - relativedelta(years=1)).replace(hour=0, minute=0, second=0)
-    sorted_github_calendar_colors = TechStack.objects.order_by('-developer_count').values('tech_name', 'tech_color')
-    tech_table_joined = list(GithubCalendar.objects.filter(author_date__gte=year_ago, tech_name__in=sorted_github_calendar_colors.values('tech_name')).values('github_id', 'tech_name').annotate(
+    ranking_side, sorted_github_calendar_colors = draw_ranking_side()
+    tech_table_joined = list(GithubCalendar.objects.filter(author_date__gte=year_ago, tech_name__in=sorted_github_calendar_colors.keys()).values('github_id', 'tech_name').annotate(
         total_lines=Sum('lines'),
         tech_code_crazy=Sum(Case(
             When(lines__range=[300, 1000], then=(3 + 0.001 * (F('lines') - 300))),
@@ -371,8 +396,8 @@ def ranking_all(request):
     RANK_COUNT_TO_SHOW = 3
     rank_data = dict()
     ranker_github_id_set = set()
-    for tech in sorted_github_calendar_colors:
-        tech_name = tech['tech_name'].lower()
+    for tech, tech_color in sorted_github_calendar_colors.items():
+        tech_name = tech.lower()
         tech_rank_data = [i for i in tech_table_joined if i['tech_name'].lower() == tech_name]
         tech_rank_data.sort(key=lambda x: x['tech_code_crazy'], reverse=True)
         top3_data = tech_rank_data[0:RANK_COUNT_TO_SHOW]
@@ -386,12 +411,12 @@ def ranking_all(request):
                 code_line_percent = 95
             ranker['code_line_percent'] = code_line_percent
 
-        rank_data[tech['tech_name']] = {'color': tech['tech_color'], 'top3_data':top3_data}
+        rank_data[tech] = {'color': tech_color, 'top3_data':top3_data}
     ranker_github_data_list = GithubUser.objects.values('github_id', 'avatar_url', 'toptech__tech_name').filter(github_id__in=ranker_github_id_set)
     rank_avatar_url_dict = {ranker['github_id']: ranker['avatar_url'] for ranker in ranker_github_data_list}
     ranker_toptech_dict = {ranker['github_id']: str(ranker['toptech__tech_name']) for ranker in ranker_github_data_list}
     context = {
-        'github_calendar_colors': sorted_github_calendar_colors,
+        'ranking_side': ranking_side,
         'rank_data': rank_data,
         'rank_avatar_url_dict': rank_avatar_url_dict,
         'ranker_toptech_dict': ranker_toptech_dict,
@@ -427,7 +452,7 @@ def ranking_tech_stack(request, tech_name):
     paginator = Paginator(now_ranker_data, items_per_page)
     page_rank_data = paginator.get_page(page_number)
     context = {
-        'github_calendar_colors': TechStack.objects.values('tech_name', 'tech_color').order_by('-developer_count'),
+        'ranking_side': draw_ranking_side(is_all=False),
         'tech_name': tech_name,
         'tech_color': current_tech.tech_color,
         'top_ranker': now_ranker_data[:3],

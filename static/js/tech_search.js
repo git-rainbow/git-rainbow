@@ -5,6 +5,7 @@ let tech_list = document.querySelectorAll('.tech_list');
 function search_tech(event) {
     clearTimeout(debounceTimeout);
     debounceTimeout = setTimeout(() => {
+        let tech_types = document.querySelectorAll(".side_tech_type");
         let search_value = document.getElementById("input_tech").value.toLowerCase();
         if (!search_value) {
             tech_list.forEach(target => {
@@ -19,6 +20,14 @@ function search_tech(event) {
                 }
             });
         }
+        tech_types.forEach(tech_type_div => {
+            let tech_card_list = tech_type_div.children[1].children;
+            if (tech_card_list.length == tech_type_div.querySelectorAll('.hidden').length){
+                tech_type_div.classList.add('hidden');
+            } else {
+                tech_type_div.classList.remove('hidden');
+            }
+        })
     }, 300);
 }
 

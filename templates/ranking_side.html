@@ -19,14 +19,21 @@
   </div>
 </div>
 <!-- Tech Card Group Start -->
-<div class="grid gap-4 mb-3 md:grid-cols-2 xl:grid-cols-3">
+<div>
   <!-- Card -->
-  {% for tech in github_calendar_colors %}
-    <div class="flex items-center ml-2 bg-white rounded-lg shadow-xs dark:bg-gray-800 mb-3 pointer tech_list" onclick="window.location.href='/ranking/{{ tech.tech_name|replace_special_char }}'"
-          style="width: 125px;height: 50px; {% if tech.tech_name == tech_name %} border: 2px solid {{ tech_color }} {% endif %}">
-      <img class="mr-8" style="width:45px;height:45px" src="{% get_static_prefix %}img/{{ tech.tech_name.lower|replace_special_char }}.png">
-      <p class="pl-2 py-2 text-xs">{{ tech.tech_name }}</p>
+  {% for tech_type, tech_dict_list in ranking_side.items %}
+  <div class="side_tech_type">
+    <div class="font-bold mb-2 pl-2">{{ tech_type }}</div>
+    <div class="grid flex gap-4 mb-3 md:grid-cols-2 xl:grid-cols-3">
+      {% for tech_dict in tech_dict_list %}
+        <div class="flex items-center ml-2 bg-white rounded-lg shadow-xs dark:bg-gray-800 mb-3 pointer tech_list" onclick="window.location.href='/ranking/{{ tech_dict.tech_name|replace_special_char }}'"
+              style="width: 125px;height: 50px; {% if tech_dict.tech_name == tech_name %} border: 2px solid {{ tech_dict.tech_color }} {% endif %}">
+          <img class="mr-8" style="width:45px;height:45px" src="{% get_static_prefix %}img/{{ tech_dict.tech_name.lower|replace_special_char }}.png">
+          <p class="pl-2 py-2 text-xs">{{ tech_dict.tech_name }}</p>
+        </div>
+      {% endfor %}
     </div>
+  </div>
   {% endfor %}
 </div>
 <!-- Tech Card Group End -->
