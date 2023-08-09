@@ -400,18 +400,12 @@ def ranking_all(request):
 
 
 def ranking_tech_stack(request, tech_name):
+    if tech_name.lower() == 'c_sharp':
+        tech_name = 'C#'
+
     current_tech = TechStack.objects.filter(tech_name__iexact=tech_name).first()
     if current_tech is None:
         return render(request, 'exception_page.html', {'error': 403, 'message': f'{tech_name} is not in service at this time'})
-
-    sorted_github_calendar_colors = TechStack.objects.values('tech_name', 'tech_color').order_by('-developer_count')
-    if tech_name.lower() == 'c_sharp':
-        tech_name = 'C#'
-    else:
-        for tech in sorted_github_calendar_colors:
-            if tech['tech_name'].lower() == tech_name.lower():
-                tech_name = tech['tech_name']
-                break
 
     now_ranker_data = make_ranker_data(tech_name)
     page_number = request.GET.get('page')
@@ -433,7 +427,7 @@ def ranking_tech_stack(request, tech_name):
     paginator = Paginator(now_ranker_data, items_per_page)
     page_rank_data = paginator.get_page(page_number)
     context = {
-        'github_calendar_colors': sorted_github_calendar_colors,
+        'github_calendar_colors': TechStack.objects.values('tech_name', 'tech_color').order_by('-developer_count'),
         'tech_name': tech_name,
         'tech_color': current_tech.tech_color,
         'top_ranker': now_ranker_data[:3],
