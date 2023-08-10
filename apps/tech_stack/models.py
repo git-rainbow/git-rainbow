@@ -56,6 +56,7 @@ class TechStack(models.Model):
     tech_type = models.CharField(max_length=50)
     tech_color = models.CharField(max_length=50)
     developer_count = models.IntegerField()
+    logo_path = models.FilePathField()
 
 
 class TopTech(models.Model):
