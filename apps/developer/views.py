@@ -354,7 +354,7 @@ def save_github_calendar_data(git_calendar_data, github_user):
     GithubCalendar.objects.bulk_create(git_calendar_data_bulk)
 
 
-def draw_ranking_side(is_all=True)->dict:
+def draw_ranking_side()->dict:
     tech_stack_with_order = TechStack.objects.annotate(
         tech_type_order=Case(
             When(tech_type='Frontend', then=1),
@@ -369,19 +369,13 @@ def draw_ranking_side(is_all=True)->dict:
     ranking_side = defaultdict(list)
     for tech in tech_stack_with_order:
         ranking_side[tech['tech_type']].append({'tech_name':tech['tech_name'], 'tech_color':tech['tech_color'], 'logo_path':tech['logo_path']})
-    ranking_side = dict(ranking_side)
-
-    if is_all:
-        sorted_github_calendar_colors = {tech_dict['tech_name']:{'tech_color': tech_dict['tech_color'], 'logo_path':tech_dict['logo_path']} for tech_dict_list in ranking_side.values() for tech_dict in tech_dict_list}
-        return ranking_side, sorted_github_calendar_colors
-
-    return ranking_side
-
+    return dict(ranking_side)
 
 def ranking_all(request):
     today = timezone.now()
     year_ago = (today - relativedelta(years=1)).replace(hour=0, minute=0, second=0)
-    ranking_side, sorted_github_calendar_colors = draw_ranking_side()
+    ranking_side = draw_ranking_side()
+    sorted_github_calendar_colors = sorted_github_calendar_colors = {tech_dict['tech_name']:{'tech_color': tech_dict['tech_color'], 'logo_path':tech_dict['logo_path']} for tech_dict_list in ranking_side.values() for tech_dict in tech_dict_list}
     tech_table_joined = list(GithubCalendar.objects.filter(author_date__gte=year_ago, tech_name__in=sorted_github_calendar_colors.keys()).values('github_id', 'tech_name').annotate(
         total_lines=Sum('lines'),
         tech_code_crazy=Sum(Case(
@@ -452,7 +446,7 @@ def ranking_tech_stack(request, tech_name):
     paginator = Paginator(now_ranker_data, items_per_page)
     page_rank_data = paginator.get_page(page_number)
     context = {
-        'ranking_side': draw_ranking_side(is_all=False),
+        'ranking_side': draw_ranking_side(),
         'tech_name': tech_name,
         'tech_color': current_tech.tech_color,
         'logo_path': current_tech.logo_path,
