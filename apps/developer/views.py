@@ -365,14 +365,14 @@ def draw_ranking_side(is_all=True)->dict:
             default=6,
             output_field=IntegerField()
         )
-    ).order_by('tech_type_order','-developer_count').values('tech_name', 'tech_color', 'tech_type', 'developer_count')
+    ).order_by('tech_type_order','-developer_count').values('tech_name', 'tech_color', 'tech_type', 'developer_count', 'logo_path')
     ranking_side = defaultdict(list)
     for tech in tech_stack_with_order:
-        ranking_side[tech['tech_type']].append({'tech_name':tech['tech_name'], 'tech_color':tech['tech_color']})
+        ranking_side[tech['tech_type']].append({'tech_name':tech['tech_name'], 'tech_color':tech['tech_color'], 'logo_path':tech['logo_path']})
     ranking_side = dict(ranking_side)
 
     if is_all:
-        sorted_github_calendar_colors = {tech_dict['tech_name']:tech_dict['tech_color'] for tech_dict_list in ranking_side.values() for tech_dict in tech_dict_list}
+        sorted_github_calendar_colors = {tech_dict['tech_name']:{'tech_color': tech_dict['tech_color'], 'logo_path':tech_dict['logo_path']} for tech_dict_list in ranking_side.values() for tech_dict in tech_dict_list}
         return ranking_side, sorted_github_calendar_colors
 
     return ranking_side
@@ -396,7 +396,7 @@ def ranking_all(request):
     RANK_COUNT_TO_SHOW = 3
     rank_data = dict()
     ranker_github_id_set = set()
-    for tech, tech_color in sorted_github_calendar_colors.items():
+    for tech, tech_data in sorted_github_calendar_colors.items():
         tech_name = tech.lower()
         tech_rank_data = [i for i in tech_table_joined if i['tech_name'].lower() == tech_name]
         tech_rank_data.sort(key=lambda x: x['tech_code_crazy'], reverse=True)
@@ -411,7 +411,7 @@ def ranking_all(request):
                 code_line_percent = 95
             ranker['code_line_percent'] = code_line_percent
 
-        rank_data[tech] = {'color': tech_color, 'top3_data':top3_data}
+        rank_data[tech] = {'color': tech_data['tech_color'], 'logo_path':tech_data['logo_path'], 'top3_data':top3_data}
     ranker_github_data_list = GithubUser.objects.values('github_id', 'avatar_url', 'toptech__tech_name').filter(github_id__in=ranker_github_id_set)
     rank_avatar_url_dict = {ranker['github_id']: ranker['avatar_url'] for ranker in ranker_github_data_list}
     ranker_toptech_dict = {ranker['github_id']: str(ranker['toptech__tech_name']) for ranker in ranker_github_data_list}
@@ -455,6 +455,7 @@ def ranking_tech_stack(request, tech_name):
         'ranking_side': draw_ranking_side(is_all=False),
         'tech_name': tech_name,
         'tech_color': current_tech.tech_color,
+        'logo_path': current_tech.logo_path,
         'top_ranker': now_ranker_data[:3],
         'now_ranker_data': page_rank_data,
         'total_rank_count': format(current_tech.developer_count, ','),
