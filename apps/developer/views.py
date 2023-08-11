@@ -1,5 +1,6 @@
 import json
 from datetime import datetime
+from threading import Thread
 
 import pytz
 import requests
@@ -83,11 +84,13 @@ def git_rainbow(request, github_id):
             return render(request, 'exception_page.html', {'error': error_code, 'message': user_result.get('reason')})
         github_user = user_result['github_user']
 
-    user_data = {"github_id": github_id, "tech_stack": True, "action": "update"}
-    core_response = core_repo_list(user_data, github_user.status)
-    github_user.status = core_response['status']
-    github_user.save()
     if not analysis_data:
+        user_data = {"github_id": github_id, "tech_stack": True, "action": "update"}
+        core_request = Thread(target=core_repo_list, args=(user_data, github_user.status))
+        core_request.start()
+
+        github_user.status = 'progress'
+        github_user.save()
         return render(request, 'loading.html', {'github_id': github_id})
     tech_card_data = json.loads(analysis_data.tech_card_data.replace("'", '"'))
     calendar_data = analysis_data.git_calendar_data.replace("'", '"')
