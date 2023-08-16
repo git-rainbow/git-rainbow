@@ -2,6 +2,7 @@ from django import template
 
 from apps.tech_stack.tech_img_base64 import tech_img_base64
 from urllib.parse import urlparse
+from apps.tech_stack.models import GithubUser
 
 register = template.Library()
 
@@ -24,3 +25,9 @@ def get_repo_name(repo_url):
 @register.filter
 def get_item(dictionary, key):
     return dictionary.get(key)
+
+
+@register.filter
+def get_owner_img(github_id):
+    owner_img = GithubUser.objects.filter(github_id=github_id).first().avatar_url
+    return owner_img

@@ -42,46 +42,41 @@
             <table class="w-full whitespace-no-wrap">
 
               <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+                {% for group in groups %}
                 <tr>
                   <td class="px-6 py-3">
                     <div class="flex items-center" style="justify-content: space-between;">
                       <div>
-                        <p class="font-semibold text-lg">Algorithm Study Group A</p>
+                        <p class="font-semibold text-lg">{{ group.name }}</p>
                         <p class="text-xs text-gray-600 dark:text-gray-400">
                           <div class="flex flex-wrap mb-3">
-                            <div class="rounded-full px-2 py-1 mr-2 mt-2 text-sm"
-                                 style="background-color: #DDF4FF; color:#2476DD;white-space : nowrap">
-                              AI
-                            </div>
-                            <div class="rounded-full px-2 py-1 mr-2 mt-2 text-sm"
-                                 style="background-color: #DDF4FF; color:#2476DD;white-space : nowrap">
-                              Web
-                            </div>
-
-                            <div class="rounded-full px-2 py-1 mr-2 mt-2 text-sm"
-                                 style="background-color: #DDF4FF; color:#2476DD;white-space : nowrap">
-                              Frontend
-                            </div>
+                            {% for topic in group.topic_set.all %}
+                              <div class="rounded-full px-2 py-1 mr-2 mt-2 text-sm"
+                                  style="background-color: #DDF4FF; color:#2476DD;white-space : nowrap">
+                                {{ topic.name }}
+                              </div>
+                            {% endfor %}
                           </div>
                         </p>
                         <div class="flex mt-2">
                           <div class="relative hidden w-8 h-8 mr-2 rounded-full md:block" style="min-width:32px;">
-                            <img class="object-cover w-full h-full rounded-full" src="https://avatars.githubusercontent.com/u/81942?v=4" alt="" loading="lazy">
+                            <img class="object-cover w-full h-full rounded-full" src="{{ group.owner|get_owner_img }}" alt="{{ group.owner }}" loading="lazy">
                             <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
                           </div>
                           <p class="text-sm mt-2 text-gray-600 dark:text-gray-400">
-                            12 {% trans "people" %} &nbsp;|&nbsp; Updated 2 days ago
+                            {{ group.github_users.all.count }} {% trans "people" %} &nbsp;|&nbsp; Updated 2 days ago
                           </p>
                         </div>
                       </div>
                       <!-- Avatar with inset shadow -->
                       <div class="relative hidden ml-3 rounded-lg md:block" style="width:90px;height:90px">
-                        <img class="object-cover w-full h-full rounded-lg" src="https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?ixlib=rb-1.2.1&amp;q=80&amp;fm=jpg&amp;crop=entropy&amp;cs=tinysrgb&amp;w=200&amp;fit=max&amp;ixid=eyJhcHBfaWQiOjE3Nzg0fQ" alt="" loading="lazy">
+                        <img class="object-cover w-full h-full rounded-lg" src="{{ group.img }}" alt="" loading="lazy">
                         <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
                       </div>
                     </div>
                   </td>
                 </tr>
+                {% endfor %}
               </tbody>
             </table>
           </div>

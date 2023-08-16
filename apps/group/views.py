@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
-from apps.tech_stack.models import TechStack
+from apps.tech_stack.models import TechStack, GithubUser
+from apps.group.models import Group
 from apps.developer.views import draw_ranking_side
 
 def group(request, group_id):
@@ -8,9 +9,11 @@ def group(request, group_id):
     return render(request, 'group.html', context)
 
 def group_list(request):
+    groups = Group.objects.all()
     ranking_side = draw_ranking_side()
 
     context = { 'group' : True,
+                'groups': groups,
                 'ranking_side': ranking_side
     }
 
