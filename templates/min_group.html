@@ -130,7 +130,7 @@
 
     </div>
   </div>
-  <div class="w-full mb-8 md:w-full scroll" style="max-width:1100px">
+  <div class="w-full md:w-full scroll" style="max-width:1100px">
     <div style="display:flex; justify-content: space-between;">
       <span class="font-bold" style="padding-top:10px;font-size:20px; font-family: 'Noto Sans KR';float: left">{% trans "Tech Stack" %}<g class="ml-3" style="font-weight: normal; font-size: 15px;">{% trans "in the last year" %}</g></span>
     </div>
@@ -395,7 +395,9 @@
       <!--Git grahp(end)-->
     </div>
     <!-- TechStack Graph Box (End) -->
+
   </div>
   {% include 'desc_div.html' %}
+  {% include 'charts.html' %}
 </div>
 {% endblock content %}
