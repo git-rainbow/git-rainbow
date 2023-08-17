@@ -31,8 +31,8 @@ msgid "Admin"
 msgstr "관리자"
 
 #: templates/header.html:27 templates/index.html:68
-msgid "Ranking"
-msgstr "랭킹"
+msgid "Crazy Ranking"
+msgstr "크레이지 랭킹"
 
 #: templates/intro.html:8
 msgid "Your Tech Stack"
@@ -213,8 +213,8 @@ msgid "\"Search a tech name\""
 msgstr "\"기술명 검색하기\""
 
 #: templates/ranking_side.html:18
-msgid "Show total rank"
-msgstr "전체 랭킹 보기"
+msgid "Show code crazy rank of all"
+msgstr "코드 크레이지 전체 랭킹"
 
 #: templates/toggle_login.html:10
 msgid "Logout"
