@@ -8,7 +8,7 @@ def get_token():
         res = github_rest_api(token_list[index], 'rate_limit')
         if not res.get('resources'):
             continue
-        elif res['resources']['core']['remaining'] > 200:
+        elif res['resources']['core']['remaining'] > 50 and res['resources']['graphql']['remaining'] > 50:
             token = token_list[index]
             break
     return token
