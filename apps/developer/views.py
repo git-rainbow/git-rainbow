@@ -86,9 +86,27 @@ def git_rainbow(request, github_id):
 
     if not analysis_data:
         user_data = {"github_id": github_id, "tech_stack": True, "action": "update"}
+        if request.GET.get('update') == 'True':
+            core_response = core_repo_list(user_data, github_user.status)
+            core_status = core_response['status']
+            github_user.status = core_status
+            github_user.save()
+            if core_status == 'completed':
+                calendar_data = core_response.get('calendar_data', [])
+                tech_card_data = core_response.get('tech_card_data', {})
+                AnalysisData.objects.update_or_create(github_id=github_user,
+                                                      defaults={
+                                                          'git_calendar_data': calendar_data,
+                                                          'tech_card_data': tech_card_data
+                                                      })
+                save_github_calendar_data(calendar_data, github_user)
+                if tech_card_data:
+                    TopTech.objects.update_or_create(github_id=github_user,
+                                                     defaults={'tech_name': tech_card_data[0]['name']})
+            return render(request, 'loading.html', {'github_id': github_id})
+
         core_request = Thread(target=core_repo_list, args=(user_data, github_user.status))
         core_request.start()
-
         github_user.status = 'progress'
         github_user.save()
         return render(request, 'loading.html', {'github_id': github_id})
