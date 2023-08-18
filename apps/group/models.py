@@ -3,11 +3,11 @@ from django.db import models
 
 class Group(models.Model):
     owner = models.ForeignKey("users.User", on_delete=models.DO_NOTHING)
-    name = models.CharField(max_length=30, unique=True)
+    name = models.CharField(max_length=30)
     description = models.CharField(max_length=300, null=True)
-    img = models.ImageField(null=True)
+    img = models.ImageField(null=True, upload_to='img/')
     is_private = models.BooleanField(default=False)
-    password = models.CharField(max_length=8, null=True)
+    join_code = models.CharField(max_length=8, null=True)
     github_users = models.ManyToManyField('tech_stack.GithubUser')
 
 

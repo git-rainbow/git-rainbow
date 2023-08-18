@@ -32,7 +32,7 @@
                    class="w-full pl-8 pr-2 text-sm text-gray-700 placeholder-gray-600 bg-gray-100 border-0 rounded-md dark:placeholder-gray-500 dark:focus:shadow-outline-gray dark:focus:placeholder-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:placeholder-gray-500 focus:bg-white focus:border-purple-300 focus:outline-none focus:shadow-outline-purple form-input"
                    type="text" placeholder={% blocktrans %}"Search Groups"{% endblocktrans %} aria-label="Search">
           </div>
-          <div id="repository_add_btn" class="btn" style="display: flex;cursor: pointer; align-items: center; background-color: #bae6f2;">
+          <div onclick="location.href='/group/new'" id="repository_add_btn" class="btn" style="display: flex;cursor: pointer; align-items: center; background-color: #bae6f2;">
             <img id="repository_add_img" src="/static/img/add.png" alt="add" style="padding: 2px; width: 18px; height:18px; font-weight: bold; cursor: pointer; opacity: 0.6">
           </div>
         </div>
@@ -70,7 +70,7 @@
                       </div>
                       <!-- Avatar with inset shadow -->
                       <div class="relative hidden ml-3 rounded-lg md:block" style="width:90px;height:90px">
-                        <img class="object-cover w-full h-full rounded-lg" src="{{ group.img }}" alt="" loading="lazy">
+                        <img class="object-cover w-full h-full rounded-lg" src={% if group.img %}"/media/{{group.img}}"{% else %}{% static 'img/profile.png' %}{% endif %} alt="" loading="lazy">
                         <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
                       </div>
                     </div>
