@@ -92,8 +92,8 @@ def git_rainbow(request, github_id):
         github_user.status = 'progress'
         github_user.save()
         return render(request, 'loading.html', {'github_id': github_id})
-    tech_card_data = json.loads(analysis_data.tech_card_data.replace("'", '"'))
-    calendar_data = analysis_data.git_calendar_data.replace("'", '"')
+    tech_card_data = json.loads(analysis_data.tech_card_data.replace("'", '"')) if analysis_data.tech_card_data else []
+    calendar_data = analysis_data.git_calendar_data.replace("'", '"') if analysis_data.git_calendar_data else {}
     top3_tech_data = []
     for tech_data in tech_card_data[:3]:
         tech_rank_data = make_ranker_data(tech_data['name'])
@@ -175,8 +175,8 @@ def update_git_rainbow(request):
         return JsonResponse({"status": "fail", 'reason': 'Core API fail'})
 
     update_or_create_github_user(github_id, ghp_token)
-    calendar_data = core_response.get('calendar_data')
-    tech_card_data = core_response.get('tech_card_data')
+    calendar_data = core_response.get('calendar_data', [])
+    tech_card_data = core_response.get('tech_card_data', {})
     AnalysisData.objects.update_or_create(github_id=github_user,
                                           defaults={
                                               'git_calendar_data': calendar_data,
@@ -241,8 +241,8 @@ def git_rainbow_svg(request, github_id):
     analysis_data = AnalysisData.objects.filter(github_id=github_user).first()
 
     if analysis_data:
-        tech_card_data = json.loads(analysis_data.tech_card_data.replace("'", '"'))
-        calendar_data = json.loads(analysis_data.git_calendar_data.replace("'", '"'))
+        tech_card_data = json.loads(analysis_data.tech_card_data.replace("'", '"')) if analysis_data.tech_card_data else []
+        calendar_data = json.loads(analysis_data.git_calendar_data.replace("'", '"')) if analysis_data.git_calendar_data else {}
     else:
         user_data = {"github_id": github_id, "tech_stack": True}
         core_response = core_repo_list(user_data, github_user.status)
