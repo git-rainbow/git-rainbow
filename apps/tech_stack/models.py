@@ -52,7 +52,7 @@ class Ranking(models.Model):
 
 
 class TechStack(models.Model):
-    tech_name = models.CharField(max_length=50)
+    tech_name = models.CharField(max_length=50, primary_key=True)
     tech_type = models.CharField(max_length=50)
     tech_color = models.CharField(max_length=50)
     developer_count = models.IntegerField()

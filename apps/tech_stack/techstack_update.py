@@ -12,29 +12,18 @@ def update_techstack_table(**kwargs):
         annotate(developer_count=Count('github_id', distinct=True))
     tech_developer_count_dict = {tech_data['tech_name']: tech_data['developer_count'] for tech_data in tech_with_developer_count_query_dict}
 
-    existing_techstack_list = TechStack.objects.all()
-    for techstack in existing_techstack_list:
-        tech_name = techstack.tech_name
-        techstack.tech_type = github_calendar_colors[tech_name]['tech_type']
-        techstack.tech_color = github_calendar_colors[tech_name]['tech_color']
-        techstack.logo_path = github_calendar_colors[tech_name]['logo_path']
-        techstack.developer_count = tech_developer_count_dict[tech_name]
-    TechStack.objects.bulk_update(existing_techstack_list, ['tech_type', 'tech_color', 'logo_path', 'developer_count'])
-
-    all_developer_tech_set = set(tech_developer_count_dict.keys())
-    exsiting_techstack_tech_name_set = {tech.tech_name for tech in existing_techstack_list}
-    new_tech_name_set = all_developer_tech_set - exsiting_techstack_tech_name_set
-
-    new_techstack_list = [
-        TechStack(
-            tech_name=tech_name,
-            tech_type=github_calendar_colors[tech_name]['tech_type'],
-            tech_color=github_calendar_colors[tech_name]['tech_color'],
-            logo_path =github_calendar_colors[tech_name]['logo_path'], 
-            developer_count=tech_developer_count_dict[tech_name],
+    updated_tech_list = []
+    for tech_name, developer_count in tech_developer_count_dict.items():
+        _, created = TechStack.objects.update_or_create(
+            tech_name = tech_name,
+            defaults={
+                'developer_count': developer_count,
+                'tech_type': github_calendar_colors[tech_name]['tech_type'],
+                'tech_color': github_calendar_colors[tech_name]['tech_color'],
+                'logo_path': github_calendar_colors[tech_name]['logo_path']
+            }
         )
-        for tech_name in new_tech_name_set
-    ]
-    TechStack.objects.bulk_create(new_techstack_list)
-    if len(new_techstack_list) != 0:
-        print(f'Newly added techstack: {", ".join(tech_name for tech_name in new_tech_name_set)}')
+        if created:
+            updated_tech_list.append(tech_name)
+    if len(updated_tech_list) != 0:
+        print(f'Newly added techstack: {", ".join(updated_tech_list)}')
