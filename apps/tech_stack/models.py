@@ -28,7 +28,8 @@ class GithubRepo(models.Model):
     branch = models.CharField(max_length=260, null=True)
     description = models.TextField(null=True)
     added_type = models.CharField(max_length=50, default='Auto', null=True)
-    status = models.CharField(max_length=50, default='reachable', null=True)
+    status = models.CharField(max_length=50, null=True)
+    is_reachable = models.BooleanField(default=True, null=True)
     is_private = models.BooleanField(default=False, null=True)
 
 
