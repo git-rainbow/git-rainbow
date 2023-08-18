@@ -8,6 +8,7 @@ class Group(models.Model):
     img = models.ImageField(null=True, upload_to='img/')
     is_private = models.BooleanField(default=False)
     join_code = models.CharField(max_length=8, null=True)
+    session_key = models.CharField(max_length=200, null=True)
     github_users = models.ManyToManyField('tech_stack.GithubUser')
 
 
