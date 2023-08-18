@@ -43,7 +43,7 @@
 
               <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
                 {% for group in groups %}
-                <tr>
+                <tr onclick="location.href='/group/{{group.id}}'" class="pointer">
                   <td class="px-6 py-3">
                     <div class="flex items-center" style="justify-content: space-between;">
                       <div>
