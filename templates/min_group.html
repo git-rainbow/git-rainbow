@@ -7,41 +7,35 @@
       <div class="flex">
         <div class="mr-2 flex flex-column" style="align-items: center;">
           <div class="relative hidden mr-3 rounded-lg md:block" style="width:120px;height:120px">
-            <img class="object-cover w-full h-full rounded-lg" src="/static/img/work.png" alt="" loading="lazy">
+            <img class="object-cover w-full h-full rounded-lg" src="/media/{{group.img}}" alt="" loading="lazy">
             <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
           </div>
         </div>
         <div class="flex flex-col">
-          {% if github_user.name  %}
-          <span class="font-bold" style="font-size: 24px;" id="user_name">Algorithm Study group</span>
-          {% endif %}
-          <span class="text-gray-500 mt-2" style="font-size: 20px;">Hello, Let's study algorithm programming</span>
+          <span class="font-bold" style="font-size: 24px;" id="user_name">{{group.name}}</span>
+          <span class="text-gray-500 mt-2" style="font-size: 20px;">{{group.description}}</span>
           <div class="flex flex-wrap mt-2">
-            <div class="rounded-full px-2 py-1 mr-2 mt-2 text-sm font-bold" style="background-color: #DDF4FF; color:#2476DD;white-space : nowrap">Front-end</div>
-            <div class="rounded-full px-2 py-1 mr-2 mt-2 text-sm font-bold" style="background-color: #DDF4FF; color:#2476DD;white-space : nowrap">javascript</div>
-            <div class="rounded-full px-2 py-1 mr-2 mt-2 text-sm font-bold" style="background-color: #DDF4FF; color:#2476DD;white-space : nowrap">React</div>
-            <div class="rounded-full px-2 py-1 mr-2 mt-2 text-sm font-bold" style="background-color: #DDF4FF; color:#2476DD;white-space : nowrap">spark</div>
+            {% for topic in group.topic_set.all %}
+              <div class="rounded-full px-2 py-1 mr-2 mt-2 text-sm font-bold" style="background-color: #DDF4FF; color:#2476DD;white-space : nowrap">
+                {{topic.name}}
+              </div>
+            {% endfor %}
           </div>
         </div>
       </div>
 
       <div class="mt-4 mb-2" style="max-width:400px">
         <div class="flex" style="justify-content: space-between;">
-          <span class="text-gray-500 mt-2 text-lg">Members (6 people)</span>
+          <span class="text-gray-500 mt-2 text-lg">Members ({{group.github_users.all.count}} people)</span>
           <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="gray" class="mt-2 bi bi-caret-down-fill" viewBox="0 0 16 16">
             <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"></path>
           </svg>
         </div>
         <div class="flex mt-2 bg-white rounded-lg shadow-xs dark:bg-gray-800" style="justify-content: space-between; padding: 1%; cursor:pointer; max-width:400px;">
           <div class="flex align-center">
-            <img class="object-cover w-full h-full rounded-full mx-2 my-2" src="https://avatars.githubusercontent.com/u/6702424?v=4" style="width:32px;height:32px">
-            <img class="object-cover w-full h-full rounded-full mx-2 my-2" src="https://avatars.githubusercontent.com/u/2269732?v=4" style="width:32px;height:32px">
-            <img class="object-cover w-full h-full rounded-full mx-2 my-2" src="https://avatars.githubusercontent.com/u/1500684?v=4" style="width:32px;height:32px">
-            <img class="object-cover w-full h-full rounded-full mx-2 my-2" src="https://avatars.githubusercontent.com/u/72603?v=4" style="width:32px;height:32px">
-            <img class="object-cover w-full h-full rounded-full mx-2 my-2" src="https://avatars.githubusercontent.com/u/88735655?v=4" style="width:32px;height:32px">
-            <img class="object-cover w-full h-full rounded-full mx-2 my-2" src="https://avatars.githubusercontent.com/u/164476?v=4" style="width:32px;height:32px">
-            <img class="object-cover w-full h-full rounded-full mx-2 my-2" src="https://avatars.githubusercontent.com/u/69431456?v=4" src="https://avatars.githubusercontent.com/u/11519203?v=4" style="width:32px;height:32px">
-            <img class="object-cover w-full h-full rounded-full mx-2 my-2" src="https://avatars.githubusercontent.com/u/11519203?v=4" style="width:32px;height:32px">
+            {% for github_user in group.github_users.all %}
+              <img class="object-cover w-full h-full rounded-full mx-2 my-2" src="{{github_user.avatar_url}}" style="width:32px; height:32px">
+            {% endfor %}
           </div>
         </div>
       </div>
@@ -139,89 +133,23 @@
     <div id="graph_box" class="mt-2 flex-1 md:w-full w-full h-full overflow-hidden bg-white rounded-lg shadow-xs p-6">
       <!-- Members start-->
       <div class="flex w-full mb-3 scroll-x">
-        <div selected="false" style="cursor: pointer;">
-          <table style="min-height: 100px;width: 126px;">
-            <tbody class="tech">
-              <tr>
-                <td class="w-full">
-                  <img class="object-cover w-full h-full rounded-full mx-auto mb-2 mt-2" src="https://avatars.githubusercontent.com/u/6702424?v=4" style="width:64px;height:64px">
-                  <div class="mb-2 px-2" style="text-align: center; display: flex; flex-direction: column;">
-                    garronej
-                    <span class="badge badge-danger px-1 py-1" style="font-size: .75rem; text-align: center; margin: 0 auto; margin-top: 8px;">125%</span>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div selected="false" style="cursor: pointer;">
-          <table style="min-height: 100px;width: 126px;">
-            <tbody class="tech">
-              <tr>
-                <td class="w-full">
-                  <img class="object-cover w-full h-full rounded-full mx-auto mb-2 mt-2" src="https://avatars.githubusercontent.com/u/1500684?v=4" style="width:64px;height:64px">
-                  <div class="mb-2 px-2" style="text-align: center; display: flex; flex-direction: column;">
-                    kentcdodds
-                    <span class="badge badge-danger px-1 py-1" style="font-size: .75rem; text-align: center; margin: 0 auto; margin-top: 8px;">103%</span>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-
-        <div selected="false" style="cursor: pointer;">
-          <table style="min-height: 100px;width: 126px;">
-            <tbody class="tech">
-              <tr>
-                <td class="w-full">
-                  <img class="object-cover w-full h-full rounded-full mx-auto mb-2 mt-2" src="https://avatars.githubusercontent.com/u/72603?v=4" style="width:64px;height:64px">
-                  <div class="mb-2 px-2" style="text-align: center; display: flex; flex-direction: column;">
-                    PowerKiKi
-                    <span class="badge badge-danger px-1 py-1" style="font-size: .75rem; text-align: center; margin: 0 auto; margin-top: 8px;">95%</span>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-
-        <div selected="false" style="cursor: pointer;">
-          <table style="min-height: 100px;width: 126px;">
-            <tbody class="tech">
-              <tr>
-                <td class="w-full">
-                  <img class="object-cover w-full h-full rounded-full mx-auto mb-2 mt-2" src="https://avatars.githubusercontent.com/u/2269732?v=4" style="width:64px;height:64px">
-                  <div class="mb-2 px-2" style="text-align: center; display: flex; flex-direction: column;">
-                    kelsos
-                    <span class="badge badge-danger px-1 py-1" style="font-size: .75rem; text-align: center; margin: 0 auto; margin-top: 8px;">95%</span>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-
-        <div selected="false" style="cursor: pointer;">
-          <table style="min-height: 100px;width: 126px;">
-            <tbody class="tech">
-              <tr>
-                <td class="w-full">
-                  <img class="object-cover w-full h-full rounded-full mx-auto mb-2 mt-2" src="https://avatars.githubusercontent.com/u/69431456?v=4" style="width:64px;height:64px">
-                  <div class="mb-2 px-2" style="text-align: center; display: flex; flex-direction: column;">
-                    bigint
-                    <span class="badge badge-danger px-1 py-1" style="font-size: .75rem; text-align: center; margin: 0 auto; margin-top: 8px;">94%</span>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
+        {% for github_user in group.github_users.all %}
+          <div selected="false" style="cursor: pointer;">
+            <table style="min-height: 100px;width: 126px;">
+              <tbody class="tech">
+                <tr>
+                  <td class="w-full">
+                    <img class="object-cover w-full h-full rounded-full mx-auto mb-2 mt-2" src="{{github_user.avatar_url}}" style="width:64px;height:64px">
+                    <div class="mb-2 px-2" style="text-align: center; display: flex; flex-direction: column;">
+                      {{github_user.github_id}}
+                      <span class="badge badge-danger px-1 py-1" style="font-size: .75rem; text-align: center; margin: 0 auto; margin-top: 8px;">125%</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        {% endfor %}
       </div>
       <!-- Members end-->
 

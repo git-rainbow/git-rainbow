@@ -16,7 +16,14 @@ from config.local_settings import RANDOM_IMG_URL
 
 
 def group(request, group_id):
+    group = Group.objects.select_related('owner').filter(id=group_id).first()
     context = { 'group' : True }
+
+    if not group:
+        context.update({'error': 404, 'message': 'There is no group'})
+        return render(request, 'exception_page.html', context)
+
+    context.update({'group': group})
 
     return render(request, 'group.html', context)
 
