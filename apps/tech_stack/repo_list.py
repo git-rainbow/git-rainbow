@@ -43,6 +43,8 @@ def get_repo_list(variables, token):
     }
     """
     res = github_gql(query, variables, headers)
+    if res.get('errors'):
+        return {'status': 'fail', 'reason': res.get('errors')}
 
     try:
         dict_list = res['data']['user']['contributionsCollection']['commitContributionsByRepository']
@@ -104,7 +106,10 @@ def repo_list(github_id, action, ghp_token=None):
             "from": gql_from_year_ago,
             "to": gql_today
         }
-        user_repo_list.update(get_repo_list(n_year_variables, token))
+        get_repo_res = get_repo_list(n_year_variables, token)
+        if get_repo_res.get('status') == 'fail':
+            return get_repo_res
+        user_repo_list.update(get_repo_res)
     except Exception as e:
         print(e)
         raise

@@ -104,6 +104,8 @@ def git_rainbow(request, github_id):
                 if tech_card_data:
                     TopTech.objects.update_or_create(github_id=github_user,
                                                      defaults={'tech_name': tech_card_data[0]['name']})
+            elif core_status == 'fail':
+                return render(request, 'exception_page.html', {'error': 404, 'message': str(core_status.get('reason'))})
             return render(request, 'loading.html', {'github_id': github_id})
 
         core_request = Thread(target=core_repo_list, args=(user_data, github_user.status))
@@ -191,7 +193,7 @@ def update_git_rainbow(request):
         return JsonResponse({"status": core_status})
 
     if core_status == 'fail':
-        return JsonResponse({"status": "fail", 'reason': 'Core API fail'})
+        return JsonResponse({"status": "fail", 'reason': str(core_response.get('reason'))})
 
     update_or_create_github_user(github_id, ghp_token)
     calendar_data = core_response.get('calendar_data')
@@ -267,6 +269,8 @@ def git_rainbow_svg(request, github_id):
         core_response = core_repo_list(user_data, github_user.status)
         github_user.status = core_response['status']
         github_user.save()
+        if core_response['status'] == 'fail':
+            return redirect(f'/{github_id}')
         tech_card_data = core_response.get('tech_card_data')
         calendar_data = core_response.get('calendar_data')
         if not tech_card_data:
