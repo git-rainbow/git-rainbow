@@ -6,4 +6,8 @@
 </div>
 <script type="text/javascript" src="{% static "js/tech_search.js" %}"></script>
 <script type="text/javascript" src="{% static "js/tech_stack.js" %}"></script>
+<script type="text/javascript" src="{% static "js/group.js" %}"></script>
+<script>
+  group_update("{{ group.id }}");
+</script>
 {% endblock %}

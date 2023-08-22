@@ -179,3 +179,45 @@ function create_group(){
         }
     });
 }
+
+function _group_update(group_id){
+    let data = {
+        "group_id": group_id,
+    }
+    let waiting = true;
+    $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+    $.ajax({
+        url: '/group/update'
+        ,method: 'POST'
+        ,data: data
+        ,async: false
+        ,success: function (data) {
+            if (data.status == 'fail'){
+                alert(data.reason);
+                waiting = false;
+            } else if (data.status == 'completed'){
+                waiting = false;
+            }
+        }
+        ,error: function (data) {
+            waiting = false;
+            alert(gettext("error occured"));
+        }
+    });
+    return waiting;
+}
+
+function group_update(group_id){
+    var interval = setInterval(function () {
+        let waiting = _group_update(group_id);
+        if (waiting == false) {
+            clearInterval(interval);
+        }
+    }, 3000);
+}

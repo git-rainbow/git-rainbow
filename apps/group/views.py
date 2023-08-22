@@ -2,11 +2,17 @@ import json
 import requests
 import os
 import shutil
+
+from dateutil.relativedelta import relativedelta
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from urllib.parse import urlparse
-from apps.tech_stack.models import TechStack, GithubUser
+
+from django.utils import timezone
+
+from apps.group.utils import core_group_analysis
+from apps.tech_stack.models import TechStack, GithubUser, GithubCalendar
 from apps.group.models import Group, GroupRepo, Topic
 from apps.developer.views import draw_ranking_side
 from utils.github_api.github_api import github_rest_api
@@ -162,3 +168,56 @@ def create_group(request):
         topic_object, _ = Topic.objects.get_or_create(name=topic)
         topic_object.groups.add(new_group)
     return JsonResponse({'status': 'success'})
+
+
+def make_name_with_owner(repo_url):
+    return urlparse(repo_url[:-4]).path[1:]
+
+
+def save_git_calendar_data(git_calendar_data):
+    calendar_data_bulk = [GithubCalendar(**git_data) for git_data in git_calendar_data]
+    GithubCalendar.objects.bulk_create(calendar_data_bulk)
+
+
+def group_update(request):
+    if request.method != 'POST':
+        return JsonResponse({"status": "fail", 'reason': 'Not allowed method'})
+    group_id = request.POST.get('group_id')
+    if not group_id:
+        return JsonResponse({'status': 'fail', 'reason': 'no group id'})
+    group = Group.objects.filter(id=group_id).first()
+    if not group:
+        return JsonResponse({'status': 'fail', 'reason': 'no group'})
+    group_member_list = group.github_users.all()
+    group_repo_list = group.grouprepo_set.all()
+    year_ago = (timezone.now() - relativedelta(years=1)).replace(hour=0, minute=0, second=0).strftime("%Y-%m-%d")
+    repo_dict_list = [
+        {
+            'name_with_owner': make_name_with_owner(group_repo.repo_url),
+            'repo_url': group_repo.repo_url,
+            'main_branch': group_repo.branch,
+            'is_private': group_repo.is_private,
+            'ghp_token': None,
+            'after': year_ago,
+            'github_id': member.github_id
+        }
+        for group_repo in group_repo_list
+        for member in group_member_list
+    ]
+    session_key = None
+    if group.session_key:
+        session_key = group.session_key
+    response = core_group_analysis(repo_dict_list, session_key)
+    if response['status'] == 'progress':
+        if not group.session_key:
+            group.session_key = response['session_key']
+            group.save()
+        return JsonResponse({'status': 'progress', 'session_key': group.session_key})
+    if response['status'] == 'done':
+        member_list = group_member_list.values_list('github_id', flat=True)
+        group_repo_list = group_repo_list.values_list('repo_url', flat=True)
+        GithubCalendar.objects.filter(github_id__in=member_list, repo_url__in=group_repo_list).delete()
+        save_git_calendar_data(response['calendar_data'])
+        group.session_key = None
+        group.save()
+    return JsonResponse({'status': 'completed', 'repo_info': repo_dict_list})
