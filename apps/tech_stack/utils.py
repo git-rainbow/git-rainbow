@@ -52,7 +52,7 @@ def make_calendar_data(tech_files):
 
 def core_repo_list(user_data, user_status):
     repo_list_result = repo_list(user_data['github_id'], user_data['action'], user_data.get('ghp_token'))
-    if repo_list_result.get('status') == 'fail':
+    if not isinstance(repo_list_result, list) and repo_list_result.get('status') == 'fail':
         return repo_list_result
     user_data['repo_dict_list'] = json.dumps(repo_list_result)
     core_url = CORE_URL + "/core/tech-stack"
