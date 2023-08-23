@@ -43,7 +43,7 @@ def get_repo_list(variables, token):
     }
     """
     res = github_gql(query, variables, headers)
-    if res.get('errors'):
+    if res.get('errors') or not res.get('data'):
         return {'status': 'fail', 'reason': res.get('errors')}
 
     try:
