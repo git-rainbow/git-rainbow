@@ -170,7 +170,7 @@ function group_calendar() {
              }
              let data = {};
              data[date]= tech_data;
-             highlight_cell(event, data);
+             highlight_group_cell(event, data);
          })
          .on("mouseover", function(d) {
              tooltip.setAttribute('style','position:absolute;');
