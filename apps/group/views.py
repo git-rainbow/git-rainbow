@@ -1,6 +1,6 @@
 import json
 from collections import defaultdict
-from random import random
+import random
 
 import requests
 import os
