@@ -1,9 +1,13 @@
 import json
+from collections import defaultdict
+from random import random
+
 import requests
 import os
 import shutil
 
 from dateutil.relativedelta import relativedelta
+from django.db.models import Sum
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
@@ -16,9 +20,29 @@ from apps.tech_stack.models import TechStack, GithubUser, GithubCalendar
 from apps.group.models import Group, GroupRepo, Topic
 from apps.developer.views import draw_ranking_side
 from utils.github_api.github_api import github_rest_api
+from utils.github_calendar_colors.github_calendar_colors import github_calendar_colors
 from utils.utils import get_token
 from time import time
 from config.local_settings import RANDOM_IMG_URL
+
+
+def make_group_tech_card(member_list, group_repo_list, one_year_ago):
+    group_calendar_data = GithubCalendar.objects.filter(github_id__in=member_list, repo_url__in=group_repo_list,
+                                                        author_date__gte=one_year_ago).values('tech_name').annotate(total_lines=Sum('lines'))
+    total_lines = sum([data['total_lines'] for data in group_calendar_data])
+    tech_card_data = []
+    for data in group_calendar_data:
+        percent = round(data['total_lines'] / total_lines * 100, 1)
+        if percent > 0:
+            name_for_file = data['tech_name'].lower()
+            tech = {'name': data['tech_name'], 'file': name_for_file,
+                    'color': github_calendar_colors[data['tech_name']]['tech_color'] if github_calendar_colors.get(data['tech_name']) else 'rgba(7,141,169,1.0)',
+                    'percent': percent}
+            img_list = os.listdir('static/img')
+            if (f'{name_for_file}.png') not in img_list:
+                tech['file'] = f'none{random.randint(1, 3)}'
+            tech_card_data.append(tech)
+    return tech_card_data
 
 
 def group(request, group_id):
@@ -30,8 +54,26 @@ def group(request, group_id):
         return render(request, 'exception_page.html', context)
 
     context.update({'group': group})
-
+    one_year_ago = timezone.now() - relativedelta(years=1)
+    member_list = group.github_users.all().values_list('github_id', flat=True)
+    group_repo_list = group.grouprepo_set.all().values_list('repo_url', flat=True)
+    group_calendar_data = GithubCalendar.objects.filter(github_id__in=member_list, repo_url__in=group_repo_list, author_date__gte=one_year_ago)
+    group_tech_card = make_group_tech_card(member_list, group_repo_list, one_year_ago)
+    group_git_calendar_data = defaultdict(lambda: defaultdict(lambda: {"total_lines": 0, "commit_repo": defaultdict(list)}))
+    for i in group_calendar_data:
+        commit_date = i.author_date.strftime("%Y-%m-%d")
+        tech_info = group_git_calendar_data[commit_date][i.tech_name]
+        tech_info["total_lines"] += i.lines
+        commit_info = {
+            "commit_hash": i.commit_hash,
+            "github_id": i.github_id_id,
+            "lines": i.lines,
+        }
+        tech_info["commit_repo"][i.repo_url].append(commit_info)
+    group_git_calendar_data = json.dumps(group_git_calendar_data)
+    context.update({'group_git_calendar_data': group_git_calendar_data, 'group_tech_card': group_tech_card})
     return render(request, 'group.html', context)
+
 
 def group_list(request):
     groups = Group.objects.all()
