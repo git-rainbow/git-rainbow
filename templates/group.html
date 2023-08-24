@@ -11,5 +11,6 @@
 <script>
     show_group_calendar(JSON.parse('{{ group_git_calendar_data|safe}}'))
   group_update("{{ group.id }}");
+  draw_monthly_graph(calendar_commits);
 </script>
 {% endblock %}

@@ -68,6 +68,7 @@ def group(request, group_id):
             "commit_hash": i.commit_hash,
             "github_id": i.github_id_id,
             "lines": i.lines,
+            "avatar_url": i.github_id.avatar_url
         }
         tech_info["commit_repo"][i.repo_url].append(commit_info)
     group_git_calendar_data = json.dumps(group_git_calendar_data)

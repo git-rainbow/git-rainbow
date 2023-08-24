@@ -1,5 +1,5 @@
 <script src="/static/js/charts-lines.js" defer></script>
-<script src="/static/js/charts-bars.js" defer></script>
+<script src="/static/js/charts-bars.js"></script>
 <script src="/static/js/charts-scatter.js" defer></script>
 
 <!-- Lines (Start) -->
@@ -29,23 +29,8 @@
   <h4 class="mb-4 font-semibold text-gray-800 dark:text-gray-300">
     Monthly Activity
   </h4>
-  <div class="flex justify-center mt-4 space-x-3 text-sm text-gray-600 dark:text-gray-400">
+  <div id="bar_graph_div" class="flex justify-center mt-4 space-x-3 text-sm text-gray-600 dark:text-gray-400">
     <!-- Chart legend -->
-    <div class="flex items-center">
-      <span class="inline-block w-4 h-3 mr-1" style="background-color:#F694a2"></span>
-      <img class="object-cover w-full h-full rounded-full mx-2 my-2" src="https://avatars.githubusercontent.com/u/6702424?v=4" style="width:32px;height:32px">
-      <span>garronej</span>
-    </div>
-    <div class="flex items-center">
-      <span class="inline-block w-4 h-3 mr-1" style="background-color:#0694a2"></span>
-      <img class="object-cover w-full h-full rounded-full mx-2 my-2" src="https://avatars.githubusercontent.com/u/1500684?v=4" style="width:32px;height:32px">
-      <span>kentcdodds</span>
-    </div>
-    <div class="flex items-center">
-      <span class="inline-block w-4 h-3 mr-1" style="background-color:#7e3af2"></span>
-      <img class="object-cover w-full h-full rounded-full mx-2 my-2" src="https://avatars.githubusercontent.com/u/72603?v=4" style="width:32px;height:32px">
-      <span>PowerKiKi</span>
-    </div>
   </div>
   <canvas id="bars"></canvas>
 </div>
