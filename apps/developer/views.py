@@ -44,7 +44,10 @@ def update_or_create_github_user(github_id, ghp_token=None):
 
     github_data = github_data['result']
     github_user, _ = GithubUser.objects.update_or_create(github_id=github_id,
-                                                               defaults={**github_data})
+                                                               defaults={
+                                                                   **github_data,
+                                                                   'is_valid': True
+                                                               })
     return {'status': 'success', 'github_user': github_user}
 
 
@@ -75,14 +78,18 @@ def git_rainbow(request, github_id):
     is_github_id_valid = check_github_id(github_id)
     if not is_github_id_valid:
         return render(request, 'exception_page.html', {'error': error_code, 'message': 'Invalid github id'})
-    github_user = GithubUser.objects.prefetch_related('githubcalendar_set').filter(github_id__iexact=github_id).first()
+    github_user = GithubUser.objects.prefetch_related('githubcalendar_set').filter(github_id__iexact=github_id, is_valid=True).first()
     analysis_data = AnalysisData.objects.filter(github_id=github_user).first()
 
     if not github_user:
+        new_github_user, _ = GithubUser.objects.get_or_create(github_id=github_id)
         user_result = update_or_create_github_user(github_id)
         if user_result.get('status') != 'success':
             return render(request, 'exception_page.html', {'error': error_code, 'message': user_result.get('reason')})
         github_user = user_result['github_user']
+        github_id = github_user.github_id
+        if new_github_user.github_id != github_id:
+            new_github_user.delete()
 
     if not analysis_data:
         user_data = {"github_id": github_id, "tech_stack": True, "action": "update"}
@@ -168,7 +175,7 @@ def save_repo_url(request):
 def update_git_rainbow(request):
     if request.method != 'POST':
         return JsonResponse({"status": "fail", 'reason': 'Not allowed method'})
-    github_user = GithubUser.objects.filter(github_id__iexact=request.POST.get('github_id')).first()
+    github_user = GithubUser.objects.filter(github_id__iexact=request.POST.get('github_id'), is_valid=True).first()
     if not github_user:
         return JsonResponse({"status": "fail", 'reason': 'No github id'})
 
@@ -252,12 +259,16 @@ def update_git_rainbow(request):
 
 
 def git_rainbow_svg(request, github_id):
-    github_user = GithubUser.objects.filter(github_id__iexact=github_id).first()
+    github_user = GithubUser.objects.filter(github_id__iexact=github_id, is_valid=True).first()
     if not github_user:
+        new_github_user, _ = GithubUser.objects.get_or_create(github_id=github_id)
         user_result = update_or_create_github_user(github_id)
         if user_result['status'] == 'fail':
             return render(request, 'exception_page.html', {'error': 404, 'message': user_result['reason']})
         github_user = user_result['github_user']
+        github_id = github_user.github_id
+        if new_github_user.github_id != github_id:
+            new_github_user.delete()
 
     analysis_data = AnalysisData.objects.filter(github_id=github_user).first()
 

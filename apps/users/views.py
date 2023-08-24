@@ -64,6 +64,7 @@ def github_callback(request):
             'email': profile_json.get("email"),
             'avatar_url': profile_json.get("avatar_url"),
             'bio': profile_json.get("bio"),
+            'is_valid': True,
         }
     )
 
