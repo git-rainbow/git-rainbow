@@ -456,7 +456,7 @@ function top_tech_lines(tech_lines) {
         }
         if (tech_lines[tech]['total_lines'] > lines) {
             tech_name = tech
-            lines = tech_lines[tech]
+            lines = tech_lines[tech]['total_lines']
         }
     }
 
