@@ -43,8 +43,8 @@ class GithubCalendar(models.Model):
     author_date = models.DateTimeField()
     tech_name = models.CharField(max_length=50)
     lines = models.IntegerField()
-    repo_url = models.CharField(max_length=150)
-    commit_hash = models.CharField(max_length=150)
+    repo_url = models.CharField(max_length=150, null=True)
+    commit_hash = models.CharField(max_length=150, null=True)
     github_id = models.ForeignKey("GithubUser", on_delete=models.CASCADE)
 
 
