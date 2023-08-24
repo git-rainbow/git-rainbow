@@ -18,6 +18,7 @@ class GithubUser(models.Model):
     bio = models.TextField(null=True)
     status = models.CharField(max_length=30, null=True)
     updated_date = models.DateTimeField(auto_now=True)
+    is_valid = models.BooleanField(default=False, null=True)
 
 
 class GithubRepo(models.Model):
