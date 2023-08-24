@@ -24,7 +24,19 @@
         </div>
       </div>
 
-      <div class="mt-4 mb-2" style="max-width:400px">
+      <button type="button" class="btn font-semibold mt-2 flex"
++              style="width:120px;background-color: #d9d2e9;align-items: center;just
+ify-content: center;" >
+        <span class="mr-2 ml-4" style="margin-top:0.5px">Join</span>
+        <div class="flex" style="background-color: #866bf257;width: 28px; height:28px;border-radius: 50%;align-content: space-around;flex-wrap: wrap;">
+          <svg style="width:22px;height:22px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-in-right" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0v-2z"/>
+            <path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+          </svg>
+        </div>
+      </button>
+
+      <div class="mt-2 mb-2" style="max-width:400px">
         <div class="flex" style="justify-content: space-between;">
           <span class="text-gray-500 mt-2 text-lg">Members ({{group.github_users.all.count}} people)</span>
           <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="gray" class="mt-2 bi bi-caret-down-fill" viewBox="0 0 16 16">
