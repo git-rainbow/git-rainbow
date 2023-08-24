@@ -16,9 +16,10 @@ from urllib.parse import urlparse
 from django.utils import timezone
 
 from apps.group.utils import core_group_analysis
-from apps.tech_stack.models import TechStack, GithubUser, GithubCalendar
+from apps.tech_stack.models import TechStack, GithubUser, GithubCalendar, GithubRepo
 from apps.group.models import Group, GroupRepo, Topic
 from apps.developer.views import draw_ranking_side
+from apps.users.models import User
 from utils.github_api.github_api import github_rest_api
 from utils.github_calendar_colors.github_calendar_colors import github_calendar_colors
 from utils.utils import get_token
@@ -72,7 +73,11 @@ def group(request, group_id):
         }
         tech_info["commit_repo"][i.repo_url].append(commit_info)
     group_git_calendar_data = json.dumps(group_git_calendar_data)
-    context.update({'group_git_calendar_data': group_git_calendar_data, 'group_tech_card': group_tech_card})
+    is_joined = False
+    login_user = request.user
+    if login_user.is_authenticated and login_user.github_id in member_list:
+        is_joined = True
+    context.update({'group_git_calendar_data': group_git_calendar_data, 'group_tech_card': group_tech_card, 'is_joined': is_joined})
     return render(request, 'group.html', context)
 
 
@@ -264,3 +269,31 @@ def group_update(request):
         group.session_key = None
         group.save()
     return JsonResponse({'status': 'completed', 'repo_info': repo_dict_list})
+
+
+def group_join(request):
+    if request.method != 'POST':
+        return JsonResponse({"status": "fail", 'reason': 'Not allowed method'})
+    group_id = request.POST.get('group_id')
+    group = Group.objects.filter(id=group_id).first()
+    if not group:
+        return JsonResponse({"status": "fail", 'reason': 'group does not exist'})
+    user = request.user
+    if not user.is_authenticated:
+        return JsonResponse({"status": "fail", 'reason': 'Login is required'})
+    github_id = user.github_id
+    group.github_users.add(github_id)
+
+    group_repo_list = group.grouprepo_set.all()
+    for repo in group_repo_list:
+        GithubRepo.objects.get_or_create(
+            github_id_id=github_id,
+            repo_url=repo.repo_url,
+            defaults={
+                'branch': repo.branch,
+                'is_private': repo.is_private,
+                'status': 'completed',
+                'added_type': 'group',
+            })
+
+    return JsonResponse({'status': 'completed'})

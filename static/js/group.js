@@ -486,3 +486,30 @@ function highlight_group_cell(event, commits=null){
         show_group_total_lines(commits, true, false);
     }
 }
+
+function group_join(group_id, is_login){
+    if (!is_login){
+        return alert('Login is required')
+    }
+    $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+    $.ajax({
+        url: '/group/join'
+        ,method: 'POST'
+        ,data: {'group_id': group_id}
+        ,async: false
+        ,success: function (data) {
+            let status = data.status
+            if (status == 'fail') {
+                alert(data.reason);
+            } else {
+                location.reload();
+            }
+        }
+    });
+}
