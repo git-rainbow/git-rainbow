@@ -19,6 +19,7 @@ class GithubUser(models.Model):
     status = models.CharField(max_length=30, null=True)
     updated_date = models.DateTimeField(auto_now=True)
     is_valid = models.BooleanField(default=False, null=True)
+    session_key = models.CharField(max_length=200, null=True)
 
 
 class GithubRepo(models.Model):
