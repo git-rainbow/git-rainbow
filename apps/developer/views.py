@@ -14,8 +14,10 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.template import loader
 from django.utils import timezone
-from collections import defaultdict
 
+from apps.developer.utils import draw_ranking_side
+from apps.group.utils import core_group_analysis, make_group_calendar_data, make_group_repo_dict_list
+from apps.group.views import save_git_calendar_data, make_group_tech_card
 from apps.tech_stack.models import GithubUser, AnalysisData, GithubCalendar, Ranking, GithubRepo, TechStack, TopTech
 from apps.tech_stack.utils import core_repo_list
 from utils.github_api.github_api import request_github_profile
@@ -79,8 +81,9 @@ def git_rainbow(request, github_id):
     if not is_github_id_valid:
         return render(request, 'exception_page.html', {'error': error_code, 'message': 'Invalid github id'})
     github_user = GithubUser.objects.prefetch_related('githubcalendar_set').filter(github_id__iexact=github_id, is_valid=True).first()
-    analysis_data = AnalysisData.objects.filter(github_id=github_user).first()
-
+    year_ago = (timezone.now() - relativedelta(years=1)).replace(hour=0, minute=0, second=0).strftime(
+        "%Y-%m-%d")
+    github_calendar_list = GithubCalendar.objects.filter(github_id=github_user, author_date__gte=year_ago)
     if not github_user:
         new_github_user, _ = GithubUser.objects.get_or_create(github_id=github_id)
         user_result = update_or_create_github_user(github_id)
@@ -91,37 +94,44 @@ def git_rainbow(request, github_id):
         if new_github_user.github_id != github_id:
             new_github_user.delete()
 
-    if not analysis_data:
-        user_data = {"github_id": github_id, "tech_stack": True, "action": "update"}
-        if request.GET.get('update') == 'True':
-            core_response = core_repo_list(user_data, github_user.status)
-            core_status = core_response['status']
-            github_user.status = core_status
+    if not github_calendar_list:
+        user_data = {"github_id": github_id, "tech_stack": True}
+        repo_list_reponse = core_repo_list(user_data, github_user.status)
+        repo_list_status = repo_list_reponse['status']
+        if repo_list_status == 'fail':
+            github_user.status = repo_list_status
             github_user.save()
-            if core_status == 'completed':
-                calendar_data = core_response.get('calendar_data')
-                tech_card_data = core_response.get('tech_card_data')
-                AnalysisData.objects.update_or_create(github_id=github_user,
-                                                      defaults={
-                                                          'git_calendar_data': calendar_data,
-                                                          'tech_card_data': tech_card_data
-                                                      })
-                save_github_calendar_data(calendar_data, github_user)
-                tech_card_data = json.loads(tech_card_data)
-                if tech_card_data:
-                    TopTech.objects.update_or_create(github_id=github_user,
-                                                     defaults={'tech_name': tech_card_data[0]['name']})
-            elif core_status == 'fail':
-                return render(request, 'exception_page.html', {'error': 404, 'message': str(core_status.get('reason'))})
+            return render(request, 'exception_page.html', {'error': 404, 'message': str(repo_list_reponse.get('reason'))})
+
+        user_repo_list = list(GithubRepo.objects.filter(github_id_id=github_id))
+        repo_dict_list = make_group_repo_dict_list([github_user], user_repo_list, year_ago)
+
+        session_key = None
+        if github_user.session_key:
+            session_key = github_user.session_key
+        if request.GET.get('update') == 'True':
+            core_response = core_group_analysis(repo_dict_list, session_key)
+            core_status = core_response['status']
+            if core_status == 'done':
+                GithubCalendar.objects.filter(github_id=github_id).delete()
+                save_git_calendar_data(core_response['calendar_data'])
+                github_user.session_key = None
+                github_user.status = 'completed'
+                github_user.save()
+            if core_status == 'progress':
+                session_key = core_response.get('session_key')
+                github_user.session_key = session_key
+                github_user.save()
             return render(request, 'loading.html', {'github_id': github_id})
 
-        core_request = Thread(target=core_repo_list, args=(user_data, github_user.status))
+        core_request = Thread(target=core_group_analysis, args=(repo_dict_list, session_key))
         core_request.start()
         github_user.status = 'progress'
         github_user.save()
         return render(request, 'loading.html', {'github_id': github_id})
-    tech_card_data = json.loads(analysis_data.tech_card_data.replace("'", '"')) if analysis_data.tech_card_data else []
-    calendar_data = analysis_data.git_calendar_data.replace("'", '"') if analysis_data.git_calendar_data else {}
+    user_repo_list = list(GithubRepo.objects.filter(github_id_id=github_id))
+    repo_url_list = [repo.repo_url for repo in user_repo_list]
+    tech_card_data = make_group_tech_card([github_id], repo_url_list, year_ago)
     top3_tech_data = []
     for tech_data in tech_card_data[:3]:
         tech_rank_data = make_ranker_data(tech_data['name'])
@@ -133,6 +143,8 @@ def git_rainbow(request, github_id):
                 top3_tech_data.append(tech_data)
                 break
 
+    git_calendar_data = make_group_calendar_data(github_calendar_list)
+    calendar_data = json.dumps(git_calendar_data)
     code_crazy, int_code_crazy = make_user_code_crazy(github_user.github_id)
 
     context = {'github_user': github_user, 'tech_card_data': tech_card_data, 'calendar_data': calendar_data,
@@ -181,45 +193,52 @@ def update_git_rainbow(request):
 
     github_id = github_user.github_id
     user_data = {"github_id": github_id, "tech_stack": True}
-    user_data['action'] = request.POST.get('action')
     ghp_token = request.POST.get('ghp_token')
     user_data['ghp_token'] = ghp_token
-    user_status = github_user.status
-
     if ghp_token:
         check_user_token_result = check_user_token(github_id, ghp_token)
         if check_user_token_result.get('status') == 'fail':
             return JsonResponse(check_user_token_result)
 
-    core_response = core_repo_list(user_data, user_status)
-    core_status = core_response['status']
-    github_user.status = core_status
-    github_user.save()
+    year_ago = (timezone.now() - relativedelta(years=1)).replace(hour=0, minute=0, second=0).strftime("%Y-%m-%d")
+    repo_list_reponse = core_repo_list(user_data, github_user.status)
+    repo_list_status = repo_list_reponse['status']
+    if repo_list_status == 'fail':
+        github_user.status = repo_list_status
+        github_user.save()
+        return render(request, 'exception_page.html',
+                      {'error': 404, 'message': str(repo_list_reponse.get('reason'))})
+    user_repo_list = list(GithubRepo.objects.filter(github_id_id=github_id))
+    repo_dict_list = make_group_repo_dict_list([github_user], user_repo_list, year_ago)
+    session_key = None
+    if github_user.session_key:
+        session_key = github_user.session_key
 
-    if core_status == 'progress':
-        return JsonResponse({"status": core_status})
+    core_response = core_group_analysis(repo_dict_list, session_key)
+    core_status = core_response['status']
 
     if core_status == 'fail':
+        github_user.session_key = None
+        github_user.save()
         return JsonResponse({"status": "fail", 'reason': str(core_response.get('reason'))})
 
-    update_or_create_github_user(github_id, ghp_token)
-    calendar_data = core_response.get('calendar_data')
-    tech_card_data = core_response.get('tech_card_data')
-    AnalysisData.objects.update_or_create(github_id=github_user,
-                                          defaults={
-                                              'git_calendar_data': calendar_data,
-                                              'tech_card_data': tech_card_data
-                                          })
-    save_github_calendar_data(calendar_data, github_user)
-    calendar_data = json.loads(calendar_data)
+    if core_status == 'progress':
+        if not session_key:
+            github_user.session_key = core_response['session_key']
+            github_user.save()
+        return JsonResponse({"status": "progress", "session_key": github_user.session_key})
 
-    tech_set = set()
-    for tech_dict in calendar_data.values():
-        tech_set.update(tech_dict.keys())
-    update_tech_stack_table(tech_set)
-    tech_card_data = json.loads(tech_card_data)
-    if tech_card_data:
-        TopTech.objects.update_or_create(github_id=github_user, defaults={'tech_name': tech_card_data[0]['name']})
+    if core_status == 'done':
+        GithubCalendar.objects.filter(github_id=github_id).delete()
+        save_git_calendar_data(core_response['calendar_data'])
+        github_user.session_key = None
+        github_user.status = 'completed'
+        github_user.save()
+
+    github_calendar_list = GithubCalendar.objects.filter(github_id=github_user, author_date__gte=year_ago)
+    git_calendar_data = make_group_calendar_data(github_calendar_list)
+    repo_url_list = [repo.repo_url for repo in user_repo_list]
+    tech_card_data = make_group_tech_card([github_id], repo_url_list, year_ago)
 
     top3_tech_data = []
     for tech_data in tech_card_data[:3]:
@@ -242,8 +261,8 @@ def update_git_rainbow(request):
         'int_code_crazy': int_code_crazy
     }
     json_data = {
-        'status': core_status,
-        'calendar_data': calendar_data
+        'status': github_user.status,
+        'calendar_data': git_calendar_data
     }
     last_day = github_user.githubcalendar_set.aggregate(last_day=Max('author_date'))['last_day']
     if last_day:
@@ -390,23 +409,6 @@ def save_github_calendar_data(git_calendar_data, github_user):
             git_calendar_data_bulk.append(github_calendar)
     GithubCalendar.objects.bulk_create(git_calendar_data_bulk)
 
-
-def draw_ranking_side()->dict:
-    tech_stack_with_order = TechStack.objects.annotate(
-        tech_type_order=Case(
-            When(tech_type='Frontend', then=1),
-            When(tech_type='Backend', then=2),
-            When(tech_type='Mobile', then=3),
-            When(tech_type='Database', then=4),
-            When(tech_type='Devops', then=5),
-            default=6,
-            output_field=IntegerField()
-        )
-    ).order_by('tech_type_order','-developer_count').values('tech_name', 'tech_color', 'tech_type', 'developer_count', 'logo_path')
-    ranking_side = defaultdict(list)
-    for tech in tech_stack_with_order:
-        ranking_side[tech['tech_type']].append({'tech_name':tech['tech_name'], 'tech_color':tech['tech_color'], 'logo_path':tech['logo_path']})
-    return dict(ranking_side)
 
 def ranking_all(request):
     today = timezone.now()

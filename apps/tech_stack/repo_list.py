@@ -68,7 +68,7 @@ def get_repo_list(variables, token):
         raise
 
 
-def repo_list(github_id, action, ghp_token=None):
+def repo_list(github_id, ghp_token=None):
     today = datetime.today()
     gql_today = today.isoformat()
     from_year_ago = today - relativedelta(years=1)
@@ -99,7 +99,7 @@ def repo_list(github_id, action, ghp_token=None):
     token = get_token()
     if token is None:
         print('No tokens available')
-        raise
+        return {'status': 'fail', 'reason': 'No tokens available'}
     try:
         n_year_variables = {
             "login": github_id,
@@ -111,8 +111,8 @@ def repo_list(github_id, action, ghp_token=None):
             return get_repo_res
         user_repo_list.update(get_repo_res)
     except Exception as e:
-        print(e)
-        raise
+        return {'status': 'fail', 'reason': e}
+
     repo_dict_list = []
 
     for user_repo in user_repo_list:
@@ -130,8 +130,7 @@ def repo_list(github_id, action, ghp_token=None):
             "repo_url": repo_url,
             "is_private": is_private,
             'ghp_token': ghp_token,
-            "action": action,
         }
         repo_dict_list.append(repo_author)
 
-    return repo_dict_list
+    return {'status': 'success', 'repo_dict_list': repo_dict_list}

@@ -51,15 +51,13 @@ def make_calendar_data(tech_files):
 
 
 def core_repo_list(user_data, user_status):
-    repo_list_result = repo_list(user_data['github_id'], user_data['action'], user_data.get('ghp_token'))
-    if not isinstance(repo_list_result, list) and repo_list_result.get('status') == 'fail':
+    repo_list_result = repo_list(user_data['github_id'], user_data.get('ghp_token'))
+    if repo_list_result.get('status') == 'fail':
         return repo_list_result
-    user_data['repo_dict_list'] = json.dumps(repo_list_result)
-    core_url = CORE_URL + "/core/tech-stack"
-    data = user_data
-    response = requests.post(core_url, data=data).json()
+    repo_dict_list = repo_list_result['repo_dict_list']
+    user_data['repo_dict_list'] = json.dumps(repo_dict_list)
     if user_status != 'progress':
-        for repo in repo_list_result:
+        for repo in repo_dict_list:
             GithubRepo.objects.update_or_create(
                 github_id_id=user_data['github_id'],
                 repo_url=repo['repo_url'],
@@ -67,8 +65,8 @@ def core_repo_list(user_data, user_status):
                     'branch': repo['main_branch'],
                     'description': repo['description'],
                     'added_type': 'Auto',
-                    'status': 'reachable',
+                    'status': 'completed',
                     'is_private': repo['is_private']
                 }
             )
-    return response
+    return {'status': 'success'}

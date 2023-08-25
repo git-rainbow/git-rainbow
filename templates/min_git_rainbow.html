@@ -102,7 +102,7 @@
     <div id="graph_box" class="flex-1 md:w-full w-full h-full overflow-hidden bg-white rounded-lg shadow-xs p-6">
       <div class="flex w-full mb-3 scroll-x">
         {% for tech_data in tech_card_data %}
-          <div class="tech_card" onclick="highlight_card_tech(event, '{{tech_data.name}}', '{{tech_data.color}}')" selected='false' style="cursor: pointer;">
+          <div class="tech_card" onclick="highlight_group_card_tech(event, '{{tech_data.name}}', '{{tech_data.color}}')" selected='false' style="cursor: pointer;">
             <table style="min-height: 100px;width: 126px;">
               <tbody class="tech">
               <tr>

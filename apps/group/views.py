@@ -1,5 +1,4 @@
 import json
-from collections import defaultdict
 import random
 
 import requests
@@ -15,10 +14,11 @@ from urllib.parse import urlparse
 
 from django.utils import timezone
 
-from apps.group.utils import core_group_analysis
+from apps.developer.utils import draw_ranking_side
+from apps.group.utils import core_group_analysis, make_group_calendar_data, make_group_repo_dict_list
 from apps.tech_stack.models import TechStack, GithubUser, GithubCalendar, GithubRepo
 from apps.group.models import Group, GroupRepo, Topic
-from apps.developer.views import draw_ranking_side
+
 from apps.users.models import User
 from utils.github_api.github_api import github_rest_api
 from utils.github_calendar_colors.github_calendar_colors import github_calendar_colors
@@ -60,18 +60,7 @@ def group(request, group_id):
     group_repo_list = group.grouprepo_set.all().values_list('repo_url', flat=True)
     group_calendar_data = GithubCalendar.objects.filter(github_id__in=member_list, repo_url__in=group_repo_list, author_date__gte=one_year_ago)
     group_tech_card = make_group_tech_card(member_list, group_repo_list, one_year_ago)
-    group_git_calendar_data = defaultdict(lambda: defaultdict(lambda: {"total_lines": 0, "commit_repo": defaultdict(list)}))
-    for i in group_calendar_data:
-        commit_date = i.author_date.strftime("%Y-%m-%d")
-        tech_info = group_git_calendar_data[commit_date][i.tech_name]
-        tech_info["total_lines"] += i.lines
-        commit_info = {
-            "commit_hash": i.commit_hash,
-            "github_id": i.github_id_id,
-            "lines": i.lines,
-            "avatar_url": i.github_id.avatar_url
-        }
-        tech_info["commit_repo"][i.repo_url].append(commit_info)
+    group_git_calendar_data = make_group_calendar_data(group_calendar_data)
     group_git_calendar_data = json.dumps(group_git_calendar_data)
     is_joined = False
     login_user = request.user
@@ -218,10 +207,6 @@ def create_group(request):
     return JsonResponse({'status': 'success'})
 
 
-def make_name_with_owner(repo_url):
-    return urlparse(repo_url[:-4]).path[1:]
-
-
 def save_git_calendar_data(git_calendar_data):
     calendar_data_bulk = [GithubCalendar(**git_data) for git_data in git_calendar_data]
     GithubCalendar.objects.bulk_create(calendar_data_bulk)
@@ -239,19 +224,7 @@ def group_update(request):
     group_member_list = group.github_users.all()
     group_repo_list = group.grouprepo_set.all()
     year_ago = (timezone.now() - relativedelta(years=1)).replace(hour=0, minute=0, second=0).strftime("%Y-%m-%d")
-    repo_dict_list = [
-        {
-            'name_with_owner': make_name_with_owner(group_repo.repo_url),
-            'repo_url': group_repo.repo_url,
-            'main_branch': group_repo.branch,
-            'is_private': group_repo.is_private,
-            'ghp_token': None,
-            'after': year_ago,
-            'github_id': member.github_id
-        }
-        for group_repo in group_repo_list
-        for member in group_member_list
-    ]
+    repo_dict_list = make_group_repo_dict_list(group_member_list, group_repo_list, year_ago)
     session_key = None
     if group.session_key:
         session_key = group.session_key
