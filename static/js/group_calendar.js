@@ -149,8 +149,8 @@ function group_calendar() {
           .attr('selected', false)
           .attr('width', SQUARE_LENGTH)
           .attr('height', SQUARE_LENGTH)
-          .attr('fill', function(d) { return fill_color(countForDate(d)); })
-          .attr('origin-fill', function(d) { return fill_color(countForDate(d)); })
+          .attr('fill', function(d) { return group_fill_color(countForDate(d)); })
+          .attr('origin-fill', function(d) { return group_fill_color(countForDate(d)); })
           .attr('x', function (d, i) {
             var cellDate = moment(d);
             var result = cellDate.week() - firstDate.week() + (firstDate.weeksInYear() * (cellDate.weekYear() - firstDate.weekYear()));
@@ -444,7 +444,7 @@ function github_calendar_colors(name, opacity){
     return colors[name]
 }
 
-function top_tech_lines(tech_lines) {
+function group_top_tech_lines(tech_lines) {
     let lines = 0
     let tech_name = "NOT TECH"
     let not_tech_lines = 0
@@ -466,12 +466,12 @@ function top_tech_lines(tech_lines) {
     return { tech_name, lines }
 }
 
-function fill_color(tech_lines) {
+function group_fill_color(tech_lines) {
 
     if (!tech_lines)
         return '#F1F1F1FF'
 
-    let { tech_name, lines } = top_tech_lines(tech_lines)
+    let { tech_name, lines } = group_top_tech_lines(tech_lines)
 
     if (lines > 99)
         return github_calendar_colors(tech_name,1.0)
