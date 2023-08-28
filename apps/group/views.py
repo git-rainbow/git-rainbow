@@ -28,7 +28,8 @@ from config.local_settings import RANDOM_IMG_URL
 
 
 def make_group_tech_card(member_list, group_repo_list, one_year_ago):
-    group_calendar_data = GithubCalendar.objects.filter(github_id__in=member_list, repo_url__in=group_repo_list,
+    tech_list = github_calendar_colors.keys()
+    group_calendar_data = GithubCalendar.objects.filter(github_id__in=member_list, repo_url__in=group_repo_list, tech_name__in=tech_list,
                                                         author_date__gte=one_year_ago).values('tech_name').annotate(total_lines=Sum('lines')).order_by('-total_lines')
     total_lines = sum([data['total_lines'] for data in group_calendar_data])
     tech_card_data = []
