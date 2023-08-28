@@ -7,9 +7,9 @@
 <script type="text/javascript" src="{% static "js/tech_search.js" %}"></script>
 <script type="text/javascript" src="{% static "js/tech_stack.js" %}"></script>
 <script type="text/javascript" src="{% static "js/group.js" %}"></script>
-<script type="text/javascript" src="{% static "js/group_calendar.js" %}"></script>
+<script type="text/javascript" src="{% static "js/rainbow_calendar.js" %}"></script>
 <script>
-    show_group_calendar(JSON.parse('{{calendar_data|safe}}'));
+    show_rainbow_calendar(JSON.parse('{{calendar_data|safe}}'));
     check_analysis_updating("{{github_user.github_id}}", "{{github_user.status}}");
     var show_more_index = 0;
     var current_data;

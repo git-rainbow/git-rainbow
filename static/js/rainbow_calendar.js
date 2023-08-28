@@ -1,4 +1,4 @@
-function group_calendar() {
+function rainbow_calendar() {
     // defaults
     var width = 900;
     var height = 200;

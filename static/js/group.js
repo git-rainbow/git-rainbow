@@ -222,7 +222,7 @@ function group_update(group_id){
     }, 3000);
 }
 
-function show_group_calendar(commit_data){
+function show_rainbow_calendar(commit_data){
     calendar_commits = commit_data;
     let today = moment().endOf('day').toDate();
     let yearAgo = moment().startOf('day').subtract(1, 'year').toDate();
@@ -232,7 +232,7 @@ function show_group_calendar(commit_data){
                 count:(calendar_commits[moment(dateElement).format('YYYY-MM-DD')] ? calendar_commits[moment(dateElement).format('YYYY-MM-DD')] : 0)
             };
         });
-    let calendar = group_calendar()
+    let calendar = rainbow_calendar()
         .data(chartData)
         .selector('.git-table')
         .tooltipEnabled(true)
