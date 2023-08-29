@@ -65,7 +65,6 @@ def core_repo_list(user_data, user_status):
                     'branch': repo['main_branch'],
                     'description': repo['description'],
                     'added_type': 'Auto',
-                    'status': 'completed',
                     'is_private': repo['is_private']
                 }
             )
