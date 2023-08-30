@@ -80,10 +80,9 @@ def git_rainbow(request, github_id):
     is_github_id_valid = check_github_id(github_id)
     if not is_github_id_valid:
         return render(request, 'exception_page.html', {'error': error_code, 'message': 'Invalid github id'})
-    github_user = GithubUser.objects.prefetch_related('githubcalendar_set').filter(github_id__iexact=github_id, is_valid=True).first()
-    year_ago = (timezone.now() - relativedelta(years=1)).replace(hour=0, minute=0, second=0).strftime(
-        "%Y-%m-%d")
-    github_calendar_list = list(GithubCalendar.objects.select_related('github_id').filter(github_id=github_user, author_date__gte=year_ago))
+    github_user = GithubUser.objects.prefetch_related('githubcalendar_set', 'githubrepo_set').filter(github_id__iexact=github_id, is_valid=True).first()
+    year_ago = (timezone.now() - relativedelta(years=1)).replace(hour=0, minute=0, second=0)
+    github_calendar_list = [github_calendar for github_calendar in github_user.githubcalendar_set.all() if github_calendar.author_date >= year_ago]
     if not github_user:
         new_github_user, _ = GithubUser.objects.get_or_create(github_id=github_id)
         user_result = update_or_create_github_user(github_id)
@@ -103,8 +102,8 @@ def git_rainbow(request, github_id):
             github_user.save()
             return render(request, 'exception_page.html', {'error': 404, 'message': str(repo_list_reponse.get('reason'))})
 
-        user_repo_list = list(GithubRepo.objects.filter(github_id_id=github_id))
-        repo_dict_list = make_group_repo_dict_list([github_user], user_repo_list, year_ago)
+        user_repo_list = list(github_user.githubrepo_set.all())
+        repo_dict_list = make_group_repo_dict_list([github_user], user_repo_list, year_ago.strftime("%Y-%m-%d"))
 
         session_key = None
         if github_user.session_key:
@@ -129,9 +128,7 @@ def git_rainbow(request, github_id):
         github_user.status = 'progress'
         github_user.save()
         return render(request, 'loading.html', {'github_id': github_id})
-    user_repo_list = list(GithubRepo.objects.filter(github_id_id=github_id))
-    repo_url_list = [repo.repo_url for repo in user_repo_list]
-    tech_card_data = make_group_tech_card([github_id], repo_url_list, year_ago)
+    tech_card_data = make_group_tech_card(github_calendar_list)
     top3_tech_data = []
     for tech_data in tech_card_data[:3]:
         tech_rank_data = make_ranker_data(tech_data['name'])
@@ -187,7 +184,7 @@ def save_repo_url(request):
 def update_git_rainbow(request):
     if request.method != 'POST':
         return JsonResponse({"status": "fail", 'reason': 'Not allowed method'})
-    github_user = GithubUser.objects.filter(github_id__iexact=request.POST.get('github_id'), is_valid=True).first()
+    github_user = GithubUser.objects.prefetch_related('githubcalendar_set', 'githubrepo_set').filter(github_id__iexact=request.POST.get('github_id'), is_valid=True).first()
     if not github_user:
         return JsonResponse({"status": "fail", 'reason': 'No github id'})
 
@@ -200,7 +197,7 @@ def update_git_rainbow(request):
         if check_user_token_result.get('status') == 'fail':
             return JsonResponse(check_user_token_result)
 
-    year_ago = (timezone.now() - relativedelta(years=1)).replace(hour=0, minute=0, second=0).strftime("%Y-%m-%d")
+    year_ago = (timezone.now() - relativedelta(years=1)).replace(hour=0, minute=0, second=0)
     repo_list_reponse = core_repo_list(user_data, github_user.status)
     repo_list_status = repo_list_reponse['status']
     if repo_list_status == 'fail':
@@ -209,7 +206,7 @@ def update_git_rainbow(request):
         return render(request, 'exception_page.html',
                       {'error': 404, 'message': str(repo_list_reponse.get('reason'))})
     user_repo_list = list(GithubRepo.objects.filter(github_id_id=github_id))
-    repo_dict_list = make_group_repo_dict_list([github_user], user_repo_list, year_ago)
+    repo_dict_list = make_group_repo_dict_list([github_user], user_repo_list, year_ago.strftime("%Y-%m-%d"))
     session_key = None
     if github_user.session_key:
         session_key = github_user.session_key
@@ -235,10 +232,9 @@ def update_git_rainbow(request):
         github_user.status = 'completed'
         github_user.save()
 
-    github_calendar_list = GithubCalendar.objects.filter(github_id=github_user, author_date__gte=year_ago)
+    github_calendar_list = [github_calendar for github_calendar in github_user.githubcalendar_set.all() if github_calendar.author_date >= year_ago]
     git_calendar_data = make_group_calendar_data(github_calendar_list)
-    repo_url_list = [repo.repo_url for repo in user_repo_list]
-    tech_card_data = make_group_tech_card([github_id], repo_url_list, year_ago)
+    tech_card_data = make_group_tech_card(github_calendar_list)
 
     top3_tech_data = []
     for tech_data in tech_card_data[:3]:

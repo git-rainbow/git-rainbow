@@ -1,5 +1,6 @@
 import json
 import random
+from collections import defaultdict
 
 import requests
 import os
@@ -27,18 +28,21 @@ from time import time
 from config.local_settings import RANDOM_IMG_URL
 
 
-def make_group_tech_card(member_list, group_repo_list, one_year_ago):
+def make_group_tech_card(group_calendar_data):
     tech_list = github_calendar_colors.keys()
-    group_calendar_data = GithubCalendar.objects.filter(github_id__in=member_list, repo_url__in=group_repo_list, tech_name__in=tech_list,
-                                                        author_date__gte=one_year_ago).values('tech_name').annotate(total_lines=Sum('lines')).order_by('-total_lines')
-    total_lines = sum([data['total_lines'] for data in group_calendar_data])
+    group_tech_calendar_data = [calendar_data for calendar_data in group_calendar_data if calendar_data.tech_name in tech_list]
+    group_by_data_list = defaultdict(int)
+    for calendar_data in group_tech_calendar_data:
+        group_by_data_list[calendar_data.tech_name] += calendar_data.lines
+    group_by_data_list = dict(sorted(group_by_data_list.items(), key=lambda item: item[1], reverse=True))
+    calendar_total_lines = sum(group_by_data_list.values())
     tech_card_data = []
-    for data in group_calendar_data:
-        percent = round(data['total_lines'] / total_lines * 100, 1)
+    for tech_name, tech_total_lines in group_by_data_list.items():
+        percent = round(tech_total_lines / calendar_total_lines * 100, 1)
         if percent > 0:
-            name_for_file = data['tech_name'].lower()
-            tech = {'name': data['tech_name'], 'file': name_for_file,
-                    'color': github_calendar_colors[data['tech_name']]['tech_color'] if github_calendar_colors.get(data['tech_name']) else 'rgba(7,141,169,1.0)',
+            name_for_file = tech_name.lower()
+            tech = {'name': tech_name, 'file': name_for_file,
+                    'color': github_calendar_colors[tech_name]['tech_color'] if github_calendar_colors.get(tech_name) else 'rgba(7,141,169,1.0)',
                     'percent': percent}
             img_list = os.listdir('static/img')
             if (f'{name_for_file}.png') not in img_list:
@@ -60,7 +64,7 @@ def group(request, group_id):
     member_list = group.github_users.all().values_list('github_id', flat=True)
     group_repo_list = group.grouprepo_set.all().values_list('repo_url', flat=True)
     group_calendar_data = GithubCalendar.objects.filter(github_id__in=member_list, repo_url__in=group_repo_list, author_date__gte=one_year_ago)
-    group_tech_card = make_group_tech_card(member_list, group_repo_list, one_year_ago)
+    group_tech_card = make_group_tech_card(group_calendar_data)
     group_git_calendar_data = make_group_calendar_data(group_calendar_data)
     group_git_calendar_data = json.dumps(group_git_calendar_data)
     is_joined = False
