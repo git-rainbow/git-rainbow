@@ -92,6 +92,29 @@ def git_rainbow(request, github_id):
         if new_github_user.github_id != github_id:
             new_github_user.delete()
 
+    if request.GET.get('update') == 'True':
+        user_repo_list = list(github_user.githubrepo_set.all())
+        repo_dict_list = make_group_repo_dict_list([github_user], user_repo_list, year_ago.strftime("%Y-%m-%d"))
+
+        session_key = None
+        if github_user.session_key:
+            session_key = github_user.session_key
+
+        core_response = core_group_analysis(repo_dict_list, session_key)
+        core_status = core_response['status']
+        if core_status == 'done':
+            GithubCalendar.objects.filter(github_id=github_id).delete()
+            save_git_calendar_data(core_response['calendar_data'])
+            github_user.session_key = None
+            github_user.status = 'completed'
+            github_user.save()
+        if core_status == 'progress':
+            session_key = core_response.get('session_key')
+            if not github_user.session_key:
+                github_user.session_key = session_key
+                github_user.save()
+        return render(request, 'loading.html', {'github_id': github_id})
+
     github_calendar_list = [github_calendar for github_calendar in github_user.githubcalendar_set.all() if github_calendar.author_date >= year_ago]
     if not github_calendar_list:
         user_data = {"github_id": github_id, "tech_stack": True}
@@ -108,20 +131,6 @@ def git_rainbow(request, github_id):
         session_key = None
         if github_user.session_key:
             session_key = github_user.session_key
-        if request.GET.get('update') == 'True':
-            core_response = core_group_analysis(repo_dict_list, session_key)
-            core_status = core_response['status']
-            if core_status == 'done':
-                GithubCalendar.objects.filter(github_id=github_id).delete()
-                save_git_calendar_data(core_response['calendar_data'])
-                github_user.session_key = None
-                github_user.status = 'completed'
-                github_user.save()
-            if core_status == 'progress':
-                session_key = core_response.get('session_key')
-                github_user.session_key = session_key
-                github_user.save()
-            return render(request, 'loading.html', {'github_id': github_id})
 
         core_request = Thread(target=core_group_analysis, args=(repo_dict_list, session_key))
         core_request.start()
