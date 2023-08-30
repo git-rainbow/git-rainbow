@@ -9,7 +9,7 @@ from dateutil.relativedelta import relativedelta
 from django.core.paginator import Paginator
 from django.db.models import Sum, F, Count, Max, Avg, OuterRef, Subquery, Window, FloatField, ExpressionWrapper, CharField
 from django.db.models import Case, IntegerField, Value, When
-from django.db.models.functions import Rank, RowNumber
+from django.db.models.functions import Rank, RowNumber, TruncDate
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.template import loader
@@ -61,7 +61,7 @@ def make_user_code_crazy(github_id):
     HIGH_MULTIPLIER = 0.001
     BASIC_POINTS = 3
     MAX_POINTS = 3.7
-    user_commit_data = GithubCalendar.objects.filter(github_id_id=github_id).values('author_date').annotate(total_lines=Sum('lines'))
+    user_commit_data = GithubCalendar.objects.annotate(date_without_time=TruncDate('author_date')).filter(github_id_id=github_id).values('date_without_time').annotate(total_lines=Sum('lines'))
     for day_data in user_commit_data:
         total_lines = day_data['total_lines']
         if total_lines <= LOW_LIMIT:
