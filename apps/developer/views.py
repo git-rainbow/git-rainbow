@@ -358,8 +358,9 @@ def make_ranker_data(tech_name):
     ).exclude(total_lines=0).order_by('rank')
 
     if now_tech_ranker:
-        user_avg_lines = now_tech_ranker.aggregate(avg_lines=Avg('total_lines'))['avg_lines'] * 2
-        total_ranking_count = now_tech_ranker.count()
+        total_ranking_count = len(now_tech_ranker)
+        user_total_lines = sum([ranker_data['total_lines'] for ranker_data in now_tech_ranker])
+        user_avg_lines = (user_total_lines / total_ranking_count) * 2
     for ranker in now_tech_ranker:
         last_rank = ranker.get('midnight_rank')
         current_rank = ranker.get('rank')
