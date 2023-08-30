@@ -82,7 +82,6 @@ def git_rainbow(request, github_id):
         return render(request, 'exception_page.html', {'error': error_code, 'message': 'Invalid github id'})
     github_user = GithubUser.objects.prefetch_related('githubcalendar_set', 'githubrepo_set').filter(github_id__iexact=github_id, is_valid=True).first()
     year_ago = (timezone.now() - relativedelta(years=1)).replace(hour=0, minute=0, second=0)
-    github_calendar_list = [github_calendar for github_calendar in github_user.githubcalendar_set.all() if github_calendar.author_date >= year_ago]
     if not github_user:
         new_github_user, _ = GithubUser.objects.get_or_create(github_id=github_id)
         user_result = update_or_create_github_user(github_id)
@@ -93,6 +92,7 @@ def git_rainbow(request, github_id):
         if new_github_user.github_id != github_id:
             new_github_user.delete()
 
+    github_calendar_list = [github_calendar for github_calendar in github_user.githubcalendar_set.all() if github_calendar.author_date >= year_ago]
     if not github_calendar_list:
         user_data = {"github_id": github_id, "tech_stack": True}
         repo_list_reponse = core_repo_list(user_data, github_user.status)
