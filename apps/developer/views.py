@@ -83,7 +83,7 @@ def git_rainbow(request, github_id):
     github_user = GithubUser.objects.prefetch_related('githubcalendar_set').filter(github_id__iexact=github_id, is_valid=True).first()
     year_ago = (timezone.now() - relativedelta(years=1)).replace(hour=0, minute=0, second=0).strftime(
         "%Y-%m-%d")
-    github_calendar_list = GithubCalendar.objects.filter(github_id=github_user, author_date__gte=year_ago)
+    github_calendar_list = list(GithubCalendar.objects.select_related('github_id').filter(github_id=github_user, author_date__gte=year_ago))
     if not github_user:
         new_github_user, _ = GithubUser.objects.get_or_create(github_id=github_id)
         user_result = update_or_create_github_user(github_id)
