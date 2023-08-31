@@ -132,10 +132,19 @@ def git_rainbow(request, github_id):
         if github_user.session_key:
             session_key = github_user.session_key
 
-        core_request = Thread(target=core_group_analysis, args=(repo_dict_list, session_key))
-        core_request.start()
-        github_user.status = 'progress'
-        github_user.save()
+        core_response = core_group_analysis(repo_dict_list, session_key)
+        core_status = core_response['status']
+        if core_status == 'done':
+            GithubCalendar.objects.filter(github_id=github_id).delete()
+            save_git_calendar_data(core_response['calendar_data'])
+            github_user.session_key = None
+            github_user.status = 'completed'
+            github_user.save()
+        if core_status == 'progress':
+            session_key = core_response.get('session_key')
+            if not github_user.session_key:
+                github_user.session_key = session_key
+                github_user.save()
         return render(request, 'loading.html', {'github_id': github_id})
     tech_card_data = make_group_tech_card(github_calendar_list)
     top3_tech_data = []
