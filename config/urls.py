@@ -33,6 +33,12 @@ urlpatterns = [
     path('', include('apps.group.urls')),
 ]
 
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns += [
+        path('__debug__/', include(debug_toolbar.urls)),
+    ]
+
 urlpatterns += i18n_patterns(
     path('', include('apps.developer.urls')),
     path('jsi18n/', JavaScriptCatalog.as_view(), name='javascript-catalog')
