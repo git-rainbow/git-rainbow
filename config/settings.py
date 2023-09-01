@@ -29,6 +29,8 @@ DEBUG = DEBUG_CONFIG
 
 ALLOWED_HOSTS = ['*']
 
+DATA_UPLOAD_MAX_MEMORY_SIZE = None
+
 CSRF_TRUSTED_ORIGINS = ['https://*.git-rainbow.com']
 
 # Application definition
