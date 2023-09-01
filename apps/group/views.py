@@ -7,7 +7,7 @@ import os
 import shutil
 
 from dateutil.relativedelta import relativedelta
-from django.db.models import Sum
+from django.db.models import Sum, F
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
@@ -71,8 +71,30 @@ def group(request, group_id):
     login_user = request.user
     if login_user.is_authenticated and login_user.github_id in member_list:
         is_joined = True
-    context.update({'group_git_calendar_data': group_git_calendar_data, 'group_tech_card': group_tech_card, 'is_joined': is_joined})
+    context.update({'group_git_calendar_data': group_git_calendar_data, 'group_tech_card': group_tech_card, 'is_joined': is_joined, 'member_list': list(member_list)})
     return render(request, 'group.html', context)
+
+
+def group_graph(request):
+    if request.method != 'POST':
+        return JsonResponse({"status": "fail", "reason": "Not allowed method"})
+    group_id = request.POST.get('group_id')
+    group = Group.objects.select_related('owner').filter(id=group_id).first()
+    context = { 'group' : True }
+
+    if not group:
+        context.update({'error': 404, 'message': 'There is no group'})
+        return render(request, 'exception_page.html', context)
+
+    context.update({'group': group})
+    one_year_ago = timezone.now() - relativedelta(years=1)
+    member_list = list(group.github_users.all().values_list('github_id', flat=True))
+    group_repo_list = group.grouprepo_set.all().values_list('repo_url', flat=True)
+    group_calendar_data = list(GithubCalendar.objects.filter(github_id__in=member_list, repo_url__in=group_repo_list, author_date__gte=one_year_ago).values('commit_hash', 'github_id', 'author_date').annotate(
+        lines = Sum('lines'),
+        avatar_url = F('github_id__avatar_url')
+    ))
+    return JsonResponse({"status": "success", "calendar_data": group_calendar_data, "member_list": member_list})
 
 
 def group_list(request):
