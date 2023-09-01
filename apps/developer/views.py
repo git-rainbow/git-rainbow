@@ -97,7 +97,7 @@ def git_rainbow(request, github_id):
     if request.GET.get('update') == 'True' or not github_calendar_list:
         core_response = core_group_analysis(github_user)
         if core_response.get("repo_list_status") == 'fail':
-            return render(request, 'exception_page.html', **core_response)
+            return render(request, 'exception_page.html', core_response)
 
     if not github_calendar_list:
         return render(request, 'loading.html', {'github_id': github_id})
@@ -172,7 +172,7 @@ def update_git_rainbow(request):
 
     core_response = core_group_analysis(github_user)
     if core_response.get("repo_list_status") == 'fail':
-        return render(request, 'exception_page.html', **core_response)
+        return render(request, 'exception_page.html', core_response)
 
     core_status = core_response['status']
     if core_status == 'fail':
