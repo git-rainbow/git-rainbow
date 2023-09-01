@@ -50,13 +50,13 @@ def make_calendar_data(tech_files):
     return calendar_data
 
 
-def core_repo_list(user_data, user_status):
+def core_repo_list(user_data, session_key):
     repo_list_result = repo_list(user_data['github_id'], user_data.get('ghp_token'))
     if repo_list_result.get('status') == 'fail':
         return repo_list_result
     repo_dict_list = repo_list_result['repo_dict_list']
     user_data['repo_dict_list'] = json.dumps(repo_dict_list)
-    if user_status != 'progress':
+    if not session_key:
         for repo in repo_dict_list:
             GithubRepo.objects.update_or_create(
                 github_id_id=user_data['github_id'],

@@ -3,21 +3,69 @@ from collections import defaultdict
 from urllib.parse import urlparse
 
 import requests
+from dateutil.relativedelta import relativedelta
+from django.utils import timezone
 
+from apps.tech_stack.models import GithubCalendar
+from apps.tech_stack.utils import core_repo_list
 from config.local_settings import CORE_URL
+
+
+def save_git_calendar_data(git_calendar_data):
+    calendar_data_bulk = [GithubCalendar(**git_data) for git_data in git_calendar_data]
+    GithubCalendar.objects.bulk_create(calendar_data_bulk)
 
 
 def make_name_with_owner(repo_url):
     return urlparse(repo_url[:-4]).path[1:]
 
-def core_group_analysis(repo_dict_list, session_key=None):
+
+def core_group_analysis(github_user):
+    year_ago = (timezone.now() - relativedelta(years=1)).replace(hour=0, minute=0, second=0)
+    session_key = github_user.session_key
+    if not session_key:
+        github_user.status = 'progress'
+        github_user.save()
+        user_data = {"github_id": github_user.github_id, "tech_stack": True}
+        repo_list_reponse = core_repo_list(user_data, session_key)
+        repo_list_status = repo_list_reponse['status']
+        if repo_list_status == 'fail':
+            github_user.status = repo_list_status
+            github_user.save()
+            return {"status": "fail", 'repo_list_status': 'fail', 'reason': str(repo_list_reponse.get('reason'))}
+
+    user_repo_list = list(github_user.githubrepo_set.all())
+    repo_dict_list = make_group_repo_dict_list([github_user], user_repo_list, year_ago.strftime("%Y-%m-%d"))
+
     data = {
         "repo_dict_list": json.dumps(repo_dict_list),
         "session_key": session_key
     }
     core_url = CORE_URL + "/core/group"
-    response = requests.post(core_url, data=data).json()
-    return response
+    core_response = requests.post(core_url, data=data).json()
+    core_status = core_response['status']
+
+    if core_status == 'fail':
+        github_user.session_key = None
+        github_user.status = 'fail'
+        github_user.save()
+        return {"status": "fail", 'reason': str(core_response.get('reason'))}
+
+    elif core_status == 'progress':
+        if not github_user.session_key:
+            github_user.session_key = core_response['session_key']
+            github_user.save()
+        return {"status": "progress", "session_key": github_user.session_key}
+
+    elif core_status == 'done':
+        GithubCalendar.objects.filter(github_id_id=github_user.github_id).delete()
+        save_git_calendar_data(core_response['calendar_data'])
+        github_user.session_key = None
+        github_user.status = 'completed'
+        github_user.save()
+        return {"status": "completed"}
+    else:
+        return {"status": "fail", 'reason': 'invalid status'}
 
 
 def make_group_calendar_data(group_calendar_data):

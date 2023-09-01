@@ -16,7 +16,8 @@ from urllib.parse import urlparse
 from django.utils import timezone
 
 from apps.developer.utils import draw_ranking_side
-from apps.group.utils import core_group_analysis, make_group_calendar_data, make_group_repo_dict_list
+from apps.group.utils import core_group_analysis, make_group_calendar_data, make_group_repo_dict_list, \
+    save_git_calendar_data
 from apps.tech_stack.models import TechStack, GithubUser, GithubCalendar, GithubRepo
 from apps.group.models import Group, GroupRepo, Topic
 
@@ -232,11 +233,6 @@ def create_group(request):
         topic_object, _ = Topic.objects.get_or_create(name=topic)
         topic_object.groups.add(new_group)
     return JsonResponse({'status': 'success'})
-
-
-def save_git_calendar_data(git_calendar_data):
-    calendar_data_bulk = [GithubCalendar(**git_data) for git_data in git_calendar_data]
-    GithubCalendar.objects.bulk_create(calendar_data_bulk)
 
 
 def group_update(request):

@@ -81,7 +81,6 @@ def git_rainbow(request, github_id):
     if not is_github_id_valid:
         return render(request, 'exception_page.html', {'error': error_code, 'message': 'Invalid github id'})
     github_user = GithubUser.objects.prefetch_related('githubcalendar_set', 'githubrepo_set').filter(github_id__iexact=github_id, is_valid=True).first()
-    year_ago = (timezone.now() - relativedelta(years=1)).replace(hour=0, minute=0, second=0)
     if not github_user:
         new_github_user, _ = GithubUser.objects.get_or_create(github_id=github_id)
         user_result = update_or_create_github_user(github_id)
@@ -92,60 +91,17 @@ def git_rainbow(request, github_id):
         if new_github_user.github_id != github_id:
             new_github_user.delete()
 
-    if request.GET.get('update') == 'True':
-        user_repo_list = list(github_user.githubrepo_set.all())
-        repo_dict_list = make_group_repo_dict_list([github_user], user_repo_list, year_ago.strftime("%Y-%m-%d"))
-
-        session_key = None
-        if github_user.session_key:
-            session_key = github_user.session_key
-
-        core_response = core_group_analysis(repo_dict_list, session_key)
-        core_status = core_response['status']
-        if core_status == 'done':
-            GithubCalendar.objects.filter(github_id=github_id).delete()
-            save_git_calendar_data(core_response['calendar_data'])
-            github_user.session_key = None
-            github_user.status = 'completed'
-            github_user.save()
-        if core_status == 'progress':
-            session_key = core_response.get('session_key')
-            if not github_user.session_key:
-                github_user.session_key = session_key
-                github_user.save()
-        return render(request, 'loading.html', {'github_id': github_id})
-
+    year_ago = (timezone.now() - relativedelta(years=1)).replace(hour=0, minute=0, second=0)
     github_calendar_list = [github_calendar for github_calendar in github_user.githubcalendar_set.all() if github_calendar.author_date >= year_ago]
+
+    if request.GET.get('update') == 'True' or not github_calendar_list:
+        core_response = core_group_analysis(github_user)
+        if core_response.get("repo_list_status") == 'fail':
+            return render(request, 'exception_page.html', **core_response)
+
     if not github_calendar_list:
-        user_data = {"github_id": github_id, "tech_stack": True}
-        repo_list_reponse = core_repo_list(user_data, github_user.status)
-        repo_list_status = repo_list_reponse['status']
-        if repo_list_status == 'fail':
-            github_user.status = repo_list_status
-            github_user.save()
-            return render(request, 'exception_page.html', {'error': 404, 'message': str(repo_list_reponse.get('reason'))})
-
-        user_repo_list = list(github_user.githubrepo_set.all())
-        repo_dict_list = make_group_repo_dict_list([github_user], user_repo_list, year_ago.strftime("%Y-%m-%d"))
-
-        session_key = None
-        if github_user.session_key:
-            session_key = github_user.session_key
-
-        core_response = core_group_analysis(repo_dict_list, session_key)
-        core_status = core_response['status']
-        if core_status == 'done':
-            GithubCalendar.objects.filter(github_id=github_id).delete()
-            save_git_calendar_data(core_response['calendar_data'])
-            github_user.session_key = None
-            github_user.status = 'completed'
-            github_user.save()
-        if core_status == 'progress':
-            session_key = core_response.get('session_key')
-            if not github_user.session_key:
-                github_user.session_key = session_key
-                github_user.save()
         return render(request, 'loading.html', {'github_id': github_id})
+
     tech_card_data = make_group_tech_card(github_calendar_list)
     top3_tech_data = []
     for tech_data in tech_card_data[:3]:
@@ -215,41 +171,17 @@ def update_git_rainbow(request):
         if check_user_token_result.get('status') == 'fail':
             return JsonResponse(check_user_token_result)
 
-    year_ago = (timezone.now() - relativedelta(years=1)).replace(hour=0, minute=0, second=0)
-    repo_list_reponse = core_repo_list(user_data, github_user.status)
-    repo_list_status = repo_list_reponse['status']
-    if repo_list_status == 'fail':
-        github_user.status = repo_list_status
-        github_user.save()
-        return render(request, 'exception_page.html',
-                      {'error': 404, 'message': str(repo_list_reponse.get('reason'))})
-    user_repo_list = list(GithubRepo.objects.filter(github_id_id=github_id))
-    repo_dict_list = make_group_repo_dict_list([github_user], user_repo_list, year_ago.strftime("%Y-%m-%d"))
-    session_key = None
-    if github_user.session_key:
-        session_key = github_user.session_key
+    core_response = core_group_analysis(github_user)
+    if core_response.get("repo_list_status") == 'fail':
+        return render(request, 'exception_page.html', **core_response)
 
-    core_response = core_group_analysis(repo_dict_list, session_key)
     core_status = core_response['status']
-
     if core_status == 'fail':
-        github_user.session_key = None
-        github_user.save()
-        return JsonResponse({"status": "fail", 'reason': str(core_response.get('reason'))})
+        return JsonResponse(core_response)
+    elif core_status == 'progress':
+        return JsonResponse(core_response)
 
-    if core_status == 'progress':
-        if not session_key:
-            github_user.session_key = core_response['session_key']
-            github_user.save()
-        return JsonResponse({"status": "progress", "session_key": github_user.session_key})
-
-    if core_status == 'done':
-        GithubCalendar.objects.filter(github_id=github_id).delete()
-        save_git_calendar_data(core_response['calendar_data'])
-        github_user.session_key = None
-        github_user.status = 'completed'
-        github_user.save()
-
+    year_ago = (timezone.now() - relativedelta(years=1)).replace(hour=0, minute=0, second=0)
     github_calendar_list = [github_calendar for github_calendar in github_user.githubcalendar_set.all() if github_calendar.author_date >= year_ago]
     git_calendar_data = make_group_calendar_data(github_calendar_list)
     tech_card_data = make_group_tech_card(github_calendar_list)
