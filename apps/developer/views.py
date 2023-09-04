@@ -103,17 +103,7 @@ def git_rainbow(request, github_id):
         return render(request, 'loading.html', {'github_id': github_id})
 
     tech_card_data = make_group_tech_card(github_calendar_list)
-    top3_tech_data = []
-    for tech_data in tech_card_data[:3]:
-        tech_rank_data = make_ranker_data(tech_data['name'])
-        for rank_data in tech_rank_data:
-            if rank_data['github_id'] == github_user.github_id:
-                tech_data['rank'] = rank_data
-                tech_data['ranker_num'] = tech_rank_data.count()
-                tech_data['rank_percent'] = round(rank_data['rank']/tech_data['ranker_num']*100, 1)
-                top3_tech_data.append(tech_data)
-                break
-
+    top3_tech_data = make_top3_tech_date(tech_card_data, github_user)
     git_calendar_data = make_group_calendar_data(github_calendar_list)
     calendar_data = json.dumps(git_calendar_data)
     code_crazy, int_code_crazy = make_user_code_crazy(github_user.github_id)
@@ -182,18 +172,7 @@ def update_git_rainbow(request):
     github_calendar_list = [github_calendar for github_calendar in github_user.githubcalendar_set.all() if github_calendar.author_date >= year_ago]
     git_calendar_data = make_group_calendar_data(github_calendar_list)
     tech_card_data = make_group_tech_card(github_calendar_list)
-
-    top3_tech_data = []
-    for tech_data in tech_card_data[:3]:
-        tech_rank_data = make_ranker_data(tech_data['name'])
-        for rank_data in tech_rank_data:
-            if rank_data['github_id'] == github_user.github_id:
-                tech_data['rank'] = rank_data
-                tech_data['ranker_num'] = tech_rank_data.count()
-                tech_data['rank_percent'] = round(rank_data['rank'] / tech_data['ranker_num'] * 100, 1)
-                top3_tech_data.append(tech_data)
-                break
-
+    top3_tech_data = make_top3_tech_date(tech_card_data, github_user)
     code_crazy, int_code_crazy = make_user_code_crazy(github_user.github_id)
     last_day_commit_data = make_last_tech_data(github_calendar_list)
 
@@ -317,6 +296,20 @@ def make_ranker_data(tech_name):
         ranker['code_line_percent'] = code_line_percent
         ranker['total_lines'] = format(ranker['total_lines'], ',')
     return now_tech_ranker
+
+
+def make_top3_tech_date(tech_card_data, github_user):
+    top3_tech_data = []
+    for tech_data in tech_card_data[:3]:
+        tech_rank_data = make_ranker_data(tech_data['name'])
+        for rank_data in tech_rank_data:
+            if rank_data['github_id'] == github_user.github_id:
+                tech_data['rank'] = rank_data
+                tech_data['ranker_num'] = tech_rank_data.count()
+                tech_data['rank_percent'] = round(rank_data['rank'] / tech_data['ranker_num'] * 100, 1)
+                top3_tech_data.append(tech_data)
+                break
+    return top3_tech_data
 
 
 def save_tech_ranking_data(request):
