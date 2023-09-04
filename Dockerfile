@@ -3,6 +3,7 @@ FROM python:3.9
 RUN mkdir /usr/src/app
 WORKDIR /usr/src/app
 COPY . .
+RUN mkdir media
 RUN pip3 install -r requirements.txt
 
 RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -
