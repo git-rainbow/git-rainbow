@@ -240,6 +240,110 @@ function show_rainbow_calendar(commit_data){
     calendar();
 };
 
+function show_total_lines(commit_data, is_reset=false, specific_tech){
+    let tagArea = document.getElementById('tech_grahp');
+    if (is_reset){
+        tagArea.innerHTML = '';
+        show_more_index = 0;
+        show_more_btn.classList.remove('hidden');
+    } else {
+        show_more_index += 1;
+    }
+    current_data = commit_data;
+    let full_sort_recent_list = Object.entries(commit_data).reverse();
+    let sort_recent_list = full_sort_recent_list.slice(show_more_index*3, show_more_index*3+3)
+    let new_show_more_btn = document.querySelector("#show_more_btn")
+    if (full_sort_recent_list.length <= 3*show_more_index+3){
+        new_show_more_btn.classList.add('hidden');
+    } else if(new_show_more_btn.classList.contains('hidden')) {
+        new_show_more_btn.classList.remove('hidden');
+        new_show_more_btn.addEventListener('click', function(){
+            show_total_lines(current_data, false, true)
+        });
+    }
+
+    if (specific_tech && !show_more_index) {
+        var k = Object.keys(commit_data)[0];
+        var tech = Object.keys(commit_data[k])[0];
+
+        tagArea.innerHTML +=
+                `<div class="flex items-center text-sm mb-2">
+                  <div style="width:60px;margin-right:20px">
+                    <img src="/static/img/${tech_name(tech)}.png" onerror="this.onerror=null; this.src='/static/img/none3.png';" loading="lazy">
+                  </div>
+                  <div style="width:60px">
+                    <p class="font-semibold">${tech}</p>
+                  </div>
+                </div>`
+    }
+
+    sort_recent_list.forEach(item => {
+        let date = item[0];
+        let tech_data = item[1];
+        let dateObj = new Date(date);
+        let day = dateObj.getDate();
+        let month = dateObj.toLocaleString('en-US', {month: 'long'});
+        let year = dateObj.getFullYear();
+        let date_info = `
+        <h3 class="h6 pr-2 py-1 border-bottom mb-3" style="height: 14px; border: none;">
+        <span class="pl-2 pr-3 text-sm font-semibold" style="background-color:white">${month} ${day}<span style="font-weight: normal;">, ${year}</span>
+        </span>
+        </h3>`
+
+        tagArea.innerHTML += date_info;
+
+        Object.entries(tech_data).forEach(function ([tech, lines]) {
+            let tech_info = `
+            <div class="text-gray-700 dark:text-gray-400 tech_graph" style="display:flex; border: none;">`
+            if (!specific_tech) {
+                tech_info += `
+              <div class="px-3 py-3">
+                <div class="flex items-center text-sm">
+                  <div style="width:60px;margin-right:20px">
+                    <img src="/static/img/${tech_name(tech)}.png" onerror="this.onerror=null; this.src='/static/img/none3.png';" loading="lazy">
+                  </div>
+                  <div style="width:60px">
+                    <p class="font-semibold">${tech}</p>
+                  </div>
+                </div>
+              </div>`
+            }
+            tech_info += `
+              <div class="px-3 py-3" style="width: 100%; display: flex; justify-content:center; align-items:center;">
+                <div class="rounded-full" style="background-color:lightgray; width: 95%;">
+                  <div
+                    class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full tech_lines" lines=${lines} tech=${tech}><p style="color:white">${lines.toLocaleString()} lines</p>
+                  </div>
+                </div>
+              </div>
+            </div>`;
+            tagArea.innerHTML += tech_info;
+        });
+    });
+
+    let current_tech_lines_divs = document.querySelectorAll(".tech_lines");
+    let line_count = 0;
+    let line_sum = 0;
+    for (let current_line_div of current_tech_lines_divs){
+        let line = parseInt(current_line_div.getAttribute('lines'));
+        if (line < 10000){
+            line_sum += line;
+            line_count += 1;
+        }
+    }
+    let new_full_line = line_sum / line_count * 2
+    for (let current_line_div of current_tech_lines_divs){
+        let line = parseInt(current_line_div.getAttribute('lines'));
+        let new_line_percent = line/new_full_line*100;
+        if (new_line_percent >= 100) {
+            new_line_percent = 99;
+        } else if (new_line_percent <= 10){
+            new_line_percent = 10;
+        }
+        current_line_div.setAttribute('style', `width:${new_line_percent}%; background-color:${github_calendar_colors(current_line_div.getAttribute('tech'), 1)};`);
+    }
+}
+
 function show_group_total_lines(commit_data, is_reset=false, specific_tech){
     let tagArea = document.getElementById('tech_grahp');
     if (is_reset){
