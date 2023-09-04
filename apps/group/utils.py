@@ -6,9 +6,10 @@ import requests
 from dateutil.relativedelta import relativedelta
 from django.utils import timezone
 
-from apps.tech_stack.models import GithubCalendar
+from apps.tech_stack.models import GithubCalendar, TopTech
 from apps.tech_stack.utils import core_repo_list
 from config.local_settings import CORE_URL
+from utils.github_calendar_colors.github_calendar_colors import github_calendar_colors
 
 
 def save_git_calendar_data(git_calendar_data):
@@ -18,6 +19,30 @@ def save_git_calendar_data(git_calendar_data):
 
 def make_name_with_owner(repo_url):
     return urlparse(repo_url[:-4]).path[1:]
+
+
+def save_top_tech(calendar_data, github_id):
+    tech_data_dict = defaultdict(lambda: defaultdict(lambda: 0))
+    for data in calendar_data:
+        if data['tech_name'] in github_calendar_colors.keys():
+            date = data['author_date'].split('T')[0]
+            tech_data_dict[data['tech_name']][date] += data['lines']
+    tech_code_crazy_dict = defaultdict(lambda: 0)
+
+    for tech, tech_data in tech_data_dict.items():
+        for date, lines in tech_data.items():
+            if lines > 1000:
+                tech_code_crazy_dict[tech] += 3.7
+            elif 300 <= lines <= 1000:
+                tech_code_crazy_dict[tech] += 3 + (0.001 * (lines - 300))
+            else:
+                tech_code_crazy_dict[tech] += lines * 0.01
+    sorted_crazy_dict = list(sorted(tech_code_crazy_dict.items(), key=lambda tech_data: tech_data[1], reverse=True))
+    TopTech.objects.update_or_create(
+        github_id_id=github_id,
+        defaults={
+            'tech_name': sorted_crazy_dict[0][0],
+        })
 
 
 def core_group_analysis(github_user):
@@ -60,6 +85,7 @@ def core_group_analysis(github_user):
     elif core_status == 'done':
         GithubCalendar.objects.filter(github_id_id=github_user.github_id).delete()
         save_git_calendar_data(core_response['calendar_data'])
+        save_top_tech((core_response['calendar_data']), github_user.github_id)
         github_user.session_key = None
         github_user.status = 'completed'
         github_user.save()
