@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 {% load static custom_tags %}
 {% block content %}
+<script type="text/javascript" src="{% static "js/group.js" %}"></script>
+<script type="text/javascript" src="{% static "js/rainbow_calendar.js" %}"></script>
 <div id = 'under_header' class="flex items-center p-6 bg-gray-50 w-full h-full">
   {% include 'min_git_rainbow.html' %}
 </div>
-<script type="text/javascript" src="{% static "js/group.js" %}"></script>
-<script type="text/javascript" src="{% static "js/rainbow_calendar.js" %}"></script>
 <script>
     show_rainbow_calendar(JSON.parse('{{calendar_data|safe}}'));
     check_analysis_updating("{{github_user.github_id}}", "{{github_user.status}}");
@@ -15,9 +15,5 @@
     show_more_btn.addEventListener('click', function(){
         show_group_total_lines(current_data, false, true)
     });
-    {% if last_tech_data %}
-        show_group_total_lines(JSON.parse('{{last_tech_data|safe}}'), true);
-        save_global_var(JSON.parse('{{last_tech_data|safe}}'));
-    {% endif %}
 </script>
 {% endblock %}

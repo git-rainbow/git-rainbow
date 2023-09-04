@@ -15,7 +15,7 @@ from django.http import JsonResponse
 from django.template import loader
 from django.utils import timezone
 
-from apps.developer.utils import draw_ranking_side
+from apps.developer.utils import draw_ranking_side, make_last_tech_data
 from apps.group.utils import core_group_analysis, make_group_calendar_data, make_group_repo_dict_list
 from apps.group.views import save_git_calendar_data, make_group_tech_card
 from apps.tech_stack.models import GithubUser, AnalysisData, GithubCalendar, Ranking, GithubRepo, TechStack, TopTech
@@ -117,13 +117,11 @@ def git_rainbow(request, github_id):
     git_calendar_data = make_group_calendar_data(github_calendar_list)
     calendar_data = json.dumps(git_calendar_data)
     code_crazy, int_code_crazy = make_user_code_crazy(github_user.github_id)
+    last_day_commit_data = make_last_tech_data(github_calendar_list)
 
     context = {'github_user': github_user, 'tech_card_data': tech_card_data, 'calendar_data': calendar_data,
-               'top3_tech_data': top3_tech_data, 'int_code_crazy': int_code_crazy, 'code_crazy': code_crazy}
-    last_day = github_user.githubcalendar_set.aggregate(last_day=Max('author_date'))['last_day']
-    if last_day:
-        last_day_commits_data = github_user.githubcalendar_set.filter(author_date=last_day)
-        context["last_tech_data"] = json.dumps(make_group_calendar_data(last_day_commits_data))
+               'top3_tech_data': top3_tech_data, 'int_code_crazy': int_code_crazy, 'code_crazy': code_crazy,
+               'last_tech_data': json.dumps(last_day_commit_data)}
     return render(request, 'git_rainbow.html', context)
 
 
@@ -197,22 +195,20 @@ def update_git_rainbow(request):
                 break
 
     code_crazy, int_code_crazy = make_user_code_crazy(github_user.github_id)
+    last_day_commit_data = make_last_tech_data(github_calendar_list)
 
     context = {
         'top3_tech_data': top3_tech_data,
         'github_user': github_user,
         'tech_card_data': tech_card_data,
         'code_crazy': code_crazy,
-        'int_code_crazy': int_code_crazy
+        'int_code_crazy': int_code_crazy,
+        'last_tech_data': json.dumps(last_day_commit_data)
     }
     json_data = {
         'status': github_user.status,
         'calendar_data': git_calendar_data
     }
-    last_day = github_user.githubcalendar_set.aggregate(last_day=Max('author_date'))['last_day']
-    if last_day:
-        last_day_commits_data = github_user.githubcalendar_set.filter(author_date=last_day)
-        json_data["last_tech_data"] = json.dumps(make_group_calendar_data(last_day_commits_data))
     content = loader.render_to_string(
         'min_git_rainbow.html',
         context,

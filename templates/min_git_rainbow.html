@@ -144,4 +144,10 @@
   {% include 'token_modals.html' %}
   {% include 'desc_div.html' %}
 </div>
+<script>
+  {% if last_tech_data %}
+      show_group_total_lines(JSON.parse('{{last_tech_data|safe}}'), true);
+      save_global_var(JSON.parse('{{last_tech_data|safe}}'));
+  {% endif %}
+</script>
 {% endblock content %}
