@@ -145,6 +145,7 @@
   {% include 'desc_div.html' %}
 </div>
 <script>
+  show_rainbow_calendar(JSON.parse('{{calendar_data|safe}}'));
   {% if last_tech_data %}
       show_group_total_lines(JSON.parse('{{last_tech_data|safe}}'), true);
       save_global_var(JSON.parse('{{last_tech_data|safe}}'));

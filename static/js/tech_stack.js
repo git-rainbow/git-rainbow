@@ -113,7 +113,6 @@ function _analyze_developer(data) {
                 }
                 // Don't change template in ranking page - finish
                 $("#under_header").html(data.content);
-                show_rainbow_calendar(data.calendar_data);
             } else if(data.status == 'fail') {
                 waiting = false;
                 alert(`status: fail, reaseon: ${data.reason}`);

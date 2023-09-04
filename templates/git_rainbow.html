@@ -7,7 +7,6 @@
   {% include 'min_git_rainbow.html' %}
 </div>
 <script>
-    show_rainbow_calendar(JSON.parse('{{calendar_data|safe}}'));
     check_analysis_updating("{{github_user.github_id}}", "{{github_user.status}}");
     var show_more_index = 0;
     var current_data;

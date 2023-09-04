@@ -75,6 +75,24 @@ def make_user_code_crazy(github_id):
     return code_crazy, int_code_crazy
 
 
+def get_profile_data(github_calendar_list, github_user):
+    tech_card_data = make_group_tech_card(github_calendar_list)
+    top3_tech_data = make_top3_tech_date(tech_card_data, github_user)
+    git_calendar_data = make_group_calendar_data(github_calendar_list)
+    code_crazy, int_code_crazy = make_user_code_crazy(github_user.github_id)
+    last_day_commit_data = make_last_tech_data(github_calendar_list)
+    context = {
+        'github_user': github_user,
+        'tech_card_data': tech_card_data,
+        'calendar_data': json.dumps(git_calendar_data),
+        'top3_tech_data': top3_tech_data,
+        'int_code_crazy': int_code_crazy,
+        'code_crazy': code_crazy,
+        'last_tech_data': json.dumps(last_day_commit_data)
+    }
+    return context
+
+
 def git_rainbow(request, github_id):
     error_code = 400
     is_github_id_valid = check_github_id(github_id)
@@ -101,17 +119,7 @@ def git_rainbow(request, github_id):
 
     if not github_calendar_list:
         return render(request, 'loading.html', {'github_id': github_id})
-
-    tech_card_data = make_group_tech_card(github_calendar_list)
-    top3_tech_data = make_top3_tech_date(tech_card_data, github_user)
-    git_calendar_data = make_group_calendar_data(github_calendar_list)
-    calendar_data = json.dumps(git_calendar_data)
-    code_crazy, int_code_crazy = make_user_code_crazy(github_user.github_id)
-    last_day_commit_data = make_last_tech_data(github_calendar_list)
-
-    context = {'github_user': github_user, 'tech_card_data': tech_card_data, 'calendar_data': calendar_data,
-               'top3_tech_data': top3_tech_data, 'int_code_crazy': int_code_crazy, 'code_crazy': code_crazy,
-               'last_tech_data': json.dumps(last_day_commit_data)}
+    context = get_profile_data(github_calendar_list, github_user)
     return render(request, 'git_rainbow.html', context)
 
 
@@ -170,23 +178,9 @@ def update_git_rainbow(request):
 
     year_ago = (timezone.now() - relativedelta(years=1)).replace(hour=0, minute=0, second=0)
     github_calendar_list = [github_calendar for github_calendar in github_user.githubcalendar_set.all() if github_calendar.author_date >= year_ago]
-    git_calendar_data = make_group_calendar_data(github_calendar_list)
-    tech_card_data = make_group_tech_card(github_calendar_list)
-    top3_tech_data = make_top3_tech_date(tech_card_data, github_user)
-    code_crazy, int_code_crazy = make_user_code_crazy(github_user.github_id)
-    last_day_commit_data = make_last_tech_data(github_calendar_list)
-
-    context = {
-        'top3_tech_data': top3_tech_data,
-        'github_user': github_user,
-        'tech_card_data': tech_card_data,
-        'code_crazy': code_crazy,
-        'int_code_crazy': int_code_crazy,
-        'last_tech_data': json.dumps(last_day_commit_data)
-    }
+    context = get_profile_data(github_calendar_list, github_user)
     json_data = {
         'status': github_user.status,
-        'calendar_data': git_calendar_data
     }
     content = loader.render_to_string(
         'min_git_rainbow.html',
