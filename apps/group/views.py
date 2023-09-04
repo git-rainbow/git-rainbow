@@ -17,7 +17,7 @@ from django.utils import timezone
 
 from apps.developer.utils import draw_ranking_side
 from apps.group.utils import core_group_analysis, make_group_calendar_data, make_group_repo_dict_list, \
-    save_git_calendar_data
+    save_git_calendar_data, code_crazy_calculation_by_tech
 from apps.tech_stack.models import TechStack, GithubUser, GithubCalendar, GithubRepo
 from apps.group.models import Group, GroupRepo, Topic
 
@@ -30,16 +30,19 @@ from config.local_settings import RANDOM_IMG_URL
 
 
 def make_group_tech_card(group_calendar_data):
-    tech_list = github_calendar_colors.keys()
-    group_tech_calendar_data = [calendar_data for calendar_data in group_calendar_data if calendar_data.tech_name in tech_list]
-    group_by_data_list = defaultdict(int)
-    for calendar_data in group_tech_calendar_data:
-        group_by_data_list[calendar_data.tech_name] += calendar_data.lines
-    group_by_data_list = dict(sorted(group_by_data_list.items(), key=lambda item: item[1], reverse=True))
-    calendar_total_lines = sum(group_by_data_list.values())
+    tech_data_dict = defaultdict(lambda: defaultdict(lambda: 0))
+    for data in group_calendar_data:
+        if data.tech_name in github_calendar_colors.keys():
+            date = data.author_date.strftime("%Y-%m-%d")
+            tech_data_dict[data.tech_name][date] += data.lines
+
+    total_code_crazy, tech_code_crazy_dict = code_crazy_calculation_by_tech(tech_data_dict)
+
+    sorted_crazy_items = sorted(tech_code_crazy_dict.items(), key=lambda tech_data: tech_data[1], reverse=True)
+    sorted_crazy_dict = {tech_name: code_crazy for tech_name, code_crazy in sorted_crazy_items}
     tech_card_data = []
-    for tech_name, tech_total_lines in group_by_data_list.items():
-        percent = round(tech_total_lines / calendar_total_lines * 100, 1)
+    for tech_name, code_crazy in sorted_crazy_dict.items():
+        percent = round(code_crazy / total_code_crazy * 100, 1)
         if percent > 0:
             name_for_file = tech_name.lower()
             tech = {'name': tech_name, 'file': name_for_file,

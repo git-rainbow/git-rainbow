@@ -21,22 +21,31 @@ def make_name_with_owner(repo_url):
     return urlparse(repo_url[:-4]).path[1:]
 
 
+def code_crazy_calculation_by_tech(tech_data_dict):
+    total_code_crazy = 0
+    tech_code_crazy_dict = defaultdict(lambda: 0)
+    for tech, tech_data in tech_data_dict.items():
+        for date, lines in tech_data.items():
+            if lines > 1000:
+                code_crazy = 3.7
+            elif 300 <= lines <= 1000:
+                code_crazy = 3 + (0.001 * (lines - 300))
+            else:
+                code_crazy = lines * 0.01
+            tech_code_crazy_dict[tech] += code_crazy
+            total_code_crazy += code_crazy
+    return total_code_crazy, tech_code_crazy_dict
+
+
 def save_top_tech(calendar_data, github_id):
     tech_data_dict = defaultdict(lambda: defaultdict(lambda: 0))
     for data in calendar_data:
         if data['tech_name'] in github_calendar_colors.keys():
             date = data['author_date'].split('T')[0]
             tech_data_dict[data['tech_name']][date] += data['lines']
-    tech_code_crazy_dict = defaultdict(lambda: 0)
 
-    for tech, tech_data in tech_data_dict.items():
-        for date, lines in tech_data.items():
-            if lines > 1000:
-                tech_code_crazy_dict[tech] += 3.7
-            elif 300 <= lines <= 1000:
-                tech_code_crazy_dict[tech] += 3 + (0.001 * (lines - 300))
-            else:
-                tech_code_crazy_dict[tech] += lines * 0.01
+    total_code_crazy, tech_code_crazy_dict = code_crazy_calculation_by_tech(tech_data_dict)
+
     sorted_crazy_dict = list(sorted(tech_code_crazy_dict.items(), key=lambda tech_data: tech_data[1], reverse=True))
     TopTech.objects.update_or_create(
         github_id_id=github_id,
