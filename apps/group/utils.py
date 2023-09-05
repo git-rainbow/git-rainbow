@@ -43,15 +43,14 @@ def save_top_tech(calendar_data, github_id):
         if data['tech_name'] in github_calendar_colors.keys():
             date = data['author_date'].split('T')[0]
             tech_data_dict[data['tech_name']][date] += data['lines']
-
-    total_code_crazy, tech_code_crazy_dict = code_crazy_calculation_by_tech(tech_data_dict)
-
-    sorted_crazy_dict = list(sorted(tech_code_crazy_dict.items(), key=lambda tech_data: tech_data[1], reverse=True))
-    TopTech.objects.update_or_create(
-        github_id_id=github_id,
-        defaults={
-            'tech_name': sorted_crazy_dict[0][0],
-        })
+    if tech_data_dict:
+        total_code_crazy, tech_code_crazy_dict = code_crazy_calculation_by_tech(tech_data_dict)
+        sorted_crazy_dict = list(sorted(tech_code_crazy_dict.items(), key=lambda tech_data: tech_data[1], reverse=True))
+        TopTech.objects.update_or_create(
+            github_id_id=github_id,
+            defaults={
+                'tech_name': sorted_crazy_dict[0][0],
+            })
 
 
 def core_group_analysis(github_user):

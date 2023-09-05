@@ -76,20 +76,31 @@ def make_user_code_crazy(github_id):
 
 
 def get_profile_data(github_calendar_list, github_user):
-    tech_card_data = make_group_tech_card(github_calendar_list)
-    top3_tech_data = make_top3_tech_date(tech_card_data, github_user)
-    git_calendar_data = make_group_calendar_data(github_calendar_list)
-    code_crazy, int_code_crazy = make_user_code_crazy(github_user.github_id)
-    last_day_commit_data = make_last_tech_data(github_calendar_list)
-    context = {
-        'github_user': github_user,
-        'tech_card_data': tech_card_data,
-        'calendar_data': json.dumps(git_calendar_data),
-        'top3_tech_data': top3_tech_data,
-        'int_code_crazy': int_code_crazy,
-        'code_crazy': code_crazy,
-        'last_tech_data': json.dumps(last_day_commit_data)
-    }
+    if github_calendar_list:
+        tech_card_data = make_group_tech_card(github_calendar_list)
+        top3_tech_data = make_top3_tech_date(tech_card_data, github_user)
+        git_calendar_data = make_group_calendar_data(github_calendar_list)
+        code_crazy, int_code_crazy = make_user_code_crazy(github_user.github_id)
+        last_day_commit_data = make_last_tech_data(github_calendar_list)
+        context = {
+            'github_user': github_user,
+            'tech_card_data': tech_card_data,
+            'calendar_data': json.dumps(git_calendar_data),
+            'top3_tech_data': top3_tech_data,
+            'int_code_crazy': int_code_crazy,
+            'code_crazy': code_crazy,
+            'last_tech_data': json.dumps(last_day_commit_data)
+        }
+    else:
+        context = {
+            'github_user': github_user,
+            'tech_card_data': [],
+            'calendar_data': {},
+            'top3_tech_data': [],
+            'int_code_crazy': 0,
+            'code_crazy': 0,
+            'last_tech_data': {}
+        }
     return context
 
 
