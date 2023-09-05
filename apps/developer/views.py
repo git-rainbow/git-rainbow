@@ -1,4 +1,5 @@
 import json
+from collections import defaultdict
 from datetime import datetime
 from threading import Thread
 
@@ -355,22 +356,42 @@ def ranking_all(request):
     ranking_side = draw_ranking_side()
     sorted_github_calendar_colors = sorted_github_calendar_colors = {tech_dict['tech_name']:{'tech_color': tech_dict['tech_color'], 'logo_path':tech_dict['logo_path']} for tech_dict_list in ranking_side.values() for tech_dict in tech_dict_list}
     tech_table_joined = list(GithubCalendar.objects.filter(author_date__gte=year_ago, tech_name__in=sorted_github_calendar_colors.keys()).values('github_id', 'tech_name').annotate(
-        total_lines=Sum('lines'),
-        tech_code_crazy=Sum(Case(
-            When(lines__range=[300, 1000], then=(3 + 0.001 * (F('lines') - 300))),
-            When(lines__gt=1000, then=Value(3.7)),
-            default=F('lines') * 0.01,
+        date_without_time=TruncDate('author_date'),
+        day_lines=Sum('lines'),
+        tech_code_crazy=Case(
+            When(day_lines__range=[300, 1000], then=(3 + 0.001 * (F('day_lines') - 300))),
+            When(day_lines__gt=1000, then=Value(3.7)),
+            default=F('day_lines') * 0.01,
             output_field=FloatField()
-        )),
-        int_code_crazy=ExpressionWrapper(F('tech_code_crazy'), output_field=IntegerField()),
+        ),
     ))
+
+    user_code_crazy_dict = defaultdict(lambda: defaultdict(lambda: {'total_lines': 0, "tech_code_crazy": 0}))
+    for joined_data in tech_table_joined:
+        github_id = joined_data['github_id']
+        tech_name = joined_data['tech_name']
+        lines = joined_data['day_lines']
+        tech_code_crazy = joined_data['tech_code_crazy']
+        user_code_crazy_dict[github_id][tech_name]['total_lines'] += lines
+        user_code_crazy_dict[github_id][tech_name]['tech_code_crazy'] += tech_code_crazy
+
+    user_code_crazy_list = []
+    for user, user_data in user_code_crazy_dict.items():
+        for tech_name, tech_data in user_data.items():
+            user_code_crazy_list.append({
+                'github_id': user,
+                'tech_name': tech_name,
+                'total_lines': tech_data['total_lines'],
+                "tech_code_crazy": tech_data['tech_code_crazy'],
+                "int_code_crazy": int(tech_data['tech_code_crazy']),
+            })
 
     RANK_COUNT_TO_SHOW = 3
     rank_data = dict()
     ranker_github_id_set = set()
     for tech, tech_data in sorted_github_calendar_colors.items():
         tech_name = tech.lower()
-        tech_rank_data = [i for i in tech_table_joined if i['tech_name'].lower() == tech_name]
+        tech_rank_data = [i for i in user_code_crazy_list if i['tech_name'].lower() == tech_name]
         tech_rank_data.sort(key=lambda x: x['tech_code_crazy'], reverse=True)
         top3_data = tech_rank_data[0:RANK_COUNT_TO_SHOW]
         user_avg_lines = sum(i['total_lines'] for i in top3_data)/RANK_COUNT_TO_SHOW
