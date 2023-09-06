@@ -7,7 +7,8 @@ import os
 import shutil
 
 from dateutil.relativedelta import relativedelta
-from django.db.models import Sum, F
+from django.db.models import Sum, F, FloatField, Case, Value, When
+from django.db.models.functions import TruncDate
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
@@ -55,6 +56,71 @@ def make_group_tech_card(group_calendar_data):
     return tech_card_data
 
 
+def get_group_calendar_data(calendar_queryset, one_year_ago, six_months_ago=None):
+    if six_months_ago:
+        period_group_queryset = calendar_queryset.filter(author_date__range=(one_year_ago, six_months_ago))
+    else:
+        period_group_queryset = calendar_queryset.filter(author_date__gte=one_year_ago)
+
+    period_group_data = period_group_queryset.values('github_id').annotate(
+        date_without_time=TruncDate('author_date'),
+        day_lines=Sum('lines'),
+        tech_code_crazy = Sum(Case(
+            When(lines__range=[300, 1000], then=(3 + 0.001 * (F('lines') - 300))),
+            When(lines__gt=1000, then=Value(3.7)),
+            default=F('lines') * 0.01,
+            output_field=FloatField(),
+        )),
+    ).order_by('-tech_code_crazy')
+    return period_group_data
+
+
+def get_rank_data_list(filtered_calendar_data):
+    user_code_crazy_dict = defaultdict(lambda: {'total_lines': 0, "tech_code_crazy": 0})
+    for joined_data in filtered_calendar_data:
+        github_id = joined_data['github_id']
+        lines = joined_data['day_lines']
+        tech_code_crazy = joined_data['tech_code_crazy']
+        user_code_crazy_dict[github_id]['total_lines'] += lines
+        user_code_crazy_dict[github_id]['tech_code_crazy'] += tech_code_crazy
+
+    user_code_crazy_list = []
+    for user, user_data in user_code_crazy_dict.items():
+        user_code_crazy_list.append({
+            'github_id': user,
+            'total_lines':user_data['total_lines'],
+            "tech_code_crazy":user_data['tech_code_crazy'],
+            "int_code_crazy": int(user_data['tech_code_crazy']),
+        })
+    user_code_crazy_list.sort(key=lambda x: x['tech_code_crazy'], reverse=True)
+
+    acc_count = 0
+    current_rank = 1
+    for i, ranker in enumerate(user_code_crazy_list):
+        if i == 0:
+            ranker['rank'] = current_rank
+        elif user_code_crazy_list[i]['tech_code_crazy'] == user_code_crazy_list[i-1]['tech_code_crazy']:
+            ranker['rank'] = user_code_crazy_list[i-1]['rank']
+            acc_count += 1
+        else:
+            current_rank = i + 1 + acc_count
+            ranker['rank'] = current_rank
+            acc_count = 0
+
+    return user_code_crazy_list
+
+
+def append_code_line_percent(rank_list, user_count):
+    user_avg_lines = sum(i['total_lines'] for i in rank_list)/user_count
+    for ranker in rank_list:
+        code_line_percent = round(ranker['total_lines'] / user_avg_lines * 100, 2)
+        if code_line_percent < 50:
+            code_line_percent = 50
+        elif code_line_percent > 95:
+            code_line_percent = 95
+        ranker['code_line_percent'] = code_line_percent
+
+
 def group(request, group_id):
     group = Group.objects.select_related('owner').filter(id=group_id).first()
     context = { 'group' : True }
@@ -65,9 +131,30 @@ def group(request, group_id):
 
     context.update({'group': group})
     one_year_ago = timezone.now() - relativedelta(years=1)
+    six_months_ago = timezone.now() - relativedelta(months=6)
     member_list = group.github_users.all().values_list('github_id', flat=True)
     group_repo_list = group.grouprepo_set.all().values_list('repo_url', flat=True)
-    group_calendar_data = GithubCalendar.objects.filter(github_id__in=member_list, repo_url__in=group_repo_list, author_date__gte=one_year_ago)
+
+    group_calendar_queryset = GithubCalendar.objects.select_related('github_id').filter(github_id__in=member_list, repo_url__in=group_repo_list)
+    group_calendar_data = group_calendar_queryset.filter(author_date__gte=one_year_ago)
+
+    six_months_data = get_group_calendar_data(group_calendar_queryset, one_year_ago, six_months_ago)
+    post_user_code_crazy_list = get_rank_data_list(six_months_data)
+    six_months_rank_dict = {data['github_id']:data['rank'] for data in post_user_code_crazy_list}
+
+    one_year_data = get_group_calendar_data(group_calendar_queryset, one_year_ago)
+    user_code_crazy_list = get_rank_data_list(one_year_data)
+
+    for ranker in user_code_crazy_list:
+        ranker['change_rank'] = ranker['rank'] - six_months_rank_dict[ranker['github_id']]
+
+    rank_member_count = len(user_code_crazy_list)
+    append_code_line_percent(user_code_crazy_list, rank_member_count)
+
+    ranker_github_data_list = GithubUser.objects.values('github_id', 'avatar_url', 'toptech__tech_name').filter(github_id__in=member_list)
+    rank_avatar_url_dict = {ranker['github_id']: ranker['avatar_url'] for ranker in ranker_github_data_list}
+    ranker_toptech_dict = {ranker['github_id']: str(ranker['toptech__tech_name']) for ranker in ranker_github_data_list}
+
     group_tech_card = make_group_tech_card(group_calendar_data)
     group_git_calendar_data = make_group_calendar_data(group_calendar_data)
     group_git_calendar_data = json.dumps(group_git_calendar_data)
@@ -75,7 +162,15 @@ def group(request, group_id):
     login_user = request.user
     if login_user.is_authenticated and login_user.github_id in member_list:
         is_joined = True
-    context.update({'group_git_calendar_data': group_git_calendar_data, 'group_tech_card': group_tech_card, 'is_joined': is_joined, 'member_list': list(member_list)})
+    context.update({
+        'group_git_calendar_data': group_git_calendar_data,
+        'group_tech_card': group_tech_card,
+        'is_joined': is_joined,
+        'member_list': list(member_list),
+        'group_rank_data': user_code_crazy_list,
+        'rank_avatar_url_dict': rank_avatar_url_dict,
+        'ranker_toptech_dict': ranker_toptech_dict,
+    })
     return render(request, 'group.html', context)
 
 

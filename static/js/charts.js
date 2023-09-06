@@ -176,6 +176,14 @@ function draw_hourly_graph(datasets) {
     window.myScatter = new Chart(scatterCtx, scatterConfig);
 }
 
+function fill_code_lines_color(group_color_obj) {
+    const user_coding_lines = document.querySelectorAll(".user-coding-lines");
+    user_coding_lines.forEach(line_div => {
+        const github_id = line_div.getAttribute("github_id");
+        line_div.style.backgroundColor = group_color_obj[github_id];
+    })
+}
+
 function draw_group_graph(group_id) {
     $.ajaxSetup({
         beforeSend: function (xhr, settings) {
@@ -199,6 +207,7 @@ function draw_group_graph(group_id) {
             draw_monthly_graph(monthly_datasets);
             draw_weekly_graph(weekly_datasets);
             draw_hourly_graph(hourly_datasets);
+            fill_code_lines_color(group_color_obj);
         }
     });
 }
