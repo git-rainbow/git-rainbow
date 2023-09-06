@@ -373,18 +373,19 @@ def group_update(request):
         group.save()
     return JsonResponse({'status': 'completed', 'repo_info': repo_dict_list})
 
-
-def group_join(request):
-    if request.method != 'POST':
-        return JsonResponse({"status": "fail", 'reason': 'Not allowed method'})
-    group_id = request.POST.get('group_id')
+@login_required(login_url='/login/github')
+def group_join(request, group_id):
     group = Group.objects.filter(id=group_id).first()
     if not group:
         return JsonResponse({"status": "fail", 'reason': 'group does not exist'})
     user = request.user
     if not user.is_authenticated:
         return JsonResponse({"status": "fail", 'reason': 'Login is required'})
-    github_id = user.github_id
+
+    if request.method == 'GET':
+        github_id = request.GET.get('github_id')
+    else:
+        github_id = user.github_id
     group.github_users.add(github_id)
 
     group_repo_list = group.grouprepo_set.all()

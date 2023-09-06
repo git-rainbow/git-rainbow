@@ -603,9 +603,8 @@ function group_join(group_id, is_login){
         }
     });
     $.ajax({
-        url: '/group/join'
+        url: '/group/'+group_id+'/join'
         ,method: 'POST'
-        ,data: {'group_id': group_id}
         ,async: false
         ,success: function (data) {
             let status = data.status
