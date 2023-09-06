@@ -324,7 +324,7 @@ def create_group(request):
             branch=repo_info['branch'],
             is_private=repo_info['is_private']
         )
-        for repo_info in group_repo_list
+        for repo_info in group_repo_list if repo_info['repo_url'] != ''
     ]
     GroupRepo.objects.bulk_create(group_repo_instance_list)
     topic_list = json.loads(data.get('topic_list')) if data.get('topic_list') else []
