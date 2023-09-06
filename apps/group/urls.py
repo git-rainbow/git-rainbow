@@ -8,5 +8,6 @@ urlpatterns = [
     path('group/<int:group_id>', views.group),
     path('group/update', views.group_update),
     path('group/join', views.group_join),
+    path('group/<int:group_id>/remove', views.remove_group),
     path('group/graph-data', views.group_graph)
 ]

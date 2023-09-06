@@ -252,6 +252,14 @@ def refresh_img(request, is_func=None):
     else:
         return JsonResponse({'file_path': file_path})
 
+@login_required(login_url='/login/github')
+def remove_group(request, group_id):
+    group_list = Group.objects.filter(owner=request.user).values_list('id', flat=True)
+    if group_id in group_list:
+        Group.objects.filter(id=group_id).delete()
+        return JsonResponse({'status': 'completed'})
+
+    return JsonResponse({'status': 'permission denied'})
 
 @login_required(login_url='/login/github')
 def create_group(request):
