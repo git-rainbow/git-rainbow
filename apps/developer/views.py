@@ -266,42 +266,66 @@ def update_tech_stack_table(tech_set: set):
 def make_ranker_data(tech_name):
     today = timezone.now()
     year_ago = (today - relativedelta(years=1)).replace(hour=0, minute=0, second=0)
-    now_tech_ranker = GithubCalendar.objects.filter(tech_name__iexact=tech_name, author_date__range=[year_ago, today]).values('github_id').annotate(
-        total_lines=Sum('lines'),
-        tech_code_crazy=Sum(Case(
-                When(lines__range=[300, 1000], then=(3+0.001*(F('lines')-300))),
-                When(lines__gt=1000, then=Value(3.7)),
-                default=F('lines')*0.01,
-                output_field=FloatField()
-        )),
-        int_code_crazy=ExpressionWrapper(F('tech_code_crazy'), output_field=IntegerField()),
-        avatar_url=F('github_id__avatar_url'),
-        top_tech=Case(
-            When(github_id__toptech__tech_name__isnull=True, then=Value('None')),
-            default=F('github_id__toptech__tech_name'),
-            output_field=CharField()
-        ),
-        midnight_rank=Subquery(Ranking.objects.filter(tech_name=OuterRef('tech_name'), github_id=OuterRef('github_id')).values('midnight_rank')),
-        rank=Window(expression=Rank(), order_by=F('tech_code_crazy').desc()),
-        row_num=Window(expression=RowNumber(), order_by=F('tech_code_crazy').desc()),
-    ).exclude(total_lines=0).order_by('rank')
+    now_tech_data = GithubCalendar.objects.filter(tech_name__iexact=tech_name, author_date__gte=year_ago).values('github_id', 'tech_name').annotate(
+        date=TruncDate('author_date'),
+        day_lines=Sum('lines'),
+        day_crazy=Case(
+            When(day_lines__range=[300, 1000], then=(3 + 0.001 * (F('day_lines') - 300))),
+            When(day_lines__gt=1000, then=Value(3.7)),
+            default=F('day_lines') * 0.01,
+            output_field=FloatField()
+        )
+    )
+    total_lines = 0
+    user_code_crazy_dict = defaultdict(lambda: defaultdict(lambda: {'total_lines': 0, "tech_code_crazy": 0}))
+    for tech_data in now_tech_data:
+        github_id = tech_data['github_id']
+        tech_name = tech_data['tech_name']
+        lines = tech_data['day_lines']
+        tech_code_crazy = tech_data['day_crazy']
+        user_code_crazy_dict[github_id][tech_name]['total_lines'] += lines
+        user_code_crazy_dict[github_id][tech_name]['tech_code_crazy'] += tech_code_crazy
+        total_lines += lines
+    github_id_list = user_code_crazy_dict.keys()
+    total_ranking_count = len(github_id_list)
+    user_avg_lines = (total_lines / total_ranking_count) * 2
 
-    if now_tech_ranker:
-        total_ranking_count = len(now_tech_ranker)
-        user_total_lines = sum([ranker_data['total_lines'] for ranker_data in now_tech_ranker])
-        user_avg_lines = (user_total_lines / total_ranking_count) * 2
-    for ranker in now_tech_ranker:
-        last_rank = ranker.get('midnight_rank')
-        current_rank = ranker.get('rank')
-        ranker['change_rank'] = last_rank - current_rank if last_rank else total_ranking_count - current_rank
-        code_line_percent = round(ranker['total_lines'] / user_avg_lines * 100, 2)
-        if code_line_percent < 25:
-            code_line_percent = 25
-        elif code_line_percent > 95:
-            code_line_percent = 95
-        ranker['code_line_percent'] = code_line_percent
-        ranker['total_lines'] = format(ranker['total_lines'], ',')
-    return now_tech_ranker
+    user_avatar_url = {user_data['github_id']: {'avatar_url': user_data['avatar_url'], 'top_tech': str(user_data['toptech__tech_name'])} for user_data in GithubUser.objects.filter(github_id__in=github_id_list).values('github_id', 'avatar_url', 'toptech__tech_name')}
+    user_mid_ranking = {user_data['github_id']: user_data['midnight_rank'] for user_data in Ranking.objects.filter(github_id__in=github_id_list).values('github_id', 'midnight_rank')}
+
+    user_code_crazy_list = []
+    for user, user_data in user_code_crazy_dict.items():
+        for tech_name, tech_data in user_data.items():
+            code_line_percent = round(tech_data['total_lines'] / user_avg_lines * 100, 2)
+            if code_line_percent < 25:
+                code_line_percent = 25
+            elif code_line_percent > 95:
+                code_line_percent = 95
+
+            user_code_crazy_list.append({
+                "github_id": user,
+                "avatar_url": user_avatar_url.get(user)['avatar_url'],
+                "top_tech": user_avatar_url.get(user)['top_tech'],
+                "tech_name": tech_name,
+                "total_lines": format(tech_data['total_lines'], ','),
+                "tech_code_crazy": tech_data['tech_code_crazy'],
+                "int_code_crazy": int(tech_data['tech_code_crazy']),
+                "code_line_percent": code_line_percent,
+            })
+    user_code_crazy_list.sort(key=lambda x: x['tech_code_crazy'], reverse=True)
+
+    row_num = 0
+    current_rank = 0
+    before_crazy = None
+    for user_crazy in user_code_crazy_list:
+        if before_crazy is None or before_crazy > user_crazy['tech_code_crazy']:
+            current_rank += 1
+            before_crazy = user_crazy['tech_code_crazy']
+        row_num += 1
+        user_crazy['rank'] = current_rank
+        last_rank = user_mid_ranking.get(user_crazy['github_id'])
+        user_crazy['change_rank'] = last_rank - current_rank if last_rank else total_ranking_count - current_rank
+    return user_code_crazy_list
 
 
 def make_top3_tech_date(tech_card_data, github_user):
@@ -311,7 +335,7 @@ def make_top3_tech_date(tech_card_data, github_user):
         for rank_data in tech_rank_data:
             if rank_data['github_id'] == github_user.github_id:
                 tech_data['rank'] = rank_data
-                tech_data['ranker_num'] = tech_rank_data.count()
+                tech_data['ranker_num'] = len(tech_rank_data)
                 tech_data['rank_percent'] = round(rank_data['rank'] / tech_data['ranker_num'] * 100, 1)
                 top3_tech_data.append(tech_data)
                 break
@@ -458,7 +482,8 @@ def ranking_tech_stack(request, tech_name):
     if request.user.is_authenticated:
         context['login_user'] = request.user.githubuser_set.first()
         github_id = context['login_user'].github_id
-        if now_ranker_data.filter(github_id=github_id).first():
+        login_user_rank_data = [ranker_data for ranker_data in now_ranker_data if ranker_data['github_id'] == github_id]
+        if login_user_rank_data:
             for ranker in now_ranker_data:
                 if ranker['github_id'] == github_id:
                     context['login_user_rank'] = ranker['rank']
