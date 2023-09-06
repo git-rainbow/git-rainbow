@@ -149,7 +149,8 @@ def group(request, group_id):
         ranker['change_rank'] = ranker['rank'] - six_months_rank_dict[ranker['github_id']]
 
     rank_member_count = len(user_code_crazy_list)
-    append_code_line_percent(user_code_crazy_list, rank_member_count)
+    if rank_member_count > 0:
+        append_code_line_percent(user_code_crazy_list, rank_member_count)
 
     ranker_github_data_list = GithubUser.objects.values('github_id', 'avatar_url', 'toptech__tech_name').filter(github_id__in=member_list)
     rank_avatar_url_dict = {ranker['github_id']: ranker['avatar_url'] for ranker in ranker_github_data_list}
