@@ -20,7 +20,8 @@ from apps.developer.utils import draw_tech_side, make_last_tech_data
 from apps.group.utils import core_user_analysis, make_group_calendar_data, make_group_repo_dict_list
 from apps.group.views import save_git_calendar_data, make_group_tech_card
 from apps.tech_stack.create_table import create_github_calendar_table
-from apps.tech_stack.models import GithubUser, AnalysisData, GithubCalendar, Ranking, GithubRepo, TechStack, TopTech
+from apps.tech_stack.models import GithubUser, AnalysisData, GithubCalendar, Ranking, GithubRepo, TechStack, TopTech, \
+    get_calendar_model
 from apps.tech_stack.utils import core_repo_list
 from utils.github_api.github_api import request_github_profile
 from utils.github_calendar.github_calendar import generate_github_calendar
@@ -123,7 +124,7 @@ def git_rainbow(request, github_id):
     is_github_id_valid = check_github_id(github_id)
     if not is_github_id_valid:
         return render(request, 'exception_page.html', {'error': error_code, 'message': 'Invalid github id'})
-    github_user = GithubUser.objects.prefetch_related('githubcalendar_set', 'githubrepo_set').filter(github_id__iexact=github_id, is_valid=True).first()
+    github_user = GithubUser.objects.prefetch_related('githubrepo_set').filter(github_id__iexact=github_id, is_valid=True).first()
     if not github_user:
         new_github_user, _ = GithubUser.objects.get_or_create(github_id=github_id)
         user_result = update_or_create_github_user(github_id)
@@ -135,7 +136,7 @@ def git_rainbow(request, github_id):
             new_github_user.delete()
 
     year_ago = (timezone.now() - relativedelta(years=1)).replace(hour=0, minute=0, second=0)
-    github_calendar_list = [github_calendar for github_calendar in github_user.githubcalendar_set.all() if github_calendar.author_date >= year_ago]
+    github_calendar_list = list(get_calendar_model(github_id).objects.select_related('github_id').filter(author_date__gte=year_ago))
 
     if request.GET.get('update') == 'True' or not github_calendar_list:
         core_response = core_user_analysis(github_user)
@@ -177,7 +178,7 @@ def save_repo_url(request, github_id):
 def update_git_rainbow(request, github_id):
     if request.method != 'POST':
         return JsonResponse({"status": "fail", 'reason': 'Not allowed method'})
-    github_user = GithubUser.objects.prefetch_related('githubcalendar_set', 'githubrepo_set').filter(github_id__iexact=github_id, is_valid=True).first()
+    github_user = GithubUser.objects.prefetch_related('githubrepo_set').filter(github_id__iexact=github_id, is_valid=True).first()
     if not github_user:
         return JsonResponse({"status": "fail", 'reason': 'No github id'})
 
@@ -200,7 +201,7 @@ def update_git_rainbow(request, github_id):
         return JsonResponse(core_response)
 
     year_ago = (timezone.now() - relativedelta(years=1)).replace(hour=0, minute=0, second=0)
-    github_calendar_list = [github_calendar for github_calendar in github_user.githubcalendar_set.all() if github_calendar.author_date >= year_ago]
+    github_calendar_list = list(get_calendar_model(github_id).objects.select_related('github_id').filter(author_date__gte=year_ago))
     context = get_profile_data(github_calendar_list, github_user)
     json_data = {
         'status': github_user.status,

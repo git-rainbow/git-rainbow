@@ -6,15 +6,21 @@ import requests
 from dateutil.relativedelta import relativedelta
 from django.utils import timezone
 
-from apps.tech_stack.models import GithubCalendar, TopTech
+from apps.tech_stack.models import TopTech, get_calendar_model
 from apps.tech_stack.utils import core_repo_list
 from config.local_settings import CORE_URL
 from utils.github_calendar_colors.github_calendar_colors import github_calendar_colors
 
 
 def save_git_calendar_data(git_calendar_data):
-    calendar_data_bulk = [GithubCalendar(**git_data) for git_data in git_calendar_data]
-    GithubCalendar.objects.bulk_create(calendar_data_bulk)
+    calendar_data_dict = defaultdict(lambda: [])
+    for git_data in git_calendar_data:
+        calendar_data_dict[git_data['github_id_id']].append(git_data)
+
+    for github_id, git_data_list in calendar_data_dict.items():
+        calendar_model = get_calendar_model(github_id)
+        calendar_data_bulk = [calendar_model(**git_data) for git_data in git_data_list]
+        calendar_model.objects.bulk_create(calendar_data_bulk)
 
 
 def make_name_with_owner(repo_url):
@@ -101,7 +107,8 @@ def core_user_analysis(github_user):
         return {"status": "progress", "session_key": github_user.session_key}
 
     elif core_status == 'done':
-        GithubCalendar.objects.filter(github_id_id=github_user.github_id).delete()
+        calendar_model = get_calendar_model(github_user.github_id)
+        calendar_model.objects.all().delete()
         save_git_calendar_data(core_response['calendar_data'])
         save_top_tech((core_response['calendar_data']), github_user.github_id)
         github_user.session_key = None
