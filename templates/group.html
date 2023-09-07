@@ -7,7 +7,6 @@
 <script type="text/javascript" src="{% static "js/group.js" %}"></script>
 <script type="text/javascript" src="{% static "js/rainbow_calendar.js" %}"></script>
 <script>
-  show_rainbow_calendar(JSON.parse('{{ group_git_calendar_data|safe}}'))
   group_update("{{ group.id }}");
   draw_group_graph("{{ group.id }}");
 </script>

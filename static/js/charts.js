@@ -85,6 +85,19 @@ function get_datasets(calendar_data, category, group_color_obj) {
     return datasets;
 }
 
+function get_grass_datasets(calendar_data) {
+    let grass_data = {};
+    for (let data of calendar_data) {
+        const { author_date, github_id, tech_name, avatar_url, repo_url, commit_hash, lines } = data;
+        const date = author_date.split('T')[0];
+        grass_data[date] = grass_data[date] || {}
+        grass_data[date][tech_name] = grass_data[date][tech_name] || {total_lines: 0, commit_repo: { [repo_url]: [] }};
+        grass_data[date][tech_name]["total_lines"] += lines
+        grass_data[date][tech_name]["commit_repo"][repo_url].push({avatar_url, commit_hash, github_id, lines});
+    }
+    return grass_data;
+}
+
 function draw_graph_header(datasets, category) {
     let inserted_tag = '';
     for (let user_data of datasets){
@@ -201,9 +214,11 @@ function draw_group_graph(group_id) {
         ,success: function (data) {
             const group_color_obj = generateRandomColorObject(data.member_list);
             const calendar_data = data.calendar_data;
+            const grass_data = get_grass_datasets(calendar_data);
             const monthly_datasets = get_datasets(calendar_data, 'monthly', group_color_obj);
             const weekly_datasets = get_datasets(calendar_data, 'weekly', group_color_obj);
             const hourly_datasets = get_datasets(calendar_data, 'hourly', group_color_obj);
+            show_rainbow_calendar(grass_data);
             draw_monthly_graph(monthly_datasets);
             draw_weekly_graph(weekly_datasets);
             draw_hourly_graph(hourly_datasets);
