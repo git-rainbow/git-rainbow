@@ -215,10 +215,13 @@ function draw_group_graph(group_id) {
             const group_color_obj = generateRandomColorObject(data.member_list);
             const calendar_data = data.calendar_data;
             const grass_data = get_grass_datasets(calendar_data);
+            const last_date = Object.keys(grass_data).sort().reverse()[0];
+            const last_tech_data = { [last_date]: grass_data[last_date] };
             const monthly_datasets = get_datasets(calendar_data, 'monthly', group_color_obj);
             const weekly_datasets = get_datasets(calendar_data, 'weekly', group_color_obj);
             const hourly_datasets = get_datasets(calendar_data, 'hourly', group_color_obj);
             show_rainbow_calendar(grass_data);
+            show_group_total_lines(last_tech_data, true);
             draw_monthly_graph(monthly_datasets);
             draw_weekly_graph(weekly_datasets);
             draw_hourly_graph(hourly_datasets);
