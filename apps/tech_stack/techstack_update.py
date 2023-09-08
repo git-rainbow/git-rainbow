@@ -25,7 +25,9 @@ def update_techstack_table(**kwargs):
     tech_developer_set_dict = defaultdict(set)
     for tech_data in all_calendar_data_list:
         tech_developer_set_dict[tech_data["tech_name"]].add(tech_data["github_id"])
-
+    exist_tech_set = set(TechStack.objects.all().values_list('tech_name', flat=True))
+    delete_tech_set = exist_tech_set - set(tech_developer_set_dict.keys())
+    TechStack.objects.filter(tech_name__in=delete_tech_set).delete()
     updated_tech_list = []
     for tech_name, developer_set in tech_developer_set_dict.items():
         _, created = TechStack.objects.update_or_create(
@@ -41,3 +43,5 @@ def update_techstack_table(**kwargs):
             updated_tech_list.append(tech_name)
     if len(updated_tech_list) != 0:
         print(f'Newly added techstack: {", ".join(updated_tech_list)}')
+    if len(delete_tech_set) > 0:
+        print(f'Delete techstack: {", ".join(delete_tech_set)}')
