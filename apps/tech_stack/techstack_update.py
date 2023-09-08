@@ -3,7 +3,7 @@ from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 from django.dispatch import Signal, receiver
 from django.db.models import Max
-from apps.tech_stack.models import GithubCalendar, TechStack
+from apps.tech_stack.models import TechStack, GithubUser, get_calendar_model
 from utils.github_calendar_colors.github_calendar_colors import github_calendar_colors
 
 
@@ -11,12 +11,19 @@ from utils.github_calendar_colors.github_calendar_colors import github_calendar_
 def update_techstack_table(**kwargs):
     today = timezone.now()
     year_ago = (today - relativedelta(years=1)).replace(hour=0, minute=0, second=0)
-    tech_with_developer_count_query_dict = GithubCalendar.objects.\
-        filter(author_date__gte=year_ago, lines__gt=0, tech_name__in=github_calendar_colors.keys()).\
-        values('tech_name', 'github_id').\
-        annotate(one_github_id=Max('github_id'))
+    all_github_id_list = GithubUser.objects.all().values_list('github_id', flat=True)
+    all_calendar_data_list = []
+    for github_id in all_github_id_list:
+        all_calendar_data_list.extend(get_calendar_model(github_id).objects.filter(
+            author_date__gte=year_ago, lines__gt=0, tech_name__in=github_calendar_colors.keys()
+        ).values(
+            'tech_name', 'github_id'
+        ).annotate(
+            one_github_id=Max('github_id')
+        ))
+
     tech_developer_set_dict = defaultdict(set)
-    for tech_data in tech_with_developer_count_query_dict:
+    for tech_data in all_calendar_data_list:
         tech_developer_set_dict[tech_data["tech_name"]].add(tech_data["github_id"])
 
     updated_tech_list = []
