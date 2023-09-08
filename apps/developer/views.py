@@ -391,20 +391,29 @@ def ranking_all(request):
     today = timezone.now()
     year_ago = (today - relativedelta(years=1)).replace(hour=0, minute=0, second=0)
     tech_side = draw_tech_side()
-    sorted_github_calendar_colors = sorted_github_calendar_colors = {tech_dict['tech_name']:{'tech_color': tech_dict['tech_color'], 'logo_path':tech_dict['logo_path']} for tech_dict_list in tech_side.values() for tech_dict in tech_dict_list}
-    tech_table_joined = list(GithubCalendar.objects.filter(author_date__gte=year_ago, tech_name__in=sorted_github_calendar_colors.keys()).values('github_id', 'tech_name').annotate(
-        date_without_time=TruncDate('author_date'),
-        day_lines=Sum('lines'),
-        tech_code_crazy=Case(
-            When(day_lines__range=[300, 1000], then=(3 + 0.001 * (F('day_lines') - 300))),
-            When(day_lines__gt=1000, then=Value(3.7)),
-            default=F('day_lines') * 0.01,
-            output_field=FloatField()
-        ),
-    ))
+    sorted_github_calendar_colors = {tech_dict['tech_name']:{'tech_color': tech_dict['tech_color'], 'logo_path':tech_dict['logo_path']} for tech_dict_list in tech_side.values() for tech_dict in tech_dict_list}
+    all_github_id_list = GithubUser.objects.all().values_list('github_id', flat=True)
+    all_calendar_data_list = []
+    for github_id in all_github_id_list:
+        all_calendar_data_list.extend(list(
+            get_calendar_model(github_id).objects.filter(
+                author_date__gte=year_ago, tech_name__in=sorted_github_calendar_colors.keys()
+            ).values(
+                'github_id', 'tech_name'
+            ).annotate(
+                date_without_time=TruncDate('author_date'),
+                day_lines=Sum('lines'),
+                tech_code_crazy=Case(
+                    When(day_lines__range=[300, 1000], then=(3 + 0.001 * (F('day_lines') - 300))),
+                    When(day_lines__gt=1000, then=Value(3.7)),
+                    default=F('day_lines') * 0.01,
+                    output_field=FloatField()
+                ),
+            )
+        ))
 
     user_code_crazy_dict = defaultdict(lambda: defaultdict(lambda: {'total_lines': 0, "tech_code_crazy": 0}))
-    for joined_data in tech_table_joined:
+    for joined_data in all_calendar_data_list:
         github_id = joined_data['github_id']
         tech_name = joined_data['tech_name']
         lines = joined_data['day_lines']
