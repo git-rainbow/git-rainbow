@@ -52,8 +52,18 @@ def save_top_tech(calendar_data, github_id):
                 'tech_name': sorted_crazy_dict[0][0],
             })
 
+def core_group_analysis(repo_dict_list, session_key):
+    data = {
+        "repo_dict_list": json.dumps(repo_dict_list),
+        "session_key": session_key
+    }
+    core_url = CORE_URL + "/core/group"
 
-def core_group_analysis(github_user):
+    core_response = requests.post(core_url, data=data).json()
+    return core_response
+
+
+def core_user_analysis(github_user):
     year_ago = (timezone.now() - relativedelta(years=1)).replace(hour=0, minute=0, second=0)
     session_key = github_user.session_key
     if not session_key:

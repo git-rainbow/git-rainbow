@@ -17,7 +17,7 @@ from django.template import loader
 from django.utils import timezone
 
 from apps.developer.utils import draw_ranking_side, make_last_tech_data
-from apps.group.utils import core_group_analysis, make_group_calendar_data, make_group_repo_dict_list
+from apps.group.utils import core_user_analysis, make_group_calendar_data, make_group_repo_dict_list
 from apps.group.views import save_git_calendar_data, make_group_tech_card
 from apps.tech_stack.models import GithubUser, AnalysisData, GithubCalendar, Ranking, GithubRepo, TechStack, TopTech
 from apps.tech_stack.utils import core_repo_list
@@ -125,7 +125,7 @@ def git_rainbow(request, github_id):
     github_calendar_list = [github_calendar for github_calendar in github_user.githubcalendar_set.all() if github_calendar.author_date >= year_ago]
 
     if request.GET.get('update') == 'True' or not github_calendar_list:
-        core_response = core_group_analysis(github_user)
+        core_response = core_user_analysis(github_user)
         if core_response.get("repo_list_status") == 'fail':
             return render(request, 'exception_page.html', core_response)
 
@@ -177,8 +177,7 @@ def update_git_rainbow(request):
         check_user_token_result = check_user_token(github_id, ghp_token)
         if check_user_token_result.get('status') == 'fail':
             return JsonResponse(check_user_token_result)
-
-    core_response = core_group_analysis(github_user)
+    core_response = core_user_analysis(github_user)
     if core_response.get("repo_list_status") == 'fail':
         return render(request, 'exception_page.html', core_response)
 
