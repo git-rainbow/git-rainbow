@@ -76,31 +76,43 @@ def make_user_code_crazy(github_id):
     return code_crazy, int_code_crazy
 
 
+def get_user_calendar(request):
+    if request.method != 'POST':
+        return JsonResponse({"status": "fail", "reason": "Not allowed method"})
+    github_id = request.POST.get('github_id')
+    github_user = GithubUser.objects.filter(github_id=github_id).first()
+
+    if not github_user:
+        return JsonResponse({"status": "No github user"})
+
+    one_year_ago = timezone.now() - relativedelta(years=1)
+    calendar_data = list(GithubCalendar.objects.filter(github_id=github_id, author_date__gte=one_year_ago).values('commit_hash', 'github_id', 'tech_name','author_date').annotate(
+        repo_url = F('repo_url'),
+        lines = Sum('lines'),
+        avatar_url = F('github_id__avatar_url')
+    ))
+    return JsonResponse({"status":"success", "calendar_data":calendar_data})
+
+
 def get_profile_data(github_calendar_list, github_user):
     if github_calendar_list:
         tech_card_data = make_group_tech_card(github_calendar_list)
         top3_tech_data = make_top3_tech_date(tech_card_data, github_user)
-        git_calendar_data = make_group_calendar_data(github_calendar_list)
         code_crazy, int_code_crazy = make_user_code_crazy(github_user.github_id)
-        last_day_commit_data = make_last_tech_data(github_calendar_list)
         context = {
             'github_user': github_user,
             'tech_card_data': tech_card_data,
-            'calendar_data': json.dumps(git_calendar_data),
             'top3_tech_data': top3_tech_data,
             'int_code_crazy': int_code_crazy,
             'code_crazy': code_crazy,
-            'last_tech_data': json.dumps(last_day_commit_data)
         }
     else:
         context = {
             'github_user': github_user,
             'tech_card_data': [],
-            'calendar_data': {},
             'top3_tech_data': [],
             'int_code_crazy': 0,
             'code_crazy': 0,
-            'last_tech_data': {}
         }
     return context
 

@@ -230,3 +230,28 @@ function draw_group_graph(group_id) {
         }
     });
 }
+
+function draw_user_graph(github_id) {
+    $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+
+    $.ajax({
+        url: '/get-user-calendar'
+        ,method: 'POST'
+        ,data: {'github_id': github_id}
+        ,async: true
+        ,success: function (data) {
+            const calendar_data = data.calendar_data;
+            const grass_data = get_grass_datasets(calendar_data);
+            const last_date = Object.keys(grass_data).sort().reverse()[0];
+            const last_tech_data = { [last_date]: grass_data[last_date] };
+            show_rainbow_calendar(grass_data);
+            show_group_total_lines(last_tech_data, true);
+        }
+    });
+}

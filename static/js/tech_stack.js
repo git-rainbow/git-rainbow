@@ -1,10 +1,3 @@
-var calendar_commits;
-var last_tech_data;
-
-function save_global_var(tech_data){
-    last_tech_data = tech_data;
-}
-
 function tech_name(tech) {
     let tech_name = tech.toLowerCase();
     tech_name = tech_name.replace('#', '_sharp');

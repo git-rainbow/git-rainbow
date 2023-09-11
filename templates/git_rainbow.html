@@ -6,12 +6,9 @@
 </div>
 <script type="text/javascript" src="{% static "js/group.js" %}"></script>
 <script type="text/javascript" src="{% static "js/rainbow_calendar.js" %}"></script>
+<script type="text/javascript" src="{% static "js/charts.js" %}"></script>
 <script>
     check_analysis_updating("{{github_user.github_id}}", "{{github_user.status}}");
-    show_rainbow_calendar(JSON.parse('{{calendar_data|safe}}'));
-    {% if last_tech_data %}
-        show_group_total_lines(JSON.parse('{{last_tech_data|safe}}'), true);
-        save_global_var(JSON.parse('{{last_tech_data|safe}}'));
-    {% endif %}
+    draw_user_graph("{{ github_user.github_id }}");
 </script>
 {% endblock %}

@@ -22,6 +22,7 @@ urlpatterns = [
     path('save-repo-url', views.save_repo_url),
     path('update-ranking', views.save_tech_ranking_data),
     path('update-git-rainbow', views.update_git_rainbow),
+    path('get-user-calendar', views.get_user_calendar),
     path('ranking', views.ranking_all),
     path('ranking/all', views.ranking_all),
     path('ranking/<str:tech_name>', views.ranking_tech_stack),
