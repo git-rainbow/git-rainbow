@@ -93,6 +93,7 @@ function get_grass_datasets(calendar_data) {
         grass_data[date] = grass_data[date] || {}
         grass_data[date][tech_name] = grass_data[date][tech_name] || {total_lines: 0, commit_repo: { [repo_url]: [] }};
         grass_data[date][tech_name]["total_lines"] += lines
+        grass_data[date][tech_name]["commit_repo"][repo_url] = grass_data[date][tech_name]["commit_repo"][repo_url] || [];
         grass_data[date][tech_name]["commit_repo"][repo_url].push({avatar_url, commit_hash, github_id, lines});
     }
     return grass_data;
