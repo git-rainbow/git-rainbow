@@ -616,3 +616,10 @@ function group_join(group_id, is_login){
         }
     });
 }
+
+var show_more_index = 0;
+var current_data;
+var show_more_btn = document.querySelector("#show_more_btn");
+show_more_btn?.addEventListener('click', function(){
+    show_group_total_lines(current_data, false, true)
+});
