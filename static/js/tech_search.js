@@ -64,9 +64,9 @@ function find_ranking_user(event, github_id=null, tech_name=null) {
     });
 
     $.ajax({
-        url: '/find-user-page'
+        url: `/${github_id}/exists`
         ,method: 'POST'
-        ,data: {'tech_name': tech_name, 'github_id': github_id}
+        ,data: {'tech_name': tech_name}
         ,async: false
         ,success: function (data) {
             if(data.exist == true) {

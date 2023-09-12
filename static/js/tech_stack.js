@@ -44,7 +44,7 @@ function analyze_developer(github_id, action, is_with_token) {
 }
 
 
-function save_public_repo(){
+function save_public_repo(github_id){
     let repo_url = document.querySelector("#public_repo_input").value;
     if (repo_url == ''){
         alert(gettext('Please input your public repository'));
@@ -68,7 +68,7 @@ function save_public_repo(){
     });
 
     $.ajax({
-        url: '/save-repo-url'
+        url: `/${github_id}/save/repo`
         ,method: 'POST'
         ,async: false
         ,data: {'repo_url': repo_url}
@@ -84,6 +84,7 @@ function save_public_repo(){
 
 function _analyze_developer(data) {
     let waiting = true;
+    const github_id = data['github_id'];
     $.ajaxSetup({
         beforeSend: function (xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -92,7 +93,7 @@ function _analyze_developer(data) {
         }
     });
     $.ajax({
-        url: '/update-git-rainbow'
+        url: `/${github_id}/update`
         ,method: 'POST'
         ,data: data
         ,async: false
@@ -169,7 +170,7 @@ function analyze_github_user(){
 }
 
 function copy_svg_url(github_id){
-    let svg_url = new URL(window.document.location.href).origin + '/svg/' + `${github_id}`;
+    let svg_url = new URL(window.document.location.href).origin + `/${github_id}/svg`;
     let textarea = document.createElement("textarea");
     document.body.appendChild(textarea);
     textarea.value = svg_url;

@@ -241,7 +241,7 @@ function draw_user_graph(github_id) {
     });
 
     $.ajax({
-        url: '/get-user-calendar'
+        url: `/${github_id}/get`
         ,method: 'POST'
         ,data: {'github_id': github_id}
         ,async: true

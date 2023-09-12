@@ -76,10 +76,9 @@ def make_user_code_crazy(github_id):
     return code_crazy, int_code_crazy
 
 
-def get_user_calendar(request):
+def get_user_calendar(request, github_id):
     if request.method != 'POST':
         return JsonResponse({"status": "fail", "reason": "Not allowed method"})
-    github_id = request.POST.get('github_id')
     github_user = GithubUser.objects.filter(github_id=github_id).first()
 
     if not github_user:
@@ -159,7 +158,7 @@ def check_user_token(github_id, token):
         return {'status':'success'}
 
 
-def save_repo_url(request):
+def save_repo_url(request, github_id):
     if request.method != 'POST':
         return JsonResponse({"status": "fail", "reason": "Not allowed method"})
 
@@ -167,17 +166,16 @@ def save_repo_url(request):
     try:
         res_code = requests.get(repo_url).status_code
         if res_code == 200:
-            github_id = request.user.github_id
             GithubRepo.objects.update_or_create(github_id_id=github_id, repo_url=repo_url, defaults={'added_type':'by_user'})
     except Exception as e:
         res_code = 404
     return JsonResponse({"status": res_code})
 
 
-def update_git_rainbow(request):
+def update_git_rainbow(request, github_id):
     if request.method != 'POST':
         return JsonResponse({"status": "fail", 'reason': 'Not allowed method'})
-    github_user = GithubUser.objects.prefetch_related('githubcalendar_set', 'githubrepo_set').filter(github_id__iexact=request.POST.get('github_id'), is_valid=True).first()
+    github_user = GithubUser.objects.prefetch_related('githubcalendar_set', 'githubrepo_set').filter(github_id__iexact=github_id, is_valid=True).first()
     if not github_user:
         return JsonResponse({"status": "fail", 'reason': 'No github id'})
 
@@ -505,11 +503,11 @@ def ranking_tech_stack(request, tech_name):
     return render(request, 'ranking.html', context)
 
 
-def find_user_page(request):
+def find_user_page(request, github_id):
     if request.method != 'POST':
         return render(request, 'exception_page.html', {'error': 403, 'message': 'Not allowed method'})
 
-    tech_name, search_user = request.POST.values()
-    if not GithubCalendar.objects.filter(tech_name__iexact=tech_name, github_id=search_user).exists():
+    tech_name = request.POST.get('tech_name')
+    if not GithubCalendar.objects.filter(tech_name__iexact=tech_name, github_id=github_id).exists():
         return JsonResponse({'exist': False})
     return JsonResponse({'exist': True})

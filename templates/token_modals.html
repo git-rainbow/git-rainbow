@@ -72,7 +72,7 @@
       <hr style="margin-bottom: 15px; width: 83%;">
       <div>
         <input id="public_repo_input" type="text" placeholder={% blocktrans %}"Git Repository URL"{% endblocktrans %} style="width: 83%; height: 70px; padding: 10px; border-width:1px;"/>
-        <button onclick="save_public_repo()" class="ml-1 p-2 font-medium leading-5 text-center transition-colors duration-150 border border-transparent" style="background-color: #fd9bad;border-radius: 10px; height: 70px; width:125px; ">
+        <button onclick="save_public_repo('{{github_user.github_id}}')" class="ml-1 p-2 font-medium leading-5 text-center transition-colors duration-150 border border-transparent" style="background-color: #fd9bad;border-radius: 10px; height: 70px; width:125px; ">
           {% trans "Add" %}
         </button>
       </div>

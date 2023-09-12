@@ -19,14 +19,13 @@ from apps.developer import views
 
 urlpatterns = [
     path('', views.main_page),
-    path('save-repo-url', views.save_repo_url),
-    path('update-ranking', views.save_tech_ranking_data),
-    path('update-git-rainbow', views.update_git_rainbow),
-    path('get-user-calendar', views.get_user_calendar),
-    path('ranking', views.ranking_all),
+    path('<str:github_id>', views.git_rainbow),
+    path('<str:github_id>/save/repo', views.save_repo_url),
+    path('<str:github_id>/update', views.update_git_rainbow),
+    path('<str:github_id>/get', views.get_user_calendar),
+    path('<str:github_id>/exists', views.find_user_page),
+    path('<str:github_id>/svg', views.git_rainbow_svg),
     path('ranking/all', views.ranking_all),
     path('ranking/<str:tech_name>', views.ranking_tech_stack),
-    path('find-user-page', views.find_user_page),
-    path('<str:github_id>', views.git_rainbow),
-    path('svg/<str:github_id>', views.git_rainbow_svg)
+    path('update-ranking', views.save_tech_ranking_data),
 ]
