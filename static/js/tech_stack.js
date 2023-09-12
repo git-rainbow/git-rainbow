@@ -106,6 +106,7 @@ function _analyze_developer(data) {
                 }
                 // Don't change template in ranking page - finish
                 $("#under_header").html(data.content);
+                draw_user_graph(github_id);
             } else if(data.status == 'fail') {
                 waiting = false;
                 alert(`status: fail, reaseon: ${data.reason}`);
