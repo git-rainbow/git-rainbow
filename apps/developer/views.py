@@ -334,6 +334,7 @@ def make_ranker_data(tech_name):
             before_crazy = user_crazy['tech_code_crazy']
         row_num += 1
         user_crazy['rank'] = current_rank
+        user_crazy['row_num'] = row_num
         last_rank = user_mid_ranking.get(user_crazy['github_id'])
         user_crazy['change_rank'] = last_rank - current_rank if last_rank else total_ranking_count - current_rank
     return user_code_crazy_list
