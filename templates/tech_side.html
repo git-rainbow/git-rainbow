@@ -13,20 +13,24 @@
            class="w-full pl-8 pr-2 text-sm text-gray-700 placeholder-gray-600 bg-gray-100 border-0 rounded-md dark:placeholder-gray-500 dark:focus:shadow-outline-gray dark:focus:placeholder-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:placeholder-gray-500 focus:bg-white focus:border-purple-300 focus:outline-none focus:shadow-outline-purple form-input"
            type="text" placeholder={% blocktrans %}"Search a tech name"{% endblocktrans %} aria-label="Search">
   </div>
-  <div class="flex items-center justify-center mt-2 ml-2 bg-white rounded-lg shadow-xs dark:bg-gray-800 pointer font-bold" onclick="window.location.href='/ranking/all'"
+  <div class="flex items-center justify-center mt-2 ml-2 bg-white rounded-lg shadow-xs dark:bg-gray-800 pointer font-bold" onclick="show_side_all()"
         style="width: 94.5%; height: 35px;">
-    {% trans "Show code crazy rank of all" %}
+    {% if request.path|startswith:"/group" %}
+      {% trans "Show groups of all" %}
+    {% else %}
+      {% trans "Show code crazy rank of all" %}
+    {% endif %}
   </div>
 </div>
 <!-- Tech Card Group Start -->
 <div>
   <!-- Card -->
-  {% for tech_type, tech_dict_list in ranking_side.items %}
+  {% for tech_type, tech_dict_list in tech_side.items %}
   <div class="side_tech_type">
     <div class="font-bold mb-2 pl-2">{{ tech_type }}</div>
     <div class="grid flex gap-4 mb-3 md:grid-cols-2 xl:grid-cols-3">
       {% for tech_dict in tech_dict_list %}
-        <div class="flex items-center ml-2 bg-white rounded-lg shadow-xs dark:bg-gray-800 mb-3 pointer tech_list" onclick="window.location.href='/ranking/{{ tech_dict.tech_name|replace_special_char }}'"
+        <div class="flex items-center ml-2 bg-white rounded-lg shadow-xs dark:bg-gray-800 mb-3 pointer tech_list" onclick="select_side_tech('{{ tech_dict.tech_name }}')"
               style="width: 125px;height: 50px; {% if tech_dict.tech_name == tech_name %} border: 2px solid {{ tech_dict.tech_color }} {% endif %}">
           <img class="mr-8" style="width:45px;height:45px" src="{{ tech_dict.logo_path }}">
           <p class="pl-2 py-2 text-xs">{{ tech_dict.tech_name }}</p>

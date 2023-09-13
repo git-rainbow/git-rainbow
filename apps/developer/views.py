@@ -16,7 +16,7 @@ from django.http import JsonResponse
 from django.template import loader
 from django.utils import timezone
 
-from apps.developer.utils import draw_ranking_side, make_last_tech_data
+from apps.developer.utils import draw_tech_side, make_last_tech_data
 from apps.group.utils import core_user_analysis, make_group_calendar_data, make_group_repo_dict_list
 from apps.group.views import save_git_calendar_data, make_group_tech_card
 from apps.tech_stack.models import GithubUser, AnalysisData, GithubCalendar, Ranking, GithubRepo, TechStack, TopTech
@@ -387,8 +387,8 @@ def save_github_calendar_data(git_calendar_data, github_user):
 def ranking_all(request):
     today = timezone.now()
     year_ago = (today - relativedelta(years=1)).replace(hour=0, minute=0, second=0)
-    ranking_side = draw_ranking_side()
-    sorted_github_calendar_colors = sorted_github_calendar_colors = {tech_dict['tech_name']:{'tech_color': tech_dict['tech_color'], 'logo_path':tech_dict['logo_path']} for tech_dict_list in ranking_side.values() for tech_dict in tech_dict_list}
+    tech_side = draw_tech_side()
+    sorted_github_calendar_colors = sorted_github_calendar_colors = {tech_dict['tech_name']:{'tech_color': tech_dict['tech_color'], 'logo_path':tech_dict['logo_path']} for tech_dict_list in tech_side.values() for tech_dict in tech_dict_list}
     tech_table_joined = list(GithubCalendar.objects.filter(author_date__gte=year_ago, tech_name__in=sorted_github_calendar_colors.keys()).values('github_id', 'tech_name').annotate(
         date_without_time=TruncDate('author_date'),
         day_lines=Sum('lines'),
@@ -443,7 +443,7 @@ def ranking_all(request):
     rank_avatar_url_dict = {ranker['github_id']: ranker['avatar_url'] for ranker in ranker_github_data_list}
     ranker_toptech_dict = {ranker['github_id']: str(ranker['toptech__tech_name']) for ranker in ranker_github_data_list}
     context = {
-        'ranking_side': ranking_side,
+        'tech_side': tech_side,
         'rank_data': rank_data,
         'rank_avatar_url_dict': rank_avatar_url_dict,
         'ranker_toptech_dict': ranker_toptech_dict,
@@ -479,7 +479,7 @@ def ranking_tech_stack(request, tech_name):
     paginator = Paginator(now_ranker_data, items_per_page)
     page_rank_data = paginator.get_page(page_number)
     context = {
-        'ranking_side': draw_ranking_side(),
+        'tech_side': draw_tech_side(),
         'tech_name': tech_name,
         'tech_color': current_tech.tech_color,
         'logo_path': current_tech.logo_path,

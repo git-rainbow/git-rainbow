@@ -16,7 +16,7 @@ from urllib.parse import urlparse
 
 from django.utils import timezone
 
-from apps.developer.utils import draw_ranking_side
+from apps.developer.utils import draw_tech_side
 from apps.group.utils import core_group_analysis, make_group_calendar_data, make_group_repo_dict_list, \
     save_git_calendar_data, code_crazy_calculation_by_tech
 from apps.tech_stack.models import TechStack, GithubUser, GithubCalendar, GithubRepo
@@ -196,12 +196,17 @@ def group_graph(request):
 
 
 def group_list(request):
-    groups = Group.objects.all()
-    ranking_side = draw_ranking_side()
+    query_tech_name = request.GET.get("tech_name")
+    if query_tech_name:
+        groups = Group.objects.filter(topic__name__iexact=query_tech_name)
+    else:
+        groups = Group.objects.all()
+
+    tech_side = draw_tech_side()
 
     context = { 'group' : True,
                 'groups': groups,
-                'ranking_side': ranking_side
+                'tech_side': tech_side
     }
 
     return render(request, 'group_list.html', context)
@@ -263,10 +268,10 @@ def remove_group(request, group_id):
 def create_group(request):
     github_id = request.user.github_id
     if request.method == 'GET':
-        ranking_side = draw_ranking_side()
+        tech_side = draw_tech_side()
         context = {
             'group':  True,
-            'ranking_side': ranking_side,
+            'tech_side': tech_side,
             'default_group_img': refresh_img(request, is_func=True),
         }
         return render(request, 'new_group.html', context)

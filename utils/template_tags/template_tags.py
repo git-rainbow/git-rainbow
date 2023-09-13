@@ -31,3 +31,8 @@ def get_item(dictionary, key):
 def get_owner_img(github_id):
     owner_img = GithubUser.objects.filter(github_id=github_id).first().avatar_url
     return owner_img
+
+
+@register.filter
+def startswith(value, arg):
+    return str(value).startswith(str(arg))

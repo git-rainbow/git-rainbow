@@ -6,7 +6,7 @@ from apps.group.utils import make_group_calendar_data
 from apps.tech_stack.models import TechStack
 
 
-def draw_ranking_side()->dict:
+def draw_tech_side()->dict:
     tech_stack_with_order = TechStack.objects.annotate(
         tech_type_order=Case(
             When(tech_type='Frontend', then=1),
@@ -18,10 +18,10 @@ def draw_ranking_side()->dict:
             output_field=IntegerField()
         )
     ).order_by('tech_type_order','-developer_count').values('tech_name', 'tech_color', 'tech_type', 'developer_count', 'logo_path')
-    ranking_side = defaultdict(list)
+    tech_side = defaultdict(list)
     for tech in tech_stack_with_order:
-        ranking_side[tech['tech_type']].append({'tech_name':tech['tech_name'], 'tech_color':tech['tech_color'], 'logo_path':tech['logo_path']})
-    return dict(ranking_side)
+        tech_side[tech['tech_type']].append({'tech_name':tech['tech_name'], 'tech_color':tech['tech_color'], 'logo_path':tech['logo_path']})
+    return dict(tech_side)
 
 
 def make_last_tech_data(github_calendar_list):
