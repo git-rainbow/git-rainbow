@@ -2789,3 +2789,12 @@ section {
     text-transform: none;
     margin:0;
 }
+
+.turn-half {
+    transform: rotate(180deg);
+}
+
+.mini-member-box {
+    overflow: hidden;
+    height: 48px;
+}

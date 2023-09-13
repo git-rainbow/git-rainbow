@@ -39,12 +39,12 @@
       <div class="mt-2 mb-2" style="max-width:400px">
         <div class="flex" style="justify-content: space-between;">
           <span class="text-gray-500 mt-2 text-lg">Members ({{group.github_users.all.count}} people)</span>
-          <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="gray" class="mt-2 bi bi-caret-down-fill" viewBox="0 0 16 16">
+          <svg class="btn-180" onclick="toggle_member_box()" xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="gray" class="mt-2 bi bi-caret-down-fill" viewBox="0 0 16 16">
             <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"></path>
           </svg>
         </div>
         <div class="flex mt-2 bg-white rounded-lg shadow-xs dark:bg-gray-800" style="justify-content: space-between; padding: 1%; cursor:pointer; max-width:400px;">
-          <div class="flex align-center">
+          <div class="flex align-center member-box mini-member-box" style="flex-wrap: wrap; width: inherit;">
             {% for github_user in group.github_users.all %}
             <img class="object-cover w-full h-full rounded-full mx-2 my-2" src="{{github_user.avatar_url}}" style="width:32px; height:32px">
             {% endfor %}

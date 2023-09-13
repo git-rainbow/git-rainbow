@@ -623,3 +623,10 @@ var show_more_btn = document.querySelector("#show_more_btn");
 show_more_btn?.addEventListener('click', function(){
     show_group_total_lines(current_data, false, true)
 });
+
+function toggle_member_box() {
+    const member_box = document.querySelector(".member-box");
+    const btn_180= document.querySelector(".btn-180");
+    member_box.classList.toggle("mini-member-box");
+    btn_180.classList.toggle("turn-half");
+}
