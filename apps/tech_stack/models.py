@@ -1,5 +1,7 @@
 from django.db import models
 
+from apps.tech_stack.create_table import create_github_calendar_table
+
 
 class GithubUser(models.Model):
     """
@@ -60,6 +62,7 @@ def get_calendar_model(github_id):
         commit_hash = models.CharField(max_length=150, null=True)
         github_id = models.ForeignKey("GithubUser", on_delete=models.CASCADE)
 
+    create_github_calendar_table(lower_github_id)
     db_table_name = f'{GithubCalendar._meta.app_label}_{GithubCalendar.__name__.lower()}_{lower_github_id}'
     GithubCalendar._meta.db_table = db_table_name
 
@@ -84,3 +87,10 @@ class TechStack(models.Model):
 class TopTech(models.Model):
     github_id = models.OneToOneField("GithubUser", on_delete=models.CASCADE)
     tech_name = models.CharField(max_length=50, null=True)
+
+
+class CodeCrazy(models.Model):
+    github_id = models.ForeignKey("GithubUser", on_delete=models.CASCADE)
+    tech_name = models.CharField(max_length=50, null=True)
+    code_crazy = models.FloatField()
+    updated_at = models.DateTimeField(auto_now=True)

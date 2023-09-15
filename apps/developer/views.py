@@ -21,7 +21,7 @@ from apps.group.utils import core_user_analysis, make_group_calendar_data, make_
 from apps.group.views import save_git_calendar_data, make_group_tech_card
 from apps.tech_stack.create_table import create_github_calendar_table
 from apps.tech_stack.models import GithubUser, AnalysisData, GithubCalendar, Ranking, GithubRepo, TechStack, TopTech, \
-    get_calendar_model
+    get_calendar_model, CodeCrazy
 from apps.tech_stack.utils import core_repo_list
 from utils.github_api.github_api import request_github_profile
 from utils.github_calendar.github_calendar import generate_github_calendar
@@ -523,3 +523,46 @@ def find_user_page(request, github_id):
     if not GithubCalendar.objects.filter(tech_name__iexact=tech_name, github_id=github_id).exists():
         return JsonResponse({'exist': False})
     return JsonResponse({'exist': True})
+
+
+def update_code_crazy(request):
+    today = timezone.now()
+    year_ago = (today - relativedelta(years=1)).replace(hour=0, minute=0, second=0)
+    all_github_id_list = GithubUser.objects.all().values_list('github_id', flat=True)
+    all_calendar_data_list = []
+    for github_id in all_github_id_list:
+        all_calendar_data_list.extend(list(
+            get_calendar_model(github_id).objects.filter(
+                author_date__gte=year_ago, tech_name__in=github_calendar_colors.keys()
+            ).values(
+                'github_id', 'tech_name'
+            ).annotate(
+                date_without_time=TruncDate('author_date'),
+                day_lines=Sum('lines'),
+                tech_code_crazy=Case(
+                    When(day_lines__range=[300, 1000], then=(3 + 0.001 * (F('day_lines') - 300))),
+                    When(day_lines__gt=1000, then=Value(3.7)),
+                    default=F('day_lines') * 0.01,
+                    output_field=FloatField()
+                ),
+            )
+        ))
+    user_code_crazy_dict = defaultdict(lambda: defaultdict(lambda: {'total_lines': 0, "tech_code_crazy": 0}))
+    for joined_data in all_calendar_data_list:
+        github_id = joined_data['github_id']
+        tech_name = joined_data['tech_name']
+        tech_code_crazy = joined_data['tech_code_crazy']
+        user_code_crazy_dict[github_id][tech_name]['tech_code_crazy'] += tech_code_crazy
+
+    user_code_crazy_list = []
+    for user, user_data in user_code_crazy_dict.items():
+        for tech_name, tech_data in user_data.items():
+            user_code_crazy_list.append({
+                "github_id_id": user,
+                "tech_name": tech_name,
+                "code_crazy": tech_data['tech_code_crazy'],
+            })
+    CodeCrazy.objects.all().delete()
+    bulk_code_crazy = [CodeCrazy(**crazy_data)for crazy_data in user_code_crazy_list]
+    CodeCrazy.objects.bulk_create(bulk_code_crazy)
+    return JsonResponse({'status': 'success'})
