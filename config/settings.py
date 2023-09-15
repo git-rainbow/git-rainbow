@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'apps.tech_stack',
     'apps.admins',
     'apps.group',
+    'apps.search',
     'mathfilters',
     'debug_toolbar',
 ]
