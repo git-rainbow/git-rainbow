@@ -49,6 +49,23 @@ class GithubCalendar(models.Model):
     github_id = models.ForeignKey("GithubUser", on_delete=models.CASCADE)
 
 
+def get_calendar_model(github_id):
+    lower_github_id = github_id.lower().replace('-', '_')
+
+    class GithubCalendar(models.Model):
+        author_date = models.DateTimeField()
+        tech_name = models.CharField(max_length=50)
+        lines = models.IntegerField()
+        repo_url = models.CharField(max_length=150, null=True)
+        commit_hash = models.CharField(max_length=150, null=True)
+        github_id = models.ForeignKey("GithubUser", on_delete=models.CASCADE)
+
+    db_table_name = f'{GithubCalendar._meta.app_label}_{GithubCalendar.__name__.lower()}_{lower_github_id}'
+    GithubCalendar._meta.db_table = db_table_name
+
+    return GithubCalendar
+
+
 class Ranking(models.Model):
     github_id = models.ForeignKey('GithubUser', on_delete=models.CASCADE)
     tech_name = models.CharField(max_length=50)

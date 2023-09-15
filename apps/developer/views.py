@@ -19,6 +19,7 @@ from django.utils import timezone
 from apps.developer.utils import draw_tech_side, make_last_tech_data
 from apps.group.utils import core_user_analysis, make_group_calendar_data, make_group_repo_dict_list
 from apps.group.views import save_git_calendar_data, make_group_tech_card
+from apps.tech_stack.create_table import create_github_calendar_table
 from apps.tech_stack.models import GithubUser, AnalysisData, GithubCalendar, Ranking, GithubRepo, TechStack, TopTech
 from apps.tech_stack.utils import core_repo_list
 from utils.github_api.github_api import request_github_profile
@@ -47,10 +48,11 @@ def update_or_create_github_user(github_id, ghp_token=None):
 
     github_data = github_data['result']
     github_user, _ = GithubUser.objects.update_or_create(github_id=github_id,
-                                                               defaults={
-                                                                   **github_data,
-                                                                   'is_valid': True
-                                                               })
+                                                         defaults={
+                                                             **github_data,
+                                                             'is_valid': True
+                                                         })
+    create_github_calendar_table(github_id)
     return {'status': 'success', 'github_user': github_user}
 
 

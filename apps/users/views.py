@@ -7,6 +7,7 @@ from config.local_settings import GH_ID, GH_SECRET, GH_AUTHORIZE_URL, GH_OATH_AP
 from .models import User
 from apps.tech_stack.models import GithubUser
 from apps.tech_stack.utils import core_repo_list
+from ..tech_stack.create_table import create_github_calendar_table
 
 
 def github_login(request):
@@ -69,6 +70,7 @@ def github_callback(request):
     )
 
     if created:
+        create_github_calendar_table(github_id)
         github_user.status = 'requested'
         github_user.save()
         core_repo_list({"github_id": github_id, "after": "", "tech_stack": True})
