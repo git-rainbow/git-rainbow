@@ -6,7 +6,7 @@ def get_token():
     token = None
     for index in range(len(token_list)):
         res = github_rest_api(token_list[index], 'rate_limit')
-        if not res.get('resources'):
+        if res is None or not res.get('resources'):
             continue
         elif res['resources']['core']['remaining'] > 50 and res['resources']['graphql']['remaining'] > 50:
             token = token_list[index]
