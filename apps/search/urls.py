@@ -1,4 +1,6 @@
 from django.urls import path
-from apps.developer import views
+from apps.search import views
 
-urlpatterns = []
+urlpatterns = [
+    path('search/repos', views.search_repo),
+]

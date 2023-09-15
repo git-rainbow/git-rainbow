@@ -238,7 +238,7 @@ function show_side_all() {
     const currentPath = window.location.pathname;
     if (currentPath.startsWith('/group')) {
         window.location.href = '/group/list'
-    } else {
+    } else if (currentPath.startsWith('/ranking')) {
         window.location.href = '/ranking/all'
     }
 }
@@ -252,7 +252,16 @@ function select_side_tech(tech_name) {
     const filtered_tech_name = replace_special_char(tech_name);
     if (currentPath.startsWith('/group')) {
         window.location.href = `/group/list?tech_name=${filtered_tech_name}`;
-    } else {
+    } else if (currentPath.startsWith('/ranking')) {
         window.location.href = `/ranking/${filtered_tech_name}`;
+    } else {
+        const searchInput = document.querySelector('input[name="tags"]');
+        if (searchInput.value == '') {
+            searchInput.value = tech_name;
+        } else {
+            let parsedSearchInput = JSON.parse(searchInput.value);
+            parsedSearchInput.push({"value":tech_name});
+            searchInput.value = JSON.stringify(parsedSearchInput);
+        }
     }
 }

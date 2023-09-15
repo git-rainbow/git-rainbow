@@ -17,8 +17,10 @@
         style="width: 94.5%; height: 35px;">
     {% if request.path|startswith:"/group" %}
       {% trans "Show groups of all" %}
-    {% else %}
+    {% elif request.path|startswith:"/ranking" %}
       {% trans "Show code crazy rank of all" %}
+    {% else %}
+      {% trans "Search source code based on tech stack" %}
     {% endif %}
   </div>
 </div>

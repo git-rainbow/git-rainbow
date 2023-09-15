@@ -2798,3 +2798,25 @@ section {
     overflow: hidden;
     height: 48px;
 }
+
+.repo-box {
+    width: 600px;
+    border: 1px solid rgb(191, 191, 191);
+    border-radius: 10px;
+    padding: 5px;
+    margin-top: 15px;
+    word-wrap: break-word;
+}
+
+.repo-box div {
+    margin: 5px;
+}
+
+.topic-span {
+    display: inline-block;
+    background-color: #DDF4FF;
+    color: #136FDF;
+    border-radius: 10px;
+    padding: 5px;
+    margin: 2px;
+}

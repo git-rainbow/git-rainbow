@@ -73,7 +73,9 @@ def github_callback(request):
         github_user.save()
         core_repo_list({"github_id": github_id, "after": "", "tech_stack": True})
     next = request.GET.get('next').replace('|', '&')
-    return redirect(f'{next}')
+    response = redirect(f'{next}')
+    response.set_cookie('gho_token', access_token)
+    return response
 
 
 def logout(request):
