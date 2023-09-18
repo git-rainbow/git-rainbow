@@ -57,7 +57,7 @@ function search_repo(isNewSearch, isWithToken) {
                     insertTopicHtml += `<span class="topic-span">${topic}</span>`;
                 }
                 const repoHtml = `
-                <div class="repo-box">
+                <div class="repo-box mb-2" style="margin:auto">
                   <div>
                     <div class="flex align-center">
                       <img src="${item.owner.avatar_url}" style="border-radius: 50%; width: 20px; height: 20px;"/>
