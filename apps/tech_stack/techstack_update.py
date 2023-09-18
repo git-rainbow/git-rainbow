@@ -1,29 +1,14 @@
-from django.utils import timezone
 from collections import defaultdict
-from dateutil.relativedelta import relativedelta
 from django.dispatch import Signal, receiver
-from django.db.models import Max
-from apps.tech_stack.models import TechStack, GithubUser, get_calendar_model
+from apps.tech_stack.models import TechStack, CodeCrazy
 from utils.github_calendar_colors.github_calendar_colors import github_calendar_colors
 
 
 @receiver(Signal())
 def update_techstack_table(**kwargs):
-    today = timezone.now()
-    year_ago = (today - relativedelta(years=1)).replace(hour=0, minute=0, second=0)
-    all_github_id_list = GithubUser.objects.all().values_list('github_id', flat=True)
-    all_calendar_data_list = []
-    for github_id in all_github_id_list:
-        all_calendar_data_list.extend(get_calendar_model(github_id).objects.filter(
-            author_date__gte=year_ago, lines__gt=0, tech_name__in=github_calendar_colors.keys()
-        ).values(
-            'tech_name', 'github_id'
-        ).annotate(
-            one_github_id=Max('github_id')
-        ))
-
+    user_tech_data_dict = CodeCrazy.objects.filter(tech_name__in=github_calendar_colors.keys()).values('tech_name', 'github_id')
     tech_developer_set_dict = defaultdict(set)
-    for tech_data in all_calendar_data_list:
+    for tech_data in user_tech_data_dict:
         tech_developer_set_dict[tech_data["tech_name"]].add(tech_data["github_id"])
     exist_tech_set = set(TechStack.objects.all().values_list('tech_name', flat=True))
     delete_tech_set = exist_tech_set - set(tech_developer_set_dict.keys())
