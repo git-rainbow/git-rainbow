@@ -19,7 +19,7 @@ from django.utils import timezone
 from apps.developer.utils import draw_tech_side
 from apps.group.utils import core_group_analysis, make_group_calendar_data, make_group_repo_dict_list, \
     save_git_calendar_data, code_crazy_calculation_by_tech
-from apps.tech_stack.models import TechStack, GithubUser, GithubCalendar, GithubRepo
+from apps.tech_stack.models import TechStack, GithubUser, GithubCalendar, GithubRepo, get_calendar_model
 from apps.group.models import Group, GroupRepo, Topic
 
 from apps.users.models import User
@@ -136,7 +136,9 @@ def group(request, group_id):
     group_repo_list = group.grouprepo_set.all().values_list('repo_url', flat=True)
 
     group_calendar_queryset = GithubCalendar.objects.select_related('github_id').filter(github_id__in=member_list, repo_url__in=group_repo_list)
-    group_calendar_data = group_calendar_queryset.filter(author_date__gte=one_year_ago)
+    group_calendar_data = []
+    for member_id in member_list:
+        group_calendar_data.extend(list(get_calendar_model(member_id).objects.filter(author_date__gte=one_year_ago, repo_url__in=group_repo_list)))
 
     six_months_data = get_group_calendar_data(group_calendar_queryset, one_year_ago, six_months_ago)
     post_user_code_crazy_list = get_rank_data_list(six_months_data)
@@ -187,12 +189,18 @@ def group_graph(request):
     one_year_ago = timezone.now() - relativedelta(years=1)
     member_list = list(group.github_users.all().values_list('github_id', flat=True))
     group_repo_list = group.grouprepo_set.all().values_list('repo_url', flat=True)
-    group_calendar_data = list(GithubCalendar.objects.filter(github_id__in=member_list, repo_url__in=group_repo_list, author_date__gte=one_year_ago).values('commit_hash', 'github_id', 'tech_name','author_date').annotate(
-        repo_url = F('repo_url'),
-        lines = Sum('lines'),
-        avatar_url = F('github_id__avatar_url')
-    ))
-    return JsonResponse({"status": "success", "calendar_data": group_calendar_data, "member_list": member_list})
+    group_calendar_data_list = []
+    for member_id in member_list:
+        group_calendar_data_list.extend(list(get_calendar_model(member_id).objects.filter(
+            repo_url__in=group_repo_list, author_date__gte=one_year_ago
+        ).values(
+            'commit_hash', 'github_id', 'tech_name','author_date'
+        ).annotate(
+            repo_url=F('repo_url'),
+            lines=Sum('lines'),
+            avatar_url=F('github_id__avatar_url')
+        )))
+    return JsonResponse({"status": "success", "calendar_data": group_calendar_data_list, "member_list": member_list})
 
 
 def group_list(request):
