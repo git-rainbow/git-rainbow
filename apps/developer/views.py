@@ -64,7 +64,7 @@ def make_user_code_crazy(github_id):
     HIGH_MULTIPLIER = 0.001
     BASIC_POINTS = 3
     MAX_POINTS = 3.7
-    user_commit_data = GithubCalendar.objects.annotate(date_without_time=TruncDate('author_date')).filter(github_id_id=github_id).values('date_without_time').annotate(total_lines=Sum('lines'))
+    user_commit_data = get_calendar_model(github_id).objects.annotate(date_without_time=TruncDate('author_date')).values('date_without_time').annotate(total_lines=Sum('lines'))
     for day_data in user_commit_data:
         total_lines = day_data['total_lines']
         if total_lines <= LOW_LIMIT:
@@ -87,12 +87,16 @@ def get_user_calendar(request, github_id):
         return JsonResponse({"status": "No github user"})
 
     one_year_ago = timezone.now() - relativedelta(years=1)
-    calendar_data = list(GithubCalendar.objects.filter(github_id=github_id, author_date__gte=one_year_ago).values('commit_hash', 'github_id', 'tech_name','author_date').annotate(
-        repo_url = F('repo_url'),
-        lines = Sum('lines'),
-        avatar_url = F('github_id__avatar_url')
+    calendar_data = list(get_calendar_model(github_id).objects.filter(
+        author_date__gte=one_year_ago
+    ).values(
+        'commit_hash', 'github_id', 'tech_name','author_date'
+    ).annotate(
+        repo_url=F('repo_url'),
+        lines=Sum('lines'),
+        avatar_url=F('github_id__avatar_url')
     ))
-    return JsonResponse({"status":"success", "calendar_data":calendar_data})
+    return JsonResponse({"status": "success", "calendar_data": calendar_data})
 
 
 def get_profile_data(github_calendar_list, github_user):
