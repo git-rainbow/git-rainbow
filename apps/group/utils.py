@@ -74,6 +74,7 @@ def core_group_analysis(repo_dict_list, session_key):
 def update_code_crazy(github_id_list):
     today = timezone.now()
     year_ago = (today - relativedelta(years=1)).replace(hour=0, minute=0, second=0)
+    six_months_ago = year_ago + relativedelta(months=6)
     all_calendar_data_list = []
     for github_id in github_id_list:
         all_calendar_data_list.extend(list(
@@ -92,7 +93,7 @@ def update_code_crazy(github_id_list):
                 ),
             )
         ))
-    user_code_crazy_dict = defaultdict(lambda: defaultdict(lambda: {'total_lines': 0, "tech_code_crazy": 0}))
+    user_code_crazy_dict = defaultdict(lambda: defaultdict(lambda: {'total_lines': 0, "tech_code_crazy": 0, "old_code_crazy": 0}))
     for joined_data in all_calendar_data_list:
         github_id = joined_data['github_id']
         tech_name = joined_data['tech_name']
@@ -100,6 +101,8 @@ def update_code_crazy(github_id_list):
         lines = joined_data['day_lines']
         user_code_crazy_dict[github_id][tech_name]['total_lines'] += lines
         user_code_crazy_dict[github_id][tech_name]['tech_code_crazy'] += tech_code_crazy
+        if six_months_ago.date() >= joined_data['date_without_time']:
+            user_code_crazy_dict[github_id][tech_name]['old_code_crazy'] += tech_code_crazy
 
     user_code_crazy_list = []
     for user, user_data in user_code_crazy_dict.items():
@@ -109,6 +112,7 @@ def update_code_crazy(github_id_list):
                 "tech_name": tech_name,
                 "total_lines": tech_data['total_lines'],
                 "code_crazy": tech_data['tech_code_crazy'],
+                "old_code_crazy": tech_data['old_code_crazy']
             })
     CodeCrazy.objects.filter(github_id_id__in=github_id_list).delete()
     bulk_code_crazy = [CodeCrazy(**crazy_data)for crazy_data in user_code_crazy_list]

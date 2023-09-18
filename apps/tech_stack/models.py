@@ -94,4 +94,5 @@ class CodeCrazy(models.Model):
     tech_name = models.CharField(max_length=50, null=True)
     code_crazy = models.FloatField()
     total_lines = models.IntegerField()
+    old_code_crazy = models.FloatField(default=0)
     updated_at = models.DateTimeField(auto_now=True)

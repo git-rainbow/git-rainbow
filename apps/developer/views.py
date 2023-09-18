@@ -284,7 +284,6 @@ def make_ranker_data(tech_name):
     total_lines = sum([tech_data.total_lines for tech_data in user_tech_data_list])
     total_ranker_count = len(github_id_set)
     user_avg_lines = (total_lines / total_ranker_count) * 2
-    user_mid_ranking = {user_data['github_id']: user_data['midnight_rank'] for user_data in Ranking.objects.filter(github_id__in=github_id_set, tech_name=tech_name).values('github_id', 'midnight_rank')}
 
     user_code_crazy_list = []
     for user_tech_data in user_tech_data_list:
@@ -309,6 +308,16 @@ def make_ranker_data(tech_name):
         })
     user_code_crazy_list.sort(key=lambda x: x['tech_code_crazy'], reverse=True)
 
+    old_code_crazy = {tech_data.github_id_id: tech_data.old_code_crazy for tech_data in user_tech_data_list}
+    sorted_old_code_crazy = sorted(old_code_crazy.items(), key=lambda x: x[1], reverse=True)
+    old_rank_dict = {}
+    rank = 0
+    before_code_crazy = None
+    for github_id, old_code_crazy in sorted_old_code_crazy:
+        if before_code_crazy is None or before_code_crazy > old_code_crazy:
+            rank += 1
+        old_rank_dict[github_id] = rank
+
     row_num = 0
     current_rank = 0
     before_crazy = None
@@ -319,7 +328,7 @@ def make_ranker_data(tech_name):
         row_num += 1
         user_crazy['rank'] = current_rank
         user_crazy['row_num'] = row_num
-        last_rank = user_mid_ranking.get(user_crazy['github_id'])
+        last_rank = old_rank_dict.get(user_crazy['github_id'])
         user_crazy['change_rank'] = last_rank - current_rank if last_rank else total_ranker_count - current_rank
     return user_code_crazy_list
 
@@ -371,49 +380,19 @@ def save_github_calendar_data(git_calendar_data, github_user):
 
 
 def ranking_all(request):
-    today = timezone.now()
-    year_ago = (today - relativedelta(years=1)).replace(hour=0, minute=0, second=0)
     tech_side = draw_tech_side()
     sorted_github_calendar_colors = {tech_dict['tech_name']:{'tech_color': tech_dict['tech_color'], 'logo_path':tech_dict['logo_path']} for tech_dict_list in tech_side.values() for tech_dict in tech_dict_list}
-    all_github_id_list = GithubUser.objects.all().values_list('github_id', flat=True)
-    all_calendar_data_list = []
-    for github_id in all_github_id_list:
-        all_calendar_data_list.extend(list(
-            get_calendar_model(github_id).objects.filter(
-                author_date__gte=year_ago, tech_name__in=sorted_github_calendar_colors.keys()
-            ).values(
-                'github_id', 'tech_name'
-            ).annotate(
-                date_without_time=TruncDate('author_date'),
-                day_lines=Sum('lines'),
-                tech_code_crazy=Case(
-                    When(day_lines__range=[300, 1000], then=(3 + 0.001 * (F('day_lines') - 300))),
-                    When(day_lines__gt=1000, then=Value(3.7)),
-                    default=F('day_lines') * 0.01,
-                    output_field=FloatField()
-                ),
-            )
-        ))
-
-    user_code_crazy_dict = defaultdict(lambda: defaultdict(lambda: {'total_lines': 0, "tech_code_crazy": 0}))
-    for joined_data in all_calendar_data_list:
-        github_id = joined_data['github_id']
-        tech_name = joined_data['tech_name']
-        lines = joined_data['day_lines']
-        tech_code_crazy = joined_data['tech_code_crazy']
-        user_code_crazy_dict[github_id][tech_name]['total_lines'] += lines
-        user_code_crazy_dict[github_id][tech_name]['tech_code_crazy'] += tech_code_crazy
+    user_tech_data_list = list(CodeCrazy.objects.filter(tech_name__in=sorted_github_calendar_colors.keys()).order_by('tech_name', '-code_crazy'))
 
     user_code_crazy_list = []
-    for user, user_data in user_code_crazy_dict.items():
-        for tech_name, tech_data in user_data.items():
-            user_code_crazy_list.append({
-                'github_id': user,
-                'tech_name': tech_name,
-                'total_lines': tech_data['total_lines'],
-                "tech_code_crazy": tech_data['tech_code_crazy'],
-                "int_code_crazy": int(tech_data['tech_code_crazy']),
-            })
+    for user_data in user_tech_data_list:
+        user_code_crazy_list.append({
+            'github_id': user_data.github_id_id,
+            'tech_name': user_data.tech_name,
+            'total_lines': user_data.total_lines,
+            "tech_code_crazy": user_data.code_crazy,
+            "int_code_crazy": int(user_data.code_crazy),
+        })
 
     RANK_COUNT_TO_SHOW = 3
     rank_data = dict()
