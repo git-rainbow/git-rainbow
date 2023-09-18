@@ -20,7 +20,7 @@ from apps.group.utils import core_user_analysis, update_code_crazy
 from apps.group.views import save_git_calendar_data, make_group_tech_card
 from apps.tech_stack.create_table import create_github_calendar_table
 from apps.tech_stack.models import GithubUser, AnalysisData, GithubCalendar, Ranking, GithubRepo, TechStack, TopTech, \
-    get_calendar_model
+    get_calendar_model, CodeCrazy
 from apps.tech_stack.utils import core_repo_list
 from utils.github_api.github_api import request_github_profile
 from utils.github_calendar.github_calendar import generate_github_calendar
@@ -279,54 +279,34 @@ def update_tech_stack_table(tech_set: set):
 
 
 def make_ranker_data(tech_name):
-    today = timezone.now()
-    year_ago = (today - relativedelta(years=1)).replace(hour=0, minute=0, second=0)
-    now_tech_data = GithubCalendar.objects.filter(tech_name__iexact=tech_name, author_date__gte=year_ago).values('github_id', 'tech_name').annotate(
-        date=TruncDate('author_date'),
-        day_lines=Sum('lines'),
-        day_crazy=Case(
-            When(day_lines__range=[300, 1000], then=(3 + 0.001 * (F('day_lines') - 300))),
-            When(day_lines__gt=1000, then=Value(3.7)),
-            default=F('day_lines') * 0.01,
-            output_field=FloatField()
-        )
-    )
-    total_lines = 0
-    user_code_crazy_dict = defaultdict(lambda: defaultdict(lambda: {'total_lines': 0, "tech_code_crazy": 0}))
-    for tech_data in now_tech_data:
-        github_id = tech_data['github_id']
-        tech_name = tech_data['tech_name']
-        lines = tech_data['day_lines']
-        tech_code_crazy = tech_data['day_crazy']
-        user_code_crazy_dict[github_id][tech_name]['total_lines'] += lines
-        user_code_crazy_dict[github_id][tech_name]['tech_code_crazy'] += tech_code_crazy
-        total_lines += lines
-    github_id_list = user_code_crazy_dict.keys()
-    total_ranking_count = len(github_id_list)
-    user_avg_lines = (total_lines / total_ranking_count) * 2
-
-    user_avatar_url = {user_data['github_id']: {'avatar_url': user_data['avatar_url'], 'top_tech': str(user_data['toptech__tech_name'])} for user_data in GithubUser.objects.filter(github_id__in=github_id_list).values('github_id', 'avatar_url', 'toptech__tech_name')}
-    user_mid_ranking = {user_data['github_id']: user_data['midnight_rank'] for user_data in Ranking.objects.filter(github_id__in=github_id_list).values('github_id', 'midnight_rank')}
+    user_tech_data_list = list(CodeCrazy.objects.select_related('github_id', 'github_id__toptech').filter(tech_name=tech_name))
+    github_id_set = {tech_data.github_id_id for tech_data in user_tech_data_list}
+    total_lines = sum([tech_data.total_lines for tech_data in user_tech_data_list])
+    total_ranker_count = len(github_id_set)
+    user_avg_lines = (total_lines / total_ranker_count) * 2
+    user_mid_ranking = {user_data['github_id']: user_data['midnight_rank'] for user_data in Ranking.objects.filter(github_id__in=github_id_set, tech_name=tech_name).values('github_id', 'midnight_rank')}
 
     user_code_crazy_list = []
-    for user, user_data in user_code_crazy_dict.items():
-        for tech_name, tech_data in user_data.items():
-            code_line_percent = round(tech_data['total_lines'] / user_avg_lines * 100, 2)
-            if code_line_percent < 25:
-                code_line_percent = 25
-            elif code_line_percent > 95:
-                code_line_percent = 95
-
-            user_code_crazy_list.append({
-                "github_id": user,
-                "avatar_url": user_avatar_url.get(user)['avatar_url'],
-                "top_tech": user_avatar_url.get(user)['top_tech'],
-                "tech_name": tech_name,
-                "total_lines": format(tech_data['total_lines'], ','),
-                "tech_code_crazy": tech_data['tech_code_crazy'],
-                "int_code_crazy": int(tech_data['tech_code_crazy']),
-                "code_line_percent": code_line_percent,
-            })
+    for user_tech_data in user_tech_data_list:
+        code_line_percent = round(user_tech_data.total_lines / user_avg_lines * 100, 2)
+        if code_line_percent < 25:
+            code_line_percent = 25
+        elif code_line_percent > 95:
+            code_line_percent = 95
+        try:
+            top_tech = user_tech_data.github_id.toptech.tech_name
+        except GithubUser.toptech.RelatedObjectDoesNotExist:
+            top_tech = "None"
+        user_code_crazy_list.append({
+            "github_id": user_tech_data.github_id_id,
+            "avatar_url": user_tech_data.github_id.avatar_url,
+            "top_tech": top_tech,
+            "tech_name": tech_name,
+            "total_lines": format(user_tech_data.total_lines, ','),
+            "tech_code_crazy": user_tech_data.code_crazy,
+            "int_code_crazy": int(user_tech_data.code_crazy),
+            "code_line_percent": code_line_percent,
+        })
     user_code_crazy_list.sort(key=lambda x: x['tech_code_crazy'], reverse=True)
 
     row_num = 0
@@ -340,7 +320,7 @@ def make_ranker_data(tech_name):
         user_crazy['rank'] = current_rank
         user_crazy['row_num'] = row_num
         last_rank = user_mid_ranking.get(user_crazy['github_id'])
-        user_crazy['change_rank'] = last_rank - current_rank if last_rank else total_ranking_count - current_rank
+        user_crazy['change_rank'] = last_rank - current_rank if last_rank else total_ranker_count - current_rank
     return user_code_crazy_list
 
 
