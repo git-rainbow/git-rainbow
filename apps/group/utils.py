@@ -97,6 +97,8 @@ def update_code_crazy(github_id_list):
         github_id = joined_data['github_id']
         tech_name = joined_data['tech_name']
         tech_code_crazy = joined_data['tech_code_crazy']
+        lines = joined_data['day_lines']
+        user_code_crazy_dict[github_id][tech_name]['total_lines'] += lines
         user_code_crazy_dict[github_id][tech_name]['tech_code_crazy'] += tech_code_crazy
 
     user_code_crazy_list = []
@@ -105,6 +107,7 @@ def update_code_crazy(github_id_list):
             user_code_crazy_list.append({
                 "github_id_id": user,
                 "tech_name": tech_name,
+                "total_lines": tech_data['total_lines'],
                 "code_crazy": tech_data['tech_code_crazy'],
             })
     CodeCrazy.objects.filter(github_id_id__in=github_id_list).delete()
