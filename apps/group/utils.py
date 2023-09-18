@@ -4,9 +4,11 @@ from urllib.parse import urlparse
 
 import requests
 from dateutil.relativedelta import relativedelta
+from django.db.models import Sum, Case, When, Value, F, FloatField
+from django.db.models.functions import TruncDate
 from django.utils import timezone
 
-from apps.tech_stack.models import TopTech, get_calendar_model
+from apps.tech_stack.models import TopTech, get_calendar_model, CodeCrazy
 from apps.tech_stack.utils import core_repo_list
 from config.local_settings import CORE_URL
 from utils.github_calendar_colors.github_calendar_colors import github_calendar_colors
@@ -69,13 +71,55 @@ def core_group_analysis(repo_dict_list, session_key):
     return core_response
 
 
+def update_code_crazy(github_id_list):
+    today = timezone.now()
+    year_ago = (today - relativedelta(years=1)).replace(hour=0, minute=0, second=0)
+    all_calendar_data_list = []
+    for github_id in github_id_list:
+        all_calendar_data_list.extend(list(
+            get_calendar_model(github_id).objects.filter(
+                author_date__gte=year_ago, tech_name__in=github_calendar_colors.keys()
+            ).values(
+                'github_id', 'tech_name'
+            ).annotate(
+                date_without_time=TruncDate('author_date'),
+                day_lines=Sum('lines'),
+                tech_code_crazy=Case(
+                    When(day_lines__range=[300, 1000], then=(3 + 0.001 * (F('day_lines') - 300))),
+                    When(day_lines__gt=1000, then=Value(3.7)),
+                    default=F('day_lines') * 0.01,
+                    output_field=FloatField()
+                ),
+            )
+        ))
+    user_code_crazy_dict = defaultdict(lambda: defaultdict(lambda: {'total_lines': 0, "tech_code_crazy": 0}))
+    for joined_data in all_calendar_data_list:
+        github_id = joined_data['github_id']
+        tech_name = joined_data['tech_name']
+        tech_code_crazy = joined_data['tech_code_crazy']
+        user_code_crazy_dict[github_id][tech_name]['tech_code_crazy'] += tech_code_crazy
+
+    user_code_crazy_list = []
+    for user, user_data in user_code_crazy_dict.items():
+        for tech_name, tech_data in user_data.items():
+            user_code_crazy_list.append({
+                "github_id_id": user,
+                "tech_name": tech_name,
+                "code_crazy": tech_data['tech_code_crazy'],
+            })
+    CodeCrazy.objects.filter(github_id_id__in=github_id_list).delete()
+    bulk_code_crazy = [CodeCrazy(**crazy_data)for crazy_data in user_code_crazy_list]
+    CodeCrazy.objects.bulk_create(bulk_code_crazy)
+
+
 def core_user_analysis(github_user):
     year_ago = (timezone.now() - relativedelta(years=1)).replace(hour=0, minute=0, second=0)
     session_key = github_user.session_key
+    github_id = github_user.github_id
     if not session_key:
         github_user.status = 'progress'
         github_user.save()
-        user_data = {"github_id": github_user.github_id, "tech_stack": True}
+        user_data = {"github_id": github_id, "tech_stack": True}
         repo_list_reponse = core_repo_list(user_data, session_key)
         repo_list_status = repo_list_reponse['status']
         if repo_list_status == 'fail':
@@ -107,10 +151,11 @@ def core_user_analysis(github_user):
         return {"status": "progress", "session_key": github_user.session_key}
 
     elif core_status == 'done':
-        calendar_model = get_calendar_model(github_user.github_id)
+        calendar_model = get_calendar_model(github_id)
         calendar_model.objects.all().delete()
         save_git_calendar_data(core_response['calendar_data'])
-        save_top_tech((core_response['calendar_data']), github_user.github_id)
+        save_top_tech((core_response['calendar_data']), github_id)
+        update_code_crazy([github_id])
         github_user.session_key = None
         github_user.status = 'completed'
         github_user.save()
