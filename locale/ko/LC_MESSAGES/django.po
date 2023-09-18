@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-03 17:11+0900\n"
+"POT-Creation-Date: 2023-09-18 08:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,15 +22,27 @@ msgstr ""
 msgid "go back"
 msgstr "돌아가기"
 
-#: templates/header.html:18 templates/index.html:59
+#: templates/group_list.html:17
+msgid "Group Coding"
+msgstr "그룹 코딩"
+
+#: templates/group_list.html:33
+msgid "\"Search Groups\""
+msgstr "\"그룹 검색\""
+
+#: templates/group_list.html:67
+msgid "people"
+msgstr "명"
+
+#: templates/header.html:19 templates/index.html:59
 msgid "Analyze"
 msgstr "분석하기"
 
-#: templates/header.html:25 templates/index.html:66
+#: templates/header.html:27 templates/index.html:66
 msgid "Admin"
 msgstr "관리자"
 
-#: templates/header.html:27 templates/index.html:68
+#: templates/header.html:29 templates/index.html:68
 msgid "Crazy Ranking"
 msgstr "크레이지 랭킹"
 
@@ -74,9 +86,9 @@ msgstr "기술스택 랭킹"
 msgid "Who are TOP 3 ?"
 msgstr "TOP 3 는 누구 ?"
 
-#: templates/intro.html:46 templates/min_git_rainbow.html:13
-#: templates/ranking.html:43 templates/ranking.html:74
-#: templates/ranking.html:155 templates/ranking_all.html:36
+#: templates/intro.html:46 templates/min_git_rainbow.html:12
+#: templates/ranking.html:43 templates/ranking.html:68
+#: templates/ranking.html:146 templates/ranking_all.html:36
 msgid "Code Crazy"
 msgstr "코드 크레이지"
 
@@ -124,83 +136,119 @@ msgstr "기술스택 별로 쉽게 분석해보고"
 msgid "Up your ranking enjoyingly"
 msgstr "나의 랭킹을 재밌게 올려보자!"
 
-#: templates/loading.html:9
+#: templates/loading.html:11
 msgid "Analyzing &nbsp;GitHub"
 msgstr "Github &nbsp;분석"
 
-#: templates/loading.html:15
+#: templates/loading.html:17
 msgid "The first analysis may take up to an hour."
 msgstr "첫 분석은 한시간 정도 걸릴 수 있습니다."
 
-#: templates/loading.html:21
+#: templates/loading.html:23
 msgid "Go Back"
 msgstr "돌아가기"
 
-#: templates/min_git_rainbow.html:17
+#: templates/min_git_rainbow.html:16
 msgid "Sharing"
 msgstr "공유하기"
 
-#: templates/min_git_rainbow.html:35
+#: templates/min_git_rainbow.html:34
 msgid "My Ranking"
 msgstr "나의 랭킹"
 
-#: templates/min_git_rainbow.html:76
+#: templates/min_git_rainbow.html:75 templates/min_group.html:99
 msgid "Tech Stack"
 msgstr "기술 스택"
 
-#: templates/min_git_rainbow.html:76
+#: templates/min_git_rainbow.html:75 templates/min_group.html:99
 msgid "in the last year"
 msgstr "최근 1년"
 
-#: templates/min_git_rainbow.html:84
+#: templates/min_git_rainbow.html:83
 msgid "You can use this service only if it is your own Github ID"
 msgstr "사용자 본인의 Github 아이디인 경우만 이 서비스를 사용할 수 있습니다"
 
-#: templates/min_git_rainbow.html:87
+#: templates/min_git_rainbow.html:86
 msgid "Git repository"
 msgstr "Git 저장소"
 
-#: templates/min_git_rainbow.html:97
+#: templates/min_git_rainbow.html:96
 msgid "Update"
 msgstr "업데이트"
 
-#: templates/min_git_rainbow.html:134
+#: templates/min_git_rainbow.html:133
 msgid "Tech activity"
 msgstr "기술 활동"
 
-#: templates/min_git_rainbow.html:139
+#: templates/min_git_rainbow.html:138
 msgid "Show more activity"
 msgstr "활동 더 보기"
 
-#: templates/ranking.html:83
+#: templates/min_group.html:57
+msgid "Group Ranking"
+msgstr "그룹 랭킹"
+
+#: templates/new_group.html:17
+msgid "New Group Coding"
+msgstr "새로운 그룹 만들기"
+
+#: templates/new_group.html:24
+msgid "Group Name"
+msgstr "그룹명"
+
+#: templates/new_group.html:51
+msgid "Description"
+msgstr "설명"
+
+#: templates/new_group.html:55 templates/token_modals.html:92
+msgid "Type"
+msgstr "유형"
+
+#: templates/new_group.html:62 templates/token_modals.html:70
+msgid "Public"
+msgstr "공개 저장소"
+
+#: templates/new_group.html:66
+msgid "Private"
+msgstr ""
+
+#: templates/new_group.html:80
+msgid "Git Repository URL"
+msgstr "\"Git 저장소 URL\""
+
+#: templates/new_group.html:93
+msgid "Topics"
+msgstr "태그"
+
+#: templates/ranking.html:77
 msgid "More"
 msgstr "자세히"
 
-#: templates/ranking.html:93 templates/ranking.html:102
+#: templates/ranking.html:84 templates/ranking.html:93
 msgid "My ranking"
 msgstr "나의 랭킹"
 
-#: templates/ranking.html:125
+#: templates/ranking.html:116
 msgid "\"Search a GitHub ID\""
 msgstr "\"GitHub ID 검색하기\""
 
-#: templates/ranking.html:131
+#: templates/ranking.html:122
 msgid "developers"
 msgstr "개발자 수"
 
-#: templates/ranking.html:139
+#: templates/ranking.html:130
 msgid "does not exsit in this tech ranking"
 msgstr "이(가) 이 기술 랭킹에 존재하지 않습니다"
 
-#: templates/ranking.html:150
+#: templates/ranking.html:141
 msgid "RANK"
 msgstr "순위"
 
-#: templates/ranking.html:158
+#: templates/ranking.html:149
 msgid "Code Lines"
 msgstr "코딩 라인수"
 
-#: templates/ranking.html:161
+#: templates/ranking.html:152
 msgid "Major"
 msgstr "주요기술"
 
@@ -208,13 +256,33 @@ msgstr "주요기술"
 msgid "Show more rank"
 msgstr "랭크 더보기"
 
-#: templates/ranking_side.html:14
+#: templates/search_repo.html:15
+msgid "What kind of code do you need ?"
+msgstr "어떤 소스코드가 필요하신가요 ?"
+
+#: templates/search_repo.html:17
+msgid "Search GitHub code for your development !"
+msgstr "개발에 필요한 소스코드를"
+
+#: templates/search_repo.html:18
+msgid "with tech keywords (eg. React, Component)"
+msgstr "React, Component 등 기술키워드로 쉽게 찾을 수 있습니다!"
+
+#: templates/tech_side.html:14
 msgid "\"Search a tech name\""
 msgstr "\"기술명 검색하기\""
 
-#: templates/ranking_side.html:18
+#: templates/tech_side.html:19
+msgid "Show groups of all"
+msgstr "모든 그룹 보기"
+
+#: templates/tech_side.html:21
 msgid "Show code crazy rank of all"
 msgstr "코드 크레이지 전체 랭킹"
+
+#: templates/tech_side.html:23
+msgid "Search source code"
+msgstr ""
 
 #: templates/toggle_login.html:10
 msgid "Logout"
@@ -240,10 +308,6 @@ msgstr "\"Github personal access token 입력\""
 msgid "Add repository"
 msgstr "저장소 추가"
 
-#: templates/token_modals.html:70
-msgid "Public"
-msgstr "공개 저장소"
-
 #: templates/token_modals.html:74
 msgid "\"Git Repository URL\""
 msgstr "\"Git 저장소 URL\""
@@ -263,10 +327,6 @@ msgstr "Git 프로젝트명"
 #: templates/token_modals.html:91
 msgid "Git repository URL"
 msgstr "Git 저장소 URL"
-
-#: templates/token_modals.html:92
-msgid "Type"
-msgstr "유형"
 
 #: templates/token_modals.html:93
 msgid "Status"
