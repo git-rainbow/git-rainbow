@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-18 08:36+0000\n"
+"POT-Creation-Date: 2023-09-19 19:40+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -89,6 +89,7 @@ msgstr "TOP 3 는 누구 ?"
 #: templates/intro.html:46 templates/min_git_rainbow.html:12
 #: templates/ranking.html:43 templates/ranking.html:68
 #: templates/ranking.html:146 templates/ranking_all.html:36
+#: templates/ranking_info.html:95
 msgid "Code Crazy"
 msgstr "코드 크레이지"
 
@@ -252,9 +253,29 @@ msgstr "코딩 라인수"
 msgid "Major"
 msgstr "주요기술"
 
-#: templates/ranking_all.html:53
-msgid "Show more rank"
-msgstr "랭크 더보기"
+#: templates/ranking_all.html:53 templates/ranking_info.html:113
+msgid "Show more ranking"
+msgstr "코드 크레이지 랭킹 더보기"
+
+#: templates/ranking_info.html:13
+msgid "Code Crazy, see your rank !!"
+msgstr "코딩에 미쳐있는 랭킹을 확인하세요 !!"
+
+#: templates/ranking_info.html:15
+msgid "What tech stack are you crazy about ?"
+msgstr "어떤 기술스택에 관심 있나요 ?"
+
+#: templates/ranking_info.html:27
+msgid "Developers"
+msgstr "개발자 수"
+
+#: templates/ranking_info.html:44
+msgid "Tech Stacks"
+msgstr "기술스택 수"
+
+#: templates/ranking_info.html:61
+msgid "Languages"
+msgstr "언어 수"
 
 #: templates/search_repo.html:15
 msgid "What kind of code do you need ?"
