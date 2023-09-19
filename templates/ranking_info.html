@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% load static custom_tags i18n humanize %}
+{% block content %}
+<div id='under_header' class="flex items-center p-6 bg-gray-50 w-full h-full">
+  <div style="margin:0 auto;">
+    <div class="grid gap-4 mb-3 md:grid-cols-2 xl:grid-cols-2-2">
+      <div style="min-width:450px">
+        <!-- Search Tech -->
+        {% include 'tech_side.html' %}
+      </div>
+      <div>
+        <div class="my-6 mt-5 font-bold" style="font-size:2.2rem;text-align:center">
+          {% trans "Code Crazy, see your rank !!" %}</div>
+        <div class="my-8 text-xl" style="text-align:center">
+          {% trans "What tech stack are you crazy about ?" %}</div>
+        <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-3" style="margin:auto;text-align:center; width:720px" >
+          <!-- Card -->
+          <div class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800 pointer" onclick="display_select_area('total_member')">
+            <div class="p-3 mr-4 text-orange-500 bg-orange-100 rounded-full dark:text-orange-100 dark:bg-orange-500">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z">
+                </path>
+              </svg>
+            </div>
+            <div>
+              <p class="mb-2 text-xl font-semibold text-gray-600 dark:text-gray-400">
+                {% trans "Developers" %}
+              </p>
+              <p class="text-xl font-semibold text-gray-700 dark:text-gray-200">
+                {{ developer_cnt|intcomma }} +
+              </p>
+            </div>
+          </div>
+          <!-- Card -->
+          <div class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800 pointer" onclick="display_select_area('github_user')">
+            <div class="p-3 mr-4 text-green-500 bg-green-100 rounded-full dark:text-green-100 dark:bg-green-500">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z">
+                </path>
+              </svg>
+            </div>
+            <div>
+              <p class="mb-2 text-xl font-semibold text-gray-600 dark:text-gray-400">
+                {% trans "Tech Stacks" %}
+              </p>
+              <p class="text-xl font-semibold text-gray-700 dark:text-gray-200">
+                {{ tech_cnt|intcomma }} +
+              </p>
+            </div>
+          </div>
+          <!-- Card -->
+          <div class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800 pointer" onclick="display_select_area('new_member')">
+            <div class="p-3 mr-4 text-blue-500 bg-blue-100 rounded-full dark:text-blue-100 dark:bg-blue-500">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z">
+                </path>
+              </svg>
+            </div>
+            <div>
+              <p class="mb-2 text-xl font-semibold text-gray-600 dark:text-gray-400">
+                {% trans "Languages" %}
+              </p>
+              <p class="text-xl font-semibold text-gray-700 dark:text-gray-200">
+                {{ lang_cnt|intcomma }} +
+              </p>
+            </div>
+          </div>
+          <!-- Card -->
+        </div>
+        <div class="mt-5" style="width: 720px; margin:auto">
+          <!-- Selected Tech & Top3 Group Start -->
+          {% for tech_name, tech_rank_data in rank_data.items %}
+          <div class="grid gap-4 pt-3 pb-3 pl-3 mb-3 tech-rankings {% if forloop.counter > 10 %}hidden{% endif %}" style="grid-template-columns: 0.6fr 1fr 1fr 1fr; background-color: #EEEEEE;">
+            <!-- Selected Tech Card -->
+            <div onclick="window.open('/ranking/{{tech_name}}', '_blank')" class="flex mb-3 bg-white rounded-lg shadow-xs dark:bg-gray-800 mr-2"
+                 style="height: 190px;width: 126px;align-items: center;flex-direction: column; cursor:pointer;">
+              <div class="w-full inline-block">
+                <div div class="tech_color mt-2 mr-2"
+                     style="background-color: {{ tech_rank_data.color }}; float: right; display: block;"></div>
+              </div>
+              <img class="mx-auto mb-2" src="{{ tech_rank_data.logo_path }}" style="margin-top: 25px;">
+              <p class="mx-auto mb-2 text-sm" id="tech_title">{{ tech_name }}</p>
+            </div>
+            {% for top3 in tech_rank_data.top3_data %}
+            <div onclick="window.open('/{{top3.github_id}}', '_blank')" class="flex bg-white rounded-lg shadow-xs dark:bg-gray-800"
+                 style="height: 257px;width: 180px;align-items: center;flex-direction: column; cursor:pointer;">
+              <div class="flex mt-1">
+                <img style="width:30px;height:30px;" src="{% get_static_prefix %}img/rank_{{ forloop.counter }}.png">
+                <p class="font-semibold ranking-ellipsis flex" style="font-size:15px; align-content: flex-start;">Top {{ forloop.counter }}</p>
+              </div>
+              <img class="object-cover w-full h-full rounded-full mt-1" src="{{ rank_avatar_url_dict|get_item:top3.github_id }}" style="width:64px;height:64px">
+              <p class="mx-auto mt-2 mb-3 font-semibold ranking-ellipsis" style="font-size:15px"><a href="/{{top3.github_id}}" target="_blank">{{ top3.github_id }}</a></p>
+              <button type="button" class="btn btn-danger font-semibold mt-2 mb-1" title="{{ top3.tech_code_crazy }}%"
+                      style="color:rgb(200,30,30);background-color:rgb(253,232,232);border-color:rgb(253,232,232); font-size: 70%; padding: 2%; width: 70%;">
+                {% trans "Code Crazy" %} <span class="badge badge-danger" style="font-size:100%;margin-left:4px; top: 1px;">{{ top3.int_code_crazy }}%</span>
+              </button>
+              <div class="rounded-full mt-2 mb-1" style="background-color:lightgray; width: 70%;">
+                <div
+                    class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
+                    style="width: {{ top3.code_line_percent }}%; background-color: {{ tech_rank_data.color }}"><p style="color:white">{{ top3.total_lines|intcomma }}</p>
+                </div>
+              </div>
+              <div class="flex mt-2 mb-1" style="align-items: center;flex-direction: row; justify-content: space-around; width: 50%;">
+                <img style="width:30px;height:30px;" src="{% get_static_prefix %}img/{{ ranker_toptech_dict|get_item:top3.github_id|replace_special_char|lower }}.png">
+                <p class="text-xs text-gray-600">{{ ranker_toptech_dict|get_item:top3.github_id }}</p>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          {% endfor %}
+          <div class="flex items-center justify-center mt-2 ml-2 bg-white rounded-lg shadow-xs dark:bg-gray-800 pointer font-bold" style="width: 98%; height: 35px;"
+               onclick="location.href='/ranking/all'">
+            {% trans "Show more rank" %}
+          </div>
+        </div>
+
+        <!-- Introduction image for Code Crazy Ranking -->
+        <div class="my-5 mx-3 bg-white">
+          <img class="mr-8" src="/static/img/code_crazy_intro.png">
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

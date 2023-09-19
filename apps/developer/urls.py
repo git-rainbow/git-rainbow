@@ -26,6 +26,7 @@ urlpatterns = [
     path('<str:github_id>/get', views.get_user_calendar),
     path('<str:github_id>/exists', views.find_user_page),
     path('<str:github_id>/svg', views.git_rainbow_svg),
+    path('ranking/info', views.ranking_info),
     path('ranking/all', views.ranking_all),
     path('ranking/<str:tech_name>', views.ranking_tech_stack),
     path('update-ranking', views.save_tech_ranking_data),

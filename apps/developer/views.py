@@ -378,8 +378,7 @@ def save_github_calendar_data(git_calendar_data, github_user):
             git_calendar_data_bulk.append(github_calendar)
     GithubCalendar.objects.bulk_create(git_calendar_data_bulk)
 
-
-def ranking_all(request):
+def __ranking_all():
     tech_side = draw_tech_side()
     sorted_github_calendar_colors = {tech_dict['tech_name']:{'tech_color': tech_dict['tech_color'], 'logo_path':tech_dict['logo_path']} for tech_dict_list in tech_side.values() for tech_dict in tech_dict_list}
     user_tech_data_list = list(CodeCrazy.objects.filter(tech_name__in=sorted_github_calendar_colors.keys()).order_by('tech_name', '-code_crazy'))
@@ -422,7 +421,26 @@ def ranking_all(request):
         'rank_avatar_url_dict': rank_avatar_url_dict,
         'ranker_toptech_dict': ranker_toptech_dict,
     }
+    return context
+
+
+def ranking_all(request):
+    context = __ranking_all()
     return render(request, 'ranking_all.html', context=context)
+
+
+def ranking_info(request):
+    context = __ranking_all()
+    i = iter(context['rank_data'])
+    tech = next(i)
+    tech2 = next(i)
+    context['rank_data'] = { tech : context['rank_data'][tech],
+                             tech2 : context['rank_data'][tech2]}
+    context['lang_cnt'] = sum(1 for tech_info in github_calendar_colors.values() if tech_info['tech_type'] == 'Language')
+    context['tech_cnt'] = len(github_calendar_colors) - context['lang_cnt']
+    context['developer_cnt'] = GithubUser.objects.count()
+
+    return render(request, 'ranking_info.html', context=context)
 
 
 def ranking_tech_stack(request, tech_name):
