@@ -56,23 +56,24 @@ def make_group_tech_card(group_calendar_data):
     return tech_card_data
 
 
-def get_group_calendar_data(calendar_queryset, one_year_ago, six_months_ago=None):
-    if six_months_ago:
-        period_group_queryset = calendar_queryset.filter(author_date__range=(one_year_ago, six_months_ago))
-    else:
-        period_group_queryset = calendar_queryset.filter(author_date__gte=one_year_ago)
-
-    period_group_data = period_group_queryset.values('github_id').annotate(
-        date_without_time=TruncDate('author_date'),
-        day_lines=Sum('lines'),
-        tech_code_crazy = Sum(Case(
+def get_group_calendar_data(member_list, group_repo_list, period):
+    calendar_data_list = []
+    for member_id in member_list:
+        calendar_data_list.extend(list(get_calendar_model(member_id).objects.filter(
+            repo_url__in=group_repo_list, author_date__gte=period
+        ).values(
+            'commit_hash', 'github_id', 'tech_name','author_date'
+        ).annotate(
+            date_without_time=TruncDate('author_date'),
+            day_lines=Sum('lines'),
+            tech_code_crazy = Sum(Case(
             When(lines__range=[300, 1000], then=(3 + 0.001 * (F('lines') - 300))),
             When(lines__gt=1000, then=Value(3.7)),
             default=F('lines') * 0.01,
             output_field=FloatField(),
         )),
-    ).order_by('-tech_code_crazy')
-    return period_group_data
+        )))
+    return calendar_data_list
 
 
 def get_rank_data_list(filtered_calendar_data):
@@ -135,20 +136,24 @@ def group(request, group_id):
     member_list = group.github_users.all().values_list('github_id', flat=True)
     group_repo_list = group.grouprepo_set.all().values_list('repo_url', flat=True)
 
-    group_calendar_queryset = GithubCalendar.objects.select_related('github_id').filter(github_id__in=member_list, repo_url__in=group_repo_list)
     group_calendar_data = []
     for member_id in member_list:
         group_calendar_data.extend(list(get_calendar_model(member_id).objects.filter(author_date__gte=one_year_ago, repo_url__in=group_repo_list)))
 
-    six_months_data = get_group_calendar_data(group_calendar_queryset, one_year_ago, six_months_ago)
-    post_user_code_crazy_list = get_rank_data_list(six_months_data)
-    six_months_rank_dict = {data['github_id']:data['rank'] for data in post_user_code_crazy_list}
-
-    one_year_data = get_group_calendar_data(group_calendar_queryset, one_year_ago)
+    one_year_data = get_group_calendar_data(member_list, group_repo_list, one_year_ago)
+    six_months_data = get_group_calendar_data(member_list, group_repo_list, six_months_ago)
     user_code_crazy_list = get_rank_data_list(one_year_data)
+    post_user_code_crazy_list = get_rank_data_list(six_months_data)
 
     for ranker in user_code_crazy_list:
-        ranker['change_rank'] = ranker['rank'] - six_months_rank_dict[ranker['github_id']]
+        for post_ranker in post_user_code_crazy_list:
+            if ranker['github_id'] == post_ranker['github_id']:
+                ranker['change_rank'] = post_ranker['rank'] - ranker['rank']
+                break
+
+    for i in user_code_crazy_list:
+        if i.get('change_rank') is None:
+            i['change_rank'] = len(user_code_crazy_list) - i['rank']
 
     rank_member_count = len(user_code_crazy_list)
     if rank_member_count > 0:
