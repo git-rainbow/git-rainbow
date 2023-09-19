@@ -1,4 +1,4 @@
-{% load static custom_tags %}
+{% load static custom_tags humanize %}
 <div class="flex mt-5 mb-3" style="justify-content: space-between;">
   <span class="font-bold" style="font-size: 20px;"> 코드 크레이지 랭킹</span>
   <p class="text-sm pt-3">참여 개발자 수: {{ group_rank_data|length }}</p>
@@ -69,7 +69,7 @@
           </td>
           <td style="border:none!important">
             <div class="w-full rounded-full" style="background-color:lightgray">
-              <div class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full user-coding-lines" github_id="{{data.github_id}}" style="width: {{ data.code_line_percent }}%; background-color: #403757"><p style="color:white">{{ data.total_lines }}</p></div>
+              <div class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full user-coding-lines" github_id="{{data.github_id}}" style="width: {{ data.code_line_percent }}%; background-color: #403757"><p style="color:white">{{ data.total_lines|intcomma }}</p></div>
             </div>
           </td>
           <td class="px-3 py-2 text-sm" style="width:100px;border:none!important">
