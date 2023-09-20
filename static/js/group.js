@@ -624,6 +624,18 @@ show_more_btn?.addEventListener('click', function(){
     show_group_total_lines(current_data, false, true)
 });
 
+function show_github_id(event, github_id){
+    let desc_box = document.querySelector("#desc_div");
+    if (event.type == 'mousemove') {
+        desc_box.classList.remove('hidden');
+    } else if (event.type == 'mouseleave') {
+        desc_box.classList.add('hidden');
+        return;
+    }
+    desc_box.innerHTML = github_id;
+    desc_box.setAttribute('style', `left: ${event.pageX-desc_box.clientWidth/2}px; top: ${event.pageY-desc_box.clientHeight-20}px`);
+}
+
 function toggle_arrow(arg) {
     const arrow_type = document.querySelector(`.${arg}`);
     const arrow_type_btn = document.querySelector(`.${arg}-btn`);

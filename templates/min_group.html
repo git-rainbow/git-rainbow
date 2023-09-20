@@ -46,8 +46,9 @@
         <div class="flex mt-2 bg-white rounded-lg shadow-xs dark:bg-gray-800" style="justify-content: space-between; padding: 1%; cursor:pointer; max-width:400px;">
           <div class="flex flex-wrap align-center mini-member mini-member-box">
             {% for github_user in group.github_users.all %}
-            <img class="object-cover w-full h-full rounded-full mx-2 my-2" src="{{github_user.avatar_url}}" style="width:32px; height:32px">
+            <a href="/{{github_user.github_id}}" target="_blank"><img onmousemove="show_github_id(event, '{{github_user.github_id}}')" onmouseleave="show_github_id(event, '{{github_user.github_id}}')" class="object-cover w-full h-full rounded-full mx-2 my-2" src="{{github_user.avatar_url}}" style="width:32px; height:32px"></a>
             {% endfor %}
+            <div id="desc_div" class="desc-box hidden text-center"></div>
           </div>
         </div>
       </div>
