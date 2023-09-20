@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static custom_tags i18n %}
+{% block content %}
+<div id='under_header' class="flex items-center p-6 bg-gray-50 w-full h-full">
+  <div style="margin:0 auto;">
+
+    <!-- First Row Start -->
+    <div class="grid gap-4 mb-3 md:grid-cols-2 xl:grid-cols-2-2">
+      <div style="min-width:450px">
+
+        <!-- Search Tech -->
+        {% include 'tech_side.html' %}
+      </div>
+
+      <div>
+        <div class="my-6 mt-5 font-bold" style="font-size:2.2rem;text-align:center">
+          {% trans "GitHub team project analysis" %}<br>
+          {% trans "with friends, co-workers, fellows" %}
+        </div>
+        <div class="my-8 text-xl" style="text-align:center">
+          {% trans "Analze GitHub project, how crazy about coding on techstacks." %}</div>
+
+        <!-- (1) Introduction image -->
+
+        <div class="my-6 mt-5 font-bold" style="font-size:2.2rem;text-align:center">
+          {% trans "My crazy ranking in GitHub team projects ?" %}
+        </div>
+        <div class="my-8 text-xl" style="text-align:center">
+          {% trans "See Top3 of code crazy in your team's work, projects" %}
+        </div>
+
+        <!-- (2) Introduction image -->
+
+        <div class="my-6 mt-5 font-bold" style="font-size:2.2rem;text-align:center">
+          {% trans "Be a Diligent Developer" %}
+        </div>
+        <div class="my-8 text-xl" style="text-align:center">
+          {% trans "Let's code consistently to achieve your team's goals" %}<br>
+          {% trans "with hourly, weekly, monthly activities(commits, lines)" %}</div>
+
+        <!-- (3) Introduction image -->
+
+      </div>
+    </div>
+    <!-- First Row End -->
+  </div>
+</div>
+<script>
+ show_ranking_user();
+ {% if login_user %}
+ check_analysis_updating("{{login_user.github_id}}", "{{login_user.status}}");
+ {% endif %}
+</script>
+{% endblock %}

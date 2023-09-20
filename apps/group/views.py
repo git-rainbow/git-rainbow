@@ -211,6 +211,13 @@ def group_graph(request):
     return JsonResponse({"status": "success", "calendar_data": group_calendar_data_list, "member_list": member_list})
 
 
+def group_info(request):
+    tech_side = draw_tech_side()
+    context = { 'group' : True, 'tech_side': tech_side}
+
+    return render(request, 'group_info.html', context)
+
+
 def group_list(request):
     query_tech_name = request.GET.get("tech_name")
     if query_tech_name:
