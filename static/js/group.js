@@ -591,6 +591,57 @@ function highlight_group_cell(event, commits=null){
     }
 }
 
+var calendar_data;
+
+function highlight_group_member(event) {
+    const member_card_list = document.querySelectorAll(".member_card");
+    const tech_card_list = document.querySelectorAll(".tech_card");
+    const target = event.currentTarget;
+    let is_target_selected = target.getAttribute('selected');
+    if (is_target_selected=='false') {
+        target.setAttribute('selected', 'true');
+        target.setAttribute('style', `border: 1px #dc3545 solid;`);
+    } else {
+        target.setAttribute('selected', 'false');
+        target.setAttribute('style', 'border: none;');
+    }
+    let selected_list = Array.from(member_card_list).map(card => {
+        if (card.getAttribute('selected') == 'true'){
+            return card.getAttribute('github_id');
+        }
+    }).filter(item => item != undefined);
+
+    let data_object;
+    if (selected_list.length == 0) {
+        data_object = get_grass_datasets(calendar_data);
+        show_rainbow_calendar(data_object);
+        tech_card_list.forEach(each => {
+            each.classList.remove('hidden');
+            each.setAttribute('style', 'opacity: 1;');
+            each.setAttribute('selected', 'false');
+        })
+    } else {
+        data_object = get_grass_datasets(calendar_data, selected_list);
+        show_rainbow_calendar(data_object);
+        const tech_set = new Set();
+        Object.values(data_object).forEach(tech_data => {
+            Object.keys(tech_data).forEach(tech_name => tech_set.add(tech_name));
+        });
+        tech_card_list.forEach(each => {
+            if (tech_set.has(each.getAttribute('tech_name'))) {
+                each.classList.remove('hidden');
+            } else {
+                each.classList.add('hidden');
+            }
+            each.setAttribute('style', 'opacity: 1;');
+            each.setAttribute('selected', 'false');
+        });
+    }
+    const last_date = Object.keys(data_object).sort().reverse()[0];
+    const last_tech_data = { [last_date]: data_object[last_date] };
+    show_group_total_lines(last_tech_data, true);
+}
+
 function group_join(group_id, is_login){
     if (!is_login){
         return alert('Login is required')

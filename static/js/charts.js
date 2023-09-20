@@ -85,16 +85,26 @@ function get_datasets(calendar_data, category, group_color_obj) {
     return datasets;
 }
 
-function get_grass_datasets(calendar_data) {
+function get_grass_datasets(calendar_data, member_list=null) {
     let grass_data = {};
     for (let data of calendar_data) {
         const { author_date, github_id, tech_name, avatar_url, repo_url, commit_hash, lines } = data;
         const date = author_date.split('T')[0];
-        grass_data[date] = grass_data[date] || {}
-        grass_data[date][tech_name] = grass_data[date][tech_name] || {total_lines: 0, commit_repo: { [repo_url]: [] }};
-        grass_data[date][tech_name]["total_lines"] += lines
-        grass_data[date][tech_name]["commit_repo"][repo_url] = grass_data[date][tech_name]["commit_repo"][repo_url] || [];
-        grass_data[date][tech_name]["commit_repo"][repo_url].push({avatar_url, commit_hash, github_id, lines});
+        if (member_list) {
+            if (member_list.includes(github_id)){
+                grass_data[date] = grass_data[date] || {};
+                grass_data[date][tech_name] = grass_data[date][tech_name] || {total_lines: 0, commit_repo: { [repo_url]: [] }};
+                grass_data[date][tech_name]["total_lines"] += lines;
+                grass_data[date][tech_name]["commit_repo"][repo_url] = grass_data[date][tech_name]["commit_repo"][repo_url] || [];
+                grass_data[date][tech_name]["commit_repo"][repo_url].push({avatar_url, commit_hash, github_id, lines});
+            }
+        } else {
+            grass_data[date] = grass_data[date] || {};
+            grass_data[date][tech_name] = grass_data[date][tech_name] || {total_lines: 0, commit_repo: { [repo_url]: [] }};
+            grass_data[date][tech_name]["total_lines"] += lines;
+            grass_data[date][tech_name]["commit_repo"][repo_url] = grass_data[date][tech_name]["commit_repo"][repo_url] || [];
+            grass_data[date][tech_name]["commit_repo"][repo_url].push({avatar_url, commit_hash, github_id, lines});
+        }
     }
     return grass_data;
 }
@@ -214,7 +224,7 @@ function draw_group_graph(group_id) {
         ,data: {'group_id': group_id}
         ,success: function (data) {
             const group_color_obj = generateRandomColorObject(data.member_list);
-            const calendar_data = data.calendar_data;
+            calendar_data = data.calendar_data;
             const grass_data = get_grass_datasets(calendar_data);
             const last_date = Object.keys(grass_data).sort().reverse()[0];
             const last_tech_data = { [last_date]: grass_data[last_date] };

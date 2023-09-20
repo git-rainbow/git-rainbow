@@ -108,7 +108,7 @@
       <!-- Members start-->
       <div class="flex mb-3 calendar-member-box calendar-member flex-wrap">
         {% for data in group_rank_data %}
-        <div selected="false" style="cursor: pointer;">
+        <div class="member_card" onclick="highlight_group_member(event)" github_id="{{ data.github_id }}" selected="false" style="cursor: pointer;">
           <table style="min-height: 100px;width: 126px;">
             <tbody class="tech">
               <tr>
@@ -133,7 +133,7 @@
       </svg>
       <div class="flex mb-3 calendar-tech-box calendar-tech flex-wrap">
         {% for tech_card in group_tech_card %}
-          <div class="tech_card" onclick="highlight_group_card_tech(event, '{{ tech_card.name }}', '{{ tech_card.color }}')" selected="false" style="cursor: pointer;">
+          <div class="tech_card" tech_name='{{ tech_card.name }}' onclick="highlight_group_card_tech(event, '{{ tech_card.name }}', '{{ tech_card.color }}')" selected="false" style="cursor: pointer;">
             <table style="min-height: 100px;width: 126px;">
               <tbody class="tech">
                 <tr>
