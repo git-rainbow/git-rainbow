@@ -39,10 +39,13 @@ function generateRandomColorObject(array) {
     return colorObject;
 }
 
-function get_datasets(calendar_data, category, group_color_obj) {
+function get_datasets(calendar_data, category, group_color_obj, member_list=null) {
     let user_info_obj = {};
     for (let each_data of calendar_data) {
         let github_id = each_data.github_id;
+        if (member_list && !member_list.includes(github_id)){
+            continue;
+        }
         let code_lines = each_data.lines
         if(!user_info_obj[github_id]){
             user_info_obj[github_id] = {
@@ -149,7 +152,12 @@ function draw_monthly_graph(datasets) {
         }
     };
     const barsCtx = document.getElementById('bars');
-    window.myBar = new Chart(barsCtx, barConfig);
+    try {
+        window.myBar = new Chart(barsCtx, barConfig);
+    } catch {
+        window.myBar.destroy();
+        window.myBar = new Chart(barsCtx, barConfig);
+    }
 }
 
 function draw_weekly_graph(datasets) {
@@ -171,7 +179,12 @@ function draw_weekly_graph(datasets) {
         },
     };
     const lineCtx = document.getElementById('lines');
-    window.myLine = new Chart(lineCtx, lineConfig);
+    try {
+        window.myLine = new Chart(lineCtx,  lineConfig);
+    } catch {
+        window.myLine.destroy();
+        window.myLine = new Chart(lineCtx, lineConfig);
+    }
 }
 
 function draw_hourly_graph(datasets) {
@@ -197,7 +210,12 @@ function draw_hourly_graph(datasets) {
         },
     }
     const scatterCtx = document.getElementById('scatter');
-    window.myScatter = new Chart(scatterCtx, scatterConfig);
+    try {
+        window.myScatter = new Chart(scatterCtx,  scatterConfig);
+    } catch {
+        window.myScatter.destroy();
+        window.myScatter = new Chart(scatterCtx, scatterConfig);
+    }
 }
 
 function fill_code_lines_color(group_color_obj) {

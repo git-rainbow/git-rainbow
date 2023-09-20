@@ -640,6 +640,14 @@ function highlight_group_member(event) {
     const last_date = Object.keys(data_object).sort().reverse()[0];
     const last_tech_data = { [last_date]: data_object[last_date] };
     show_group_total_lines(last_tech_data, true);
+
+    if (selected_list.length == 0) selected_list = null;
+    const monthly_datasets = get_datasets(calendar_data,  'monthly',  group_color_obj,  selected_list);
+    const weekly_datasets = get_datasets(calendar_data,  'weekly',  group_color_obj,  selected_list);
+    const hourly_datasets = get_datasets(calendar_data,  'hourly',  group_color_obj,  selected_list);
+    draw_monthly_graph(monthly_datasets);
+    draw_weekly_graph(weekly_datasets);
+    draw_hourly_graph(hourly_datasets);
 }
 
 function group_join(group_id, is_login){
