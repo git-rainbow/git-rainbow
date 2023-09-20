@@ -600,7 +600,7 @@ function highlight_group_member(event) {
     let is_target_selected = target.getAttribute('selected');
     if (is_target_selected=='false') {
         target.setAttribute('selected', 'true');
-        target.setAttribute('style', `border: 1px #dc3545 solid;`);
+        target.setAttribute('style', `border: 2px ${group_color_obj[target.getAttribute('github_id')]} solid;`);
     } else {
         target.setAttribute('selected', 'false');
         target.setAttribute('style', 'border: none;');

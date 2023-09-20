@@ -223,7 +223,7 @@ function draw_group_graph(group_id) {
         ,async: true
         ,data: {'group_id': group_id}
         ,success: function (data) {
-            const group_color_obj = generateRandomColorObject(data.member_list);
+            group_color_obj = generateRandomColorObject(data.member_list);
             calendar_data = data.calendar_data;
             const grass_data = get_grass_datasets(calendar_data);
             const last_date = Object.keys(grass_data).sort().reverse()[0];
