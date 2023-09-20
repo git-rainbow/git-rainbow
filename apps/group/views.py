@@ -33,9 +33,9 @@ from config.local_settings import RANDOM_IMG_URL
 def make_group_tech_card(group_calendar_data):
     tech_data_dict = defaultdict(lambda: defaultdict(lambda: 0))
     for data in group_calendar_data:
-        if data.tech_name in github_calendar_colors.keys():
-            date = data.author_date.strftime("%Y-%m-%d")
-            tech_data_dict[data.tech_name][date] += data.lines
+        if data['tech_name'] in github_calendar_colors.keys():
+            date = data['author_date'].strftime("%Y-%m-%d")
+            tech_data_dict[data['tech_name']][date] += data['lines']
 
     total_code_crazy, tech_code_crazy_dict = code_crazy_calculation_by_tech(tech_data_dict)
 

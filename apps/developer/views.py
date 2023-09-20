@@ -139,8 +139,7 @@ def git_rainbow(request, github_id):
             new_github_user.delete()
 
     year_ago = (timezone.now() - relativedelta(years=1)).replace(hour=0, minute=0, second=0)
-    github_calendar_list = list(get_calendar_model(github_id).objects.select_related('github_id').filter(author_date__gte=year_ago))
-
+    github_calendar_list = list(get_calendar_model(github_id).objects.filter(author_date__gte=year_ago).values('tech_name', 'author_date', 'lines'))
     if request.GET.get('update') == 'True' or not github_calendar_list:
         core_response = core_user_analysis(github_user)
         if core_response.get("repo_list_status") == 'fail':
@@ -204,7 +203,7 @@ def update_git_rainbow(request, github_id):
         return JsonResponse(core_response)
 
     year_ago = (timezone.now() - relativedelta(years=1)).replace(hour=0, minute=0, second=0)
-    github_calendar_list = list(get_calendar_model(github_id).objects.select_related('github_id').filter(author_date__gte=year_ago))
+    github_calendar_list = list(get_calendar_model(github_id).objects.filter(author_date__gte=year_ago).values('tech_name', 'author_date', 'lines'))
     context = get_profile_data(github_calendar_list, github_user)
     json_data = {
         'status': github_user.status,
