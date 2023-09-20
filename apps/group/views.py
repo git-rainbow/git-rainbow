@@ -138,7 +138,7 @@ def group(request, group_id):
 
     group_calendar_data = []
     for member_id in member_list:
-        group_calendar_data.extend(list(get_calendar_model(member_id).objects.filter(author_date__gte=one_year_ago, repo_url__in=group_repo_list)))
+        group_calendar_data.extend(list(get_calendar_model(member_id).objects.filter(author_date__gte=one_year_ago, repo_url__in=group_repo_list).values('tech_name', 'author_date', 'lines')))
 
     one_year_data = get_group_calendar_data(member_list, group_repo_list, one_year_ago)
     six_months_data = get_group_calendar_data(member_list, group_repo_list, six_months_ago)
