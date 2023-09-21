@@ -181,9 +181,6 @@ function create_group(){
 }
 
 function _group_update(group_id){
-    let data = {
-        "group_id": group_id,
-    }
     let waiting = true;
     $.ajaxSetup({
         beforeSend: function (xhr, settings) {
@@ -193,9 +190,8 @@ function _group_update(group_id){
         }
     });
     $.ajax({
-        url: '/group/update'
+        url: `/group/${group_id}/update`
         ,method: 'POST'
-        ,data: data
         ,async: false
         ,success: function (data) {
             if (data.status == 'fail'){

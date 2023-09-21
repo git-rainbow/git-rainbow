@@ -29,9 +29,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('apps.admins.urls')),
     path('', include('apps.users.urls')),
-    path('', include('apps.developer.urls')),
     path('', include('apps.group.urls')),
     path('', include('apps.search.urls')),
+    path('', include('apps.developer.urls')),
 ]
 
 if settings.DEBUG:
