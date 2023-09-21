@@ -191,7 +191,7 @@ function _group_update(group_id){
     });
     $.ajax({
         url: `/group/${group_id}/update`
-        ,method: 'POST'
+        ,method: 'GET'
         ,async: false
         ,success: function (data) {
             if (data.status == 'fail'){

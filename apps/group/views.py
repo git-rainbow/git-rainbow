@@ -359,8 +359,6 @@ def create_group(request):
 
 
 def group_update(request, group_id):
-    if request.method != 'POST':
-        return JsonResponse({"status": "fail", 'reason': 'Not allowed method'})
     group = Group.objects.filter(id=group_id).first()
     if not group:
         return JsonResponse({'status': 'fail', 'reason': 'no group'})
