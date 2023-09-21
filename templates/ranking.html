@@ -155,7 +155,7 @@
                   </thead>
                   <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
                     {% for ranker in now_ranker_data %}
-                    <tr id="{{ ranker.github_id }}" class="user_tr text-gray-700 dark:text-gray-400" style="border: 0.5 solid #d5d6d7!important;">
+                    <tr id="{{ ranker.github_id|lower }}" class="user_tr text-gray-700 dark:text-gray-400" style="border: 0.5 solid #d5d6d7!important;">
                       <td style="width:50px;border:none!important; text-align: center;">
                         <p class="font-bold text-sm text-gray-600 dark:text-gray-400">
                           {{ ranker.rank }}

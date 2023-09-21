@@ -83,7 +83,7 @@ function show_ranking_user() {
     const search_user = queryParams.get('github_id');
     if (search_user){
         const user_trs = document.querySelectorAll('.user_tr');
-        let focus_tag = document.getElementById(`${search_user}`);
+        let focus_tag = document.getElementById(`${search_user.toLowerCase()}`);
         if (focus_tag){
             for (let user_tr of user_trs){
             user_tr.setAttribute('style', 'opacity: 0.2;');
