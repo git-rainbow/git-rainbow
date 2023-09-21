@@ -26,7 +26,7 @@ class GithubUser(models.Model):
 
 class GithubRepo(models.Model):
     github_id = models.ForeignKey("GithubUser", on_delete=models.CASCADE)
-    updated_date = models.DateTimeField(auto_now=True, null=True)
+    access_date = models.DateTimeField(null=True)
     repo_url = models.CharField(max_length=260)
     branch = models.CharField(max_length=260, null=True)
     description = models.TextField(null=True)
