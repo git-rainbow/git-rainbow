@@ -63,6 +63,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'apps.admins.page_request_middleware.page_request_middleware',
 ]
 
 INTERNAL_IPS = [
