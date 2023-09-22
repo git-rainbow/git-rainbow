@@ -52,6 +52,9 @@ class GithubCalendar(models.Model):
 
 
 def get_calendar_model(github_id):
+    """
+    Note: This function has to be checked that github_id exists in GithubUser table before calling.
+    """
     lower_github_id = github_id.lower().replace('-', '_')
 
     class GithubCalendar(models.Model):

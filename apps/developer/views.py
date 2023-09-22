@@ -456,12 +456,13 @@ def ranking_tech_stack(request, tech_name):
     search_user = request.GET.get('github_id')
     exist_search_user = None
     if search_user:
-        if not get_calendar_model(search_user).objects.filter(tech_name__iexact=tech_name).exists():
+        github_user = GithubUser.objects.filter(github_id__iexact=search_user).first()
+        if not github_user or not get_calendar_model(search_user).objects.filter(tech_name__iexact=tech_name).exists():
             exist_search_user = False
         else:
             exist_search_user = True
             search_user_page_number = 0
-            origin_github_id = GithubUser.objects.filter(github_id__iexact=search_user).first().github_id
+            origin_github_id = github_user.github_id
             for data in now_ranker_data:
                 if data.get('github_id') == origin_github_id:
                     search_user_rank = data.get('row_num')
@@ -500,7 +501,7 @@ def find_user_page(request, github_id):
         return render(request, 'exception_page.html', {'error': 403, 'message': 'Not allowed method'})
 
     tech_name = request.POST.get('tech_name')
-    if not get_calendar_model(github_id).objects.filter(tech_name__iexact=tech_name).exists():
+    if not GithubUser.objects.filter(github_id__iexact=github_id).exists() or not get_calendar_model(github_id).objects.filter(tech_name__iexact=tech_name).exists():
         return JsonResponse({'exist': False})
     return JsonResponse({'exist': True})
 
