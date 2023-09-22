@@ -2,7 +2,6 @@
 {% load static i18n custom_tags %}
 {% block content %}
 <script src="{% static 'js/rainbow_calendar.js' %}"></script>
-<script src="{% static 'js/search_repo.js' %}"></script>
 <div id='under_header' class="flex items-center p-6 bg-gray-50 w-full h-full">
   <div style="margin:0 auto;">
     <div class="grid gap-4 mb-3 md:grid-cols-2 xl:grid-cols-2-2">
@@ -20,14 +19,14 @@
           <div class="relative focus-within:text-purple-500" style="width:500px; margin-right: 5px;">
             <input type="text" name="tags" class="tagify w-full leading-5 relative text-sm py-2 px-2 rounded text-gray-800 bg-white border border-gray-300 overflow-x-auto focus:outline-none focus:border-gray-400 focus:ring-0 dark:text-gray-300 dark:bg-blue-500 dark:border-gray-700 dark:focus:border-gray-600" minlength="2">
           </div>
-          <div onclick="search_repo(isNewSearch=true, withToken=false)" id="repository_add_btn" class="flex align-center justify-center" style="cursor: pointer; background-color: #bae6f2; width: 70px;">
+          <div onclick="search_repo(isNewSearch=true, withToken=false, isFirstLoad=false)" id="repository_add_btn" class="flex align-center justify-center" style="cursor: pointer; background-color: #bae6f2; width: 70px;">
             <span class="loading-span">Search</span>
             <img class="loading-img rotate-img hidden" src="{% static 'img/update-arrows.svg' %}" alt="update" style="margin-left: 5px; padding: 2px; background-color: black; width: 17px; height:17px; border-radius: 50%; font-weight: bold; cursor: pointer;" class="hidden">
           </div>
         </div>
         <span id="total-count-span" class="flex mb-3" style="font-size: 16px;justify-content: center;"></span>
         <div class="searched-repo-box"><!-- Searched repo result--></div>
-        <div onclick="search_repo(isNewSearch=false, withToken=false)" id="search-more-btn" class="hidden flex items-center justify-center mt-2 bg-white rounded-lg shadow-xs dark:bg-gray-800 pointer font-bold" style="width: 600px; height: 35px;">
+        <div onclick="search_repo(isNewSearch=false, withToken=false, isFirstLoad=false)" id="search-more-btn" class="hidden flex items-center justify-center mt-2 bg-white rounded-lg shadow-xs dark:bg-gray-800 pointer font-bold" style="width: 600px; height: 35px;">
           <span class="loading-span">Show more repositories</span>
           <img class="loading-img rotate-img hidden" src="{% static 'img/update-arrows.svg' %}" alt="update" style="margin-left: 5px; padding: 2px; background-color: black; width: 17px; height:17px; border-radius: 50%; font-weight: bold; cursor: pointer;" class="hidden">
         </div>
@@ -38,6 +37,8 @@
 <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify"></script>
 <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.polyfills.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css" rel="stylesheet" type="text/css"/>
+<script src="{% static 'js/common_keywords.js' %}"></script>
+<script src="{% static 'js/search_repo.js' %}"></script>
 <script>
  var input = document.querySelector('input[name=tags]');
  new Tagify(input);

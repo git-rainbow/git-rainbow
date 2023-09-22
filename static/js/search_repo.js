@@ -20,10 +20,10 @@ function toggleLoading(is_loading=true) {
     }
 }
 
-function search_repo(isNewSearch, isWithToken) {
+function search_repo(isNewSearch, isWithToken, isFirstLoad) {
     const searchTag =  document.querySelector('input[name="tags"]');
     const searchTagValue = JSON.parse(searchTag.value);
-    const perPage = 100;
+    const perPage = isFirstLoad ? 10 : 100;
     const ghoToken = getCookie('gho_token');
     const headers = isWithToken ? {"Authorization": `token ${ghoToken}`} : null;
     let apiQuery = `?page=${currentPage}&per_page=${perPage}&q=`;
@@ -104,9 +104,21 @@ function search_repo(isNewSearch, isWithToken) {
           if (isWithToken) {
             alert("Please refresh page or try after few minutes");
           } else {
-            search_repo(isNewSearch, true);
+            search_repo(isNewSearch, true, isFirstLoad);
           }
           toggleLoading(false);
         }
     });
 }
+
+const techNameList = Array.from(document.querySelectorAll('.tech_list')).map(each => {
+    return each.getAttribute("tech_name");
+});
+const techNameListRandomIndex = Math.floor(Math.random() * techNameList.length);
+const commonKeywordsRandomIndex = Math.floor(Math.random() * commonKeywords.length);
+const searchInput = document.querySelector('input[name="tags"]');
+let parsedSearchInput = searchInput.value ? JSON.parse(searchInput.value) : [];
+parsedSearchInput.push({"value": techNameList[techNameListRandomIndex]});
+parsedSearchInput.push({"value": commonKeywords[commonKeywordsRandomIndex]});
+searchInput.value = JSON.stringify(parsedSearchInput);
+search_repo(true, false, true);
