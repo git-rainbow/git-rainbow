@@ -111,7 +111,10 @@ function search_repo(isNewSearch, isWithToken, isFirstLoad) {
     });
 }
 
-const techNameList = Array.from(document.querySelectorAll('.tech_list')).map(each => {
+const randomTechTypes = ['Frontend', 'Backend', 'Mobile'];
+const techNameList = Array.from(document.querySelectorAll('.tech_list')).filter(
+    each => randomTechTypes.includes(each.getAttribute('tech_type'))
+).map(each => {
     return each.getAttribute("tech_name");
 });
 const techNameListRandomIndex = Math.floor(Math.random() * techNameList.length);
