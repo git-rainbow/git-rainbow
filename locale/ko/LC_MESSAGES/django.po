@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-19 19:40+0000\n"
+"POT-Creation-Date: 2023-09-25 06:53+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -45,6 +45,10 @@ msgstr "관리자"
 #: templates/header.html:29 templates/index.html:68
 msgid "Crazy Ranking"
 msgstr "크레이지 랭킹"
+
+#: templates/header.html:30 templates/index.html:69
+msgid "Code Search"
+msgstr "코드 검색"
 
 #: templates/intro.html:8
 msgid "Your Tech Stack"
@@ -157,11 +161,11 @@ msgstr "공유하기"
 msgid "My Ranking"
 msgstr "나의 랭킹"
 
-#: templates/min_git_rainbow.html:75 templates/min_group.html:99
+#: templates/min_git_rainbow.html:75 templates/min_group.html:100
 msgid "Tech Stack"
 msgstr "기술 스택"
 
-#: templates/min_git_rainbow.html:75 templates/min_group.html:99
+#: templates/min_git_rainbow.html:75 templates/min_group.html:100
 msgid "in the last year"
 msgstr "최근 1년"
 
@@ -169,11 +173,11 @@ msgstr "최근 1년"
 msgid "You can use this service only if it is your own Github ID"
 msgstr "사용자 본인의 Github 아이디인 경우만 이 서비스를 사용할 수 있습니다"
 
-#: templates/min_git_rainbow.html:86
+#: templates/min_git_rainbow.html:86 templates/min_group.html:111
 msgid "Git repository"
 msgstr "Git 저장소"
 
-#: templates/min_git_rainbow.html:96
+#: templates/min_git_rainbow.html:96 templates/min_group.html:121
 msgid "Update"
 msgstr "업데이트"
 
@@ -185,9 +189,13 @@ msgstr "기술 활동"
 msgid "Show more activity"
 msgstr "활동 더 보기"
 
-#: templates/min_group.html:57
+#: templates/min_group.html:58
 msgid "Group Ranking"
 msgstr "그룹 랭킹"
+
+#: templates/min_group.html:108
+msgid "You can use this service only if you are in this group"
+msgstr "사용자 본인의 Github 아이디인 경우만 이 서비스를 사용할 수 있습니다"
 
 #: templates/new_group.html:17
 msgid "New Group Coding"
@@ -201,11 +209,11 @@ msgstr "그룹명"
 msgid "Description"
 msgstr "설명"
 
-#: templates/new_group.html:55 templates/token_modals.html:92
+#: templates/new_group.html:55 templates/token_modals.html:94
 msgid "Type"
 msgstr "유형"
 
-#: templates/new_group.html:62 templates/token_modals.html:70
+#: templates/new_group.html:62 templates/token_modals.html:72
 msgid "Public"
 msgstr "공개 저장소"
 
@@ -277,15 +285,15 @@ msgstr "기술스택 수"
 msgid "Languages"
 msgstr "언어 수"
 
-#: templates/search_repo.html:15
+#: templates/search_repo.html:14
 msgid "What kind of code do you need ?"
 msgstr "어떤 소스코드가 필요하신가요 ?"
 
-#: templates/search_repo.html:17
+#: templates/search_repo.html:16
 msgid "Search GitHub code for your development !"
 msgstr "개발에 필요한 소스코드를"
 
-#: templates/search_repo.html:18
+#: templates/search_repo.html:17
 msgid "with tech keywords (eg. React, Component)"
 msgstr "React, Component 등 기술키워드로 쉽게 찾을 수 있습니다!"
 
@@ -317,42 +325,42 @@ msgstr "GitHub 로그인"
 msgid "Git repositories"
 msgstr "Git 저장소"
 
-#: templates/token_modals.html:58
+#: templates/token_modals.html:59
 msgid "Using token"
 msgstr "토큰으로 분석"
 
-#: templates/token_modals.html:62
+#: templates/token_modals.html:63
 msgid "\"Enter Github personal access token\""
 msgstr "\"Github personal access token 입력\""
 
-#: templates/token_modals.html:64
+#: templates/token_modals.html:65
 msgid "Add repository"
 msgstr "저장소 추가"
 
-#: templates/token_modals.html:74
+#: templates/token_modals.html:76
 msgid "\"Git Repository URL\""
 msgstr "\"Git 저장소 URL\""
 
-#: templates/token_modals.html:76
+#: templates/token_modals.html:78
 msgid "Add"
 msgstr "추가하기"
 
-#: templates/token_modals.html:81
+#: templates/token_modals.html:83
 msgid "All repositories"
 msgstr "모든 저장소"
 
-#: templates/token_modals.html:90
+#: templates/token_modals.html:92
 msgid "Git project name"
 msgstr "Git 프로젝트명"
 
-#: templates/token_modals.html:91
+#: templates/token_modals.html:93
 msgid "Git repository URL"
 msgstr "Git 저장소 URL"
 
-#: templates/token_modals.html:93
+#: templates/token_modals.html:95
 msgid "Status"
 msgstr "상태"
 
-#: templates/token_modals.html:94
+#: templates/token_modals.html:96
 msgid "Is private"
 msgstr "개인 저장소"
