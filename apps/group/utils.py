@@ -1,9 +1,11 @@
 import json
 from collections import defaultdict
+from io import StringIO
 from urllib.parse import urlparse
 
 import requests
 from dateutil.relativedelta import relativedelta
+from django.db import connection
 from django.db.models import Sum, Case, When, Value, F, FloatField
 from django.db.models.functions import TruncDate
 from django.utils import timezone
@@ -21,8 +23,23 @@ def save_git_calendar_data(git_calendar_data):
 
     for github_id, git_data_list in calendar_data_dict.items():
         calendar_model = get_calendar_model(github_id)
-        calendar_data_bulk = [calendar_model(**git_data) for git_data in git_data_list]
-        calendar_model.objects.bulk_create(calendar_data_bulk)
+
+        # Assuming you have a list of data to insert
+        data = [(git_data['author_date'], git_data['tech_name'], git_data['lines'], git_data['repo_url'], git_data['commit_hash'], git_data['github_id_id']) for git_data in git_data_list]
+
+        # Create a StringIO object to prepare the data
+        data_buffer = StringIO()
+
+        # Write the data to the buffer
+        for item in data:
+            data_buffer.write('\t'.join(map(str, item)) + '\n')
+
+        # Move the buffer's cursor to the beginning
+        data_buffer.seek(0)
+
+        # Use the PostgreSQL COPY command to insert the data
+        with connection.cursor() as cursor:
+            cursor.copy_from(data_buffer, calendar_model._meta.db_table, columns=('author_date', 'tech_name', 'lines', 'repo_url', 'commit_hash', 'github_id_id'))
 
 
 def make_name_with_owner(repo_url):
