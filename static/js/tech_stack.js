@@ -75,6 +75,7 @@ function save_public_repo(){
         ,success: function (data) {
             if (data.status == 200) {
                 alert(gettext("Your repository url has been saved"));
+                location.reload();
             } else if(data.reason) {
                 alert(data.reason);
             } else {
@@ -293,6 +294,7 @@ function delete_repos() {
         ,success: function (data) {
             if (data.status == 'success'){
                 alert("Selected repositories are deleted");
+                location.reload();
             } else{
                 alert(data.reason);
             }
