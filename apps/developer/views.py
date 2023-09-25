@@ -177,6 +177,20 @@ def save_repo_url(request, github_id):
     return JsonResponse({"status": res_code})
 
 
+def delete_repo_url(request, github_id):
+    if request.method != 'POST':
+        return JsonResponse({"status": "fail", "reason": "Not allowed method"})
+
+    repo_id_list = json.loads(request.POST.get('repo_id_list'))
+    github_user = GithubUser.objects.filter(github_id=github_id).first()
+    if not github_user:
+        return JsonResponse({"status": "fail", "reason": "There is no github user"})
+
+    github_user_repo_list = github_user.githubrepo_set.filter(id__in=repo_id_list)
+    github_user_repo_list.delete()
+    return JsonResponse({"status":"success"})
+
+
 def update_git_rainbow(request, github_id):
     if request.method != 'POST':
         return JsonResponse({"status": "fail", 'reason': 'Not allowed method'})

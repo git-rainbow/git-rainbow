@@ -267,3 +267,35 @@ function select_side_tech(tech_name) {
         }
     }
 }
+
+function delete_repos() {
+    const repos = document.querySelectorAll(".repos");
+    const checkedRepos = Array.from(repos).filter(box => box.checked).map(box => box.getAttribute('repo_id'));
+
+    if (checkedRepos.length == 0) {
+        alert("There is no selected repository");
+        return;
+    }
+
+    $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+
+    $.ajax({
+        url: `${window.location.pathname}/delete/repo`
+        ,method: 'POST'
+        ,data: {"repo_id_list": JSON.stringify(checkedRepos)}
+        ,async: true
+        ,success: function (data) {
+            if (data.status == 'success'){
+                alert("Selected repositories are deleted");
+            } else{
+                alert(data.reason);
+            }
+        }
+    });
+}

@@ -22,6 +22,7 @@ urlpatterns = [
     path('update-code-crazy', views.update_all_user_code_crazy),
     path('<str:github_id>', views.git_rainbow),
     path('<str:github_id>/save/repo', views.save_repo_url),
+    path('<str:github_id>/delete/repo', views.delete_repo_url),
     path('<str:github_id>/update', views.update_git_rainbow),
     path('<str:github_id>/get', views.get_user_calendar),
     path('<str:github_id>/exists', views.find_user_page),

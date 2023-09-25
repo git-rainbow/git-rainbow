@@ -79,9 +79,14 @@
         </button>
       </div>
       <br>
-      <p class="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-300">
-        {% trans "All repositories" %}
-      </p>
+      <div class="flex justify-between">
+        <p class="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-300">
+          {% trans "All repositories" %}
+        </p>
+        <button onclick="delete_repos()" class="ml-1 p-2 font-medium leading-5 text-center transition-colors duration-150 border border-transparent" style="background-color: #d4d4d4;border-radius: 10px; height: 35px; width:125px;">
+          Delete
+        </button>
+      </div>
       <hr style="margin-bottom: 15px; width: 83%;">
       <div class="w-full mb-8 overflow-hidden rounded-lg shadow-xs">
         <div style="height: 250px;" class="w-full overflow-x-auto">
@@ -89,6 +94,7 @@
             <thead>
                 <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
                   <th class="px-1 py-2">No.</th>
+                  <th class="px-1 py-2"><input type="checkbox" id="repo_all"></th>
                   <th class="px-1 py-2">{% trans "Git project name" %}</th>
                   <th class="px-1 py-2">{% trans "Git repository URL" %}</th>
                   <th class="px-1 py-2">{% trans "Type" %}</th>
@@ -101,6 +107,7 @@
                 {% for repo in group_repo_queryset %}
                   <tr class="text-gray-700 dark:text-gray-400">
                     <td class="px-1 py-2">{{forloop.counter}}</td>
+                    <th class="px-1 py-2"><input type="checkbox" class="repos" repo_id="{{repo.id}}"></th>
                     <td class="px-1 py-2">{{repo.repo_url|get_repo_name}}</td>
                     <td class="px-1 py-2"><a href="{{repo.repo_url}}">{{repo.repo_url}}</a></td>
                     <td class="px-1 py-2">group</td>
@@ -112,6 +119,7 @@
                 {% for repo in github_user.githubrepo_set.all %}
                   <tr class="text-gray-700 dark:text-gray-400">
                     <td class="px-1 py-2">{{forloop.counter}}</td>
+                    <th class="px-1 py-2"><input type="checkbox" class="repos" repo_id="{{repo.id}}"></th>
                     <td class="px-1 py-2">{{repo.repo_url|get_repo_name}}</td>
                     <td class="px-1 py-2"><a href="{{repo.repo_url}}">{{repo.repo_url}}</a></td>
                     <td class="px-1 py-2">{{repo.added_type}}</td>

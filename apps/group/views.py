@@ -436,3 +436,17 @@ def group_join(request, group_id):
             })
 
     return JsonResponse({'status': 'completed'})
+
+
+def delete_group_repo(request, group_id):
+    if request.method != 'POST':
+        return JsonResponse({"status": "fail", "reason": "Not allowed method"})
+
+    repo_id_list = json.loads(request.POST.get('repo_id_list'))
+    group = Group.objects.filter(id=group_id).first()
+    if not group:
+        return JsonResponse({"status": "fail", "reason": "There is no group"})
+
+    group_repo_list = group.grouprepo_set.filter(id__in=repo_id_list)
+    group_repo_list.delete()
+    return JsonResponse({"status":"success"})

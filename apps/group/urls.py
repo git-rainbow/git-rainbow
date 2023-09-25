@@ -10,5 +10,6 @@ urlpatterns = [
     path('group/<int:group_id>/join', views.group_join),
     path('group/<int:group_id>/remove', views.remove_group),
     path('group/<int:group_id>/save/repo', views.update_group_repo),
+    path('group/<int:group_id>/delete/repo', views.delete_group_repo),
     path('group/graph-data', views.group_graph)
 ]
