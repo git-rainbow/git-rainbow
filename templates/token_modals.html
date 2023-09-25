@@ -54,17 +54,19 @@
       <p class="mb-2 text-2xl font-semibold text-gray-700 dark:text-gray-300">
         {% trans "Git repositories" %}
       </p>
-      <p class="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-300">
-        {% trans "Using token" %}
-      </p>
-      <hr style="margin-bottom: 15px; width: 83%;">
-      <div>
-        <input id="token_input" type="text" placeholder={% blocktrans %}"Enter Github personal access token"{% endblocktrans %} style="width: 83%; height: 70px; padding: 10px; border-width: 1px;"/>
-        <button onclick="analyze_developer('{{github_user.github_id}}', true, true)" class="ml-1 p-2 font-medium leading-5 text-center transition-colors duration-150 border border-transparent" style="background-color: #A4C2F4;border-radius: 10px; height: 70px; width:125px;">
-          {% trans "Add repository" %}
-        </button>
-        <div><span class="text-xs text-red-600 dark:text-red-400"></span></div>
-      </div>
+      {% if not is_joined %}
+        <p class="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-300">
+          {% trans "Using token" %}
+        </p>
+        <hr style="margin-bottom: 15px; width: 83%;">
+        <div>
+          <input id="token_input" type="text" placeholder={% blocktrans %}"Enter Github personal access token"{% endblocktrans %} style="width: 83%; height: 70px; padding: 10px; border-width: 1px;"/>
+          <button onclick="analyze_developer('{{github_user.github_id}}', true, true)" class="ml-1 p-2 font-medium leading-5 text-center transition-colors duration-150 border border-transparent" style="background-color: #A4C2F4;border-radius: 10px; height: 70px; width:125px;">
+            {% trans "Add repository" %}
+          </button>
+          <div><span class="text-xs text-red-600 dark:text-red-400"></span></div>
+        </div>
+      {% endif %}
       <br>
       <p class="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-300">
         {% trans "Public" %}
@@ -72,7 +74,7 @@
       <hr style="margin-bottom: 15px; width: 83%;">
       <div>
         <input id="public_repo_input" type="text" placeholder={% blocktrans %}"Git Repository URL"{% endblocktrans %} style="width: 83%; height: 70px; padding: 10px; border-width:1px;"/>
-        <button onclick="save_public_repo('{{github_user.github_id}}')" class="ml-1 p-2 font-medium leading-5 text-center transition-colors duration-150 border border-transparent" style="background-color: #fd9bad;border-radius: 10px; height: 70px; width:125px; ">
+        <button onclick="save_public_repo()" class="ml-1 p-2 font-medium leading-5 text-center transition-colors duration-150 border border-transparent" style="background-color: #fd9bad;border-radius: 10px; height: 70px; width:125px; ">
           {% trans "Add" %}
         </button>
       </div>
@@ -95,16 +97,29 @@
                 </tr>
             </thead>
             <tbody>
-              {% for repo in github_user.githubrepo_set.all %}
-                <tr class="text-gray-700 dark:text-gray-400">
-                  <td class="px-1 py-2">{{forloop.counter}}</td>
-                  <td class="px-1 py-2">{{repo.repo_url|get_repo_name}}</td>
-                  <td class="px-1 py-2"><a href="{{repo.repo_url}}">{{repo.repo_url}}</a></td>
-                  <td class="px-1 py-2">{{repo.added_type}}</td>
-                  <td class="px-1 py-2">{{repo.status}}</td>
-                  <td class="px-1 py-2">{{repo.is_private}}</td>
-                </tr>
-              {% endfor %}
+              {% if is_joined %}
+                {% for repo in group_repo_queryset %}
+                  <tr class="text-gray-700 dark:text-gray-400">
+                    <td class="px-1 py-2">{{forloop.counter}}</td>
+                    <td class="px-1 py-2">{{repo.repo_url|get_repo_name}}</td>
+                    <td class="px-1 py-2"><a href="{{repo.repo_url}}">{{repo.repo_url}}</a></td>
+                    <td class="px-1 py-2">group</td>
+                    <td class="px-1 py-2">{{repo.status}}</td>
+                    <td class="px-1 py-2">{{repo.is_private}}</td>
+                  </tr>
+                {% endfor %}
+              {% else %}
+                {% for repo in github_user.githubrepo_set.all %}
+                  <tr class="text-gray-700 dark:text-gray-400">
+                    <td class="px-1 py-2">{{forloop.counter}}</td>
+                    <td class="px-1 py-2">{{repo.repo_url|get_repo_name}}</td>
+                    <td class="px-1 py-2"><a href="{{repo.repo_url}}">{{repo.repo_url}}</a></td>
+                    <td class="px-1 py-2">{{repo.added_type}}</td>
+                    <td class="px-1 py-2">{{repo.status}}</td>
+                    <td class="px-1 py-2">{{repo.is_private}}</td>
+                  </tr>
+                {% endfor %}
+              {% endif %}
             </tbody>
           </table>
         </div>

@@ -99,6 +99,18 @@
     <div style="display:flex; justify-content: space-between;">
       <span class="font-bold" style="padding-top:10px;font-size:20px; font-family: 'Noto Sans KR';float: left">{% trans "Tech Stack" %}<g class="ml-3" style="font-weight: normal; font-size: 15px;">{% trans "in the last year" %}</g></span>
       <div class="flex">
+        <div id="repository_add_btn" class="btn mt-2 mb-1" style="display: flex;cursor: pointer; align-items: center; background-color: #bae6f2;"
+          {% if not request.user.is_authenticated %}
+            onclick="go_to_login()"
+          {% elif is_joined %}
+            @click="openModal"
+          {% else %}
+            onclick="alert(`{% trans 'You can use this service only if you are in this group' %}`)"
+          {% endif %}
+          >
+            <span class="font-semibold" style="color:#4e4e4e">{% trans "Git repository" %}</span>
+            <img id="repository_add_img" src="{% static 'img/add.png' %}" alt="add" style="margin-left: 5px; padding: 2px; width: 18px; height:18px; font-weight: bold; cursor: pointer; opacity: 0.6">
+        </div>
         <div id="update_btn" class="btn mt-2 mb-1 ml-2" onmousemove="show_desc(event)" onmouseleave="show_desc(event)" style="display: flex;cursor: pointer; align-items: center; background-color: #d9d2e9;"
           {% if not request.user.is_authenticated %}
             onclick="go_to_login()"
@@ -195,5 +207,6 @@
   {% include 'desc_div.html' %}
   {% include 'charts.html' %}
   {% include 'group_ranking.html' %}
+  {% include 'token_modals.html' %}
 </div>
 {% endblock content %}

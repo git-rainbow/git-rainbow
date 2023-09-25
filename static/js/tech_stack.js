@@ -44,7 +44,7 @@ function analyze_developer(github_id, action, is_with_token) {
 }
 
 
-function save_public_repo(github_id){
+function save_public_repo(){
     let repo_url = document.querySelector("#public_repo_input").value;
     if (repo_url == ''){
         alert(gettext('Please input your public repository'));
@@ -68,13 +68,15 @@ function save_public_repo(github_id){
     });
 
     $.ajax({
-        url: `/${github_id}/save/repo`
+        url: window.location.pathname + '/save/repo'
         ,method: 'POST'
         ,async: false
         ,data: {'repo_url': repo_url}
         ,success: function (data) {
             if (data.status == 200) {
                 alert(gettext("Your repository url has been saved"));
+            } else if(data.reason) {
+                alert(data.reason);
             } else {
                 alert(gettext("Invalid URL"));
             }

@@ -134,7 +134,8 @@ def group(request, group_id):
     one_year_ago = timezone.now() - relativedelta(years=1)
     six_months_ago = timezone.now() - relativedelta(months=6)
     member_list = group.github_users.all().values_list('github_id', flat=True)
-    group_repo_list = group.grouprepo_set.all().values_list('repo_url', flat=True)
+    group_repo_queryset = group.grouprepo_set.all()
+    group_repo_list = group_repo_queryset.values_list('repo_url', flat=True)
 
     group_calendar_data = []
     for member_id in member_list:
@@ -175,6 +176,7 @@ def group(request, group_id):
         'group_rank_data': user_code_crazy_list,
         'rank_avatar_url_dict': rank_avatar_url_dict,
         'ranker_toptech_dict': ranker_toptech_dict,
+        'group_repo_queryset': group_repo_queryset,
     })
     return render(request, 'group.html', context)
 
@@ -246,6 +248,28 @@ def check_group_repo(group_name, repo_url):
         'is_private': is_private
     }
     return {'status': 'success', 'repo_info': repo_data_dict}
+
+
+def update_group_repo(request, group_id):
+    if request.method != 'POST':
+        return JsonResponse({"status": 405, "reason": "Method Not Allowed"})
+    repo_url = request.POST.get('repo_url')
+    if not repo_url:
+        return JsonResponse({"status": 402, "reason": "Repo url required"})
+    result = check_group_repo('test', repo_url)
+    if result['status'] == 'fail':
+        return JsonResponse({"status": 409, "reason": result['reason']})
+    repo_info = result['repo_info']
+    group = Group.objects.filter(id=group_id).first()
+    if not group:
+        return JsonResponse({"status": 404, "reason": "There is no group with that id"})
+    GroupRepo.objects.create(
+        group=group,
+        repo_url = repo_info['repo_url'],
+        branch = repo_info['branch'],
+        is_private= repo_info['is_private']
+    )
+    return JsonResponse({"status":200})
 
 
 def refresh_img(request, is_func=None):
