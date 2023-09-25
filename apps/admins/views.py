@@ -1,8 +1,8 @@
-from django.db.models import Count
+from django.db.models import Count, Prefetch
 from django.shortcuts import render
 from django.utils import timezone
 
-from apps.admins.models import PageRequest
+from apps.admins.models import PageRequest, ClientInfo
 from apps.tech_stack.models import GithubUser
 from apps.users.models import User
 
@@ -24,10 +24,19 @@ def admin_page(request):
     page_request_data = PageRequest.objects.all().values('request_type', 'date', 'count').annotate(
         unique_cnt=Count('access_client')
     ).order_by('request_type')
-    access_data = defaultdict(lambda: {'count': 0, 'unique_cnt': 0})
+    access_data = defaultdict(lambda: {'count': 0, 'unique_cnt': 0, 'access_user_data': []})
     for data in page_request_data:
         access_data[data['request_type']]['count'] += data['count']
         access_data[data['request_type']]['unique_cnt'] += data['unique_cnt']
+
+    access_client_queryset = ClientInfo.objects.select_related('user')
+    request_data_list = list(PageRequest.objects.prefetch_related(
+        Prefetch('access_client', queryset=access_client_queryset)
+    ).all().order_by('-date'))
+    for request_data in request_data_list:
+        for client in request_data.access_client.all():
+            access_data[request_data.request_type]['access_user_data'].append({request_data.date: client})
+
     context = {
         'all_member': all_member,
         'all_member_cnt': all_member_cnt,

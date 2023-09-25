@@ -1,5 +1,15 @@
 function display_select_area(category){
-    let category_name_list = ['total_member', 'github_user', 'new_member']
+    const parentElement = document.getElementById("display_data");
+    const category_name_list = [];
+
+    if (parentElement) {
+        const childElements = parentElement.children;
+        for (let i = 0; i < childElements.length; i++) {
+            const childElement = childElements[i];
+            category_name_list.push(childElement.id);
+        }
+    }
+
     category_name_list.forEach(name => {
         let hidden_area = document.getElementById(name);
         hidden_area.classList.add('hidden');
