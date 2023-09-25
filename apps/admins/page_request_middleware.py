@@ -27,7 +27,7 @@ class page_request_middleware:
             request_type = 'group'
         elif accessed_url.startswith('/search'):
             request_type = 'search'
-        elif re.findall(github_id_pattern, accessed_url) and accessed_url != '/logout':
+        elif accessed_url != '/logout' and accessed_url != '/admins' and re.findall(github_id_pattern, accessed_url):
             request_type = 'github_id'
         if request_type:
 
