@@ -10,16 +10,16 @@ from collections import defaultdict
 
 
 def admin_page(request):
-    all_member = User.objects.prefetch_related('githubuser_set').all().order_by('-date_joined')
-    all_member_cnt = all_member.count()
-
-    all_githubuser = GithubUser.objects.filter(user__isnull=True).order_by('-updated_date')
-    all_githubuser_cnt = all_githubuser.count()
+    all_member = list(User.objects.prefetch_related('githubuser_set').all().order_by('-date_joined'))
+    all_member_cnt = len(all_member)
 
     now = timezone.now()
     first_day_of_this_month = now.replace(day=1, hour=0, minute=0, second=0)
-    all_new_member = all_member.filter(date_joined__range=[first_day_of_this_month, now])
-    all_new_member_cnt = all_new_member.count()
+    all_new_member = [member for member in all_member if member.date_joined > first_day_of_this_month]
+    all_new_member_cnt = len(all_new_member)
+
+    all_githubuser = list(GithubUser.objects.filter(user__isnull=True).values('avatar_url', 'github_id', 'updated_date').order_by('-updated_date')[:1000])
+    all_githubuser_cnt = GithubUser.objects.filter(user__isnull=True).count()
 
     page_request_data = PageRequest.objects.all().values('request_type', 'date', 'count').annotate(
         unique_cnt=Count('access_client')

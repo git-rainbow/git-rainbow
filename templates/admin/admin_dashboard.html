@@ -94,6 +94,7 @@
           </thead>
           <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
           {% for member in all_member %}
+            {% for github_user in member.githubuser_set.all %}
             <tr class="text-gray-700 dark:text-gray-400">
               <td class="px-4 py-3">
                 <div class="flex items-center text-sm">
@@ -101,7 +102,7 @@
                   <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block">
                     <img
                       class="object-cover w-full h-full rounded-full"
-                      src="{{ member.githubuser_set.first.avatar_url }}"
+                      src="{{ github_user.avatar_url }}"
                       alt=""
                       loading="lazy"/>
                     <div
@@ -110,14 +111,15 @@
                     </div>
                   </div>
                   <div>
-                    <p class="font-semibold">{{ member.githubuser_set.first.github_id }}</p>
+                    <p class="font-semibold">{{ github_user.github_id }}</p>
                   </div>
                 </div>
               </td>
-              <td class="px-4 py-3 text-sm">{{ member.githubuser_set.first.updated_date|date:'Y-m-d' }}</td>
+              <td class="px-4 py-3 text-sm">{{ github_user.updated_date|date:'Y-m-d' }}</td>
               <td class="px-4 py-3 text-xs">{{ member.last_login|date:'Y-m-d' }}</td>
               <td class="px-4 py-3 text-sm">{{ member.date_joined|date:'Y-m-d' }}</td>
             </tr>
+            {% endfor %}
           {% endfor %}
           </tbody>
         </table>
@@ -178,6 +180,7 @@
           </thead>
           <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
           {% for new_member in all_new_member %}
+            {% for github_user in new_member.githubuser_set.all %}
             <tr class="text-gray-700 dark:text-gray-400">
               <td class="px-4 py-3">
                 <div class="flex items-center text-sm">
@@ -185,7 +188,7 @@
                   <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block">
                     <img
                       class="object-cover w-full h-full rounded-full"
-                      src="{{ new_member.githubuser_set.first.avatar_url }}"
+                      src="{{ github_user.avatar_url }}"
                       alt=""
                       loading="lazy"/>
                     <div
@@ -194,14 +197,15 @@
                     </div>
                   </div>
                   <div>
-                    <p class="font-semibold">{{ new_member.githubuser_set.first.github_id }}</p>
+                    <p class="font-semibold">{{ github_user.github_id }}</p>
                   </div>
                 </div>
               </td>
-              <td class="px-4 py-3 text-sm">{{ new_member.githubuser_set.first.updated_date|date:'Y-m-d' }}</td>
+              <td class="px-4 py-3 text-sm">{{ github_user.updated_date|date:'Y-m-d' }}</td>
               <td class="px-4 py-3 text-xs">{{ new_member.last_login|date:'Y-m-d' }}</td>
               <td class="px-4 py-3 text-sm">{{ new_member.date_joined|date:'Y-m-d' }}</td>
             </tr>
+          {% endfor %}
           {% endfor %}
           </tbody>
         </table>
