@@ -75,7 +75,7 @@ function search_repo(isNewSearch, isWithToken, isFirstLoad) {
                   <div>
                     <div class="flex align-center">
                       <img src="${item.owner.avatar_url}" style="border-radius: 50%; width: 20px; height: 20px;"/>
-                      <span style="width: 550px;"><a href="${item.html_url}" target="_blank">&nbsp${item.full_name}</a></span>
+                      <span class="ml-2 font-semibold" style="width: 550px;font-size:1.2rem"><a href="${item.html_url}" target="_blank">${item.full_name}</a></span>
                     </div>
                   </div>
                   <div>
