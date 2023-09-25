@@ -210,10 +210,17 @@ function _group_update(group_id){
 }
 
 function group_update(group_id){
+    let updateBtn = document.querySelector("#update_btn_img");
+    if (updateBtn){
+        updateBtn.classList.add("rotate-img");
+    }
     var interval = setInterval(function () {
         let waiting = _group_update(group_id);
         if (waiting == false) {
             clearInterval(interval);
+            if (updateBtn){
+                updateBtn.classList.remove("rotate-img");
+            }
         }
     }, 3000);
 }

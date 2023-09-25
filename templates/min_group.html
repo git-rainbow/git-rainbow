@@ -98,6 +98,18 @@
   <div class="w-full md:w-full scroll" style="max-width:1100px">
     <div style="display:flex; justify-content: space-between;">
       <span class="font-bold" style="padding-top:10px;font-size:20px; font-family: 'Noto Sans KR';float: left">{% trans "Tech Stack" %}<g class="ml-3" style="font-weight: normal; font-size: 15px;">{% trans "in the last year" %}</g></span>
+      <div class="flex">
+        <div id="update_btn" class="btn mt-2 mb-1 ml-2" onmousemove="show_desc(event)" onmouseleave="show_desc(event)" style="display: flex;cursor: pointer; align-items: center; background-color: #d9d2e9;"
+          {% if not request.user.is_authenticated %}
+            onclick="go_to_login()"
+          {% else %}
+            onclick="group_update('{{ group.id }}')"
+          {% endif %}
+        >
+          <span class="font-semibold" style="color:#866CF3">{% trans "Update" %}</span>
+          <img id="update_btn_img" src="{% static 'img/update-arrows.svg' %}" alt="update" style="margin-left: 5px; padding: 2px; background-color: #866BF2; width: 18px; height:18px; border-radius: 50%; font-weight: bold; cursor: pointer;">
+        </div>
+      </div>
     </div>
 
     <!-- TackStack Graph Box (Start) -->
