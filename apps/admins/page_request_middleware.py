@@ -41,11 +41,16 @@ class page_request_middleware:
             user = None
             if request.user.is_authenticated:
                 user = request.user
-
-            info_obj, _ = ClientInfo.objects.get_or_create(
-                client_ip=client_ip,
-                user=user
-            )
+            if user is None:
+                info_obj, _ = ClientInfo.objects.get_or_create(
+                    client_ip=client_ip,
+                    user__isnull=True
+                )
+            else:
+                info_obj, _ = ClientInfo.objects.get_or_create(
+                    client_ip=client_ip,
+                    user=user
+                )
             page_request_obj, _ = PageRequest.objects.get_or_create(
                 date=today,
                 request_type=request_type,
