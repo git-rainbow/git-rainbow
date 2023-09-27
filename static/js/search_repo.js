@@ -171,4 +171,4 @@ let parsedSearchInput = searchInput.value ? JSON.parse(searchInput.value) : [];
 parsedSearchInput.push({"value": techNameList[techNameListRandomIndex]});
 parsedSearchInput.push({"value": commonKeywords[commonKeywordsRandomIndex]});
 searchInput.value = JSON.stringify(parsedSearchInput);
-search_repo(true, false, true);
+search_repo(true, true);
