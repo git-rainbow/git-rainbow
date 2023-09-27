@@ -20,12 +20,56 @@ function toggleLoading(is_loading=true) {
     }
 }
 
-function search_repo(isNewSearch, isWithToken, isFirstLoad) {
+function check_search_api(ghoToken=null) {
+    let headers = ghoToken ? {"Authorization": `token ${ghoToken}`} : null;
+    let diffSeconds;
+    let remaining;
+    $.ajax({
+        url: 'https://api.github.com/rate_limit'
+        ,method: 'GET'
+        ,headers: headers
+        ,async: false
+        ,success: function (data) {
+            const apiReset = data.resources.search.reset;
+            let now = Math.floor(Date.now() / 1000);
+            diffSeconds = apiReset - now;
+            remaining = data.resources.search.remaining;
+        }
+    });
+    return {diffSeconds, remaining}
+}
+
+function alert_search_reset_time(noTokenResetTime, tokenResetTime) {
+    let resetTime = noTokenResetTime < tokenResetTime ? noTokenResetTime : tokenResetTime;
+    alert (`Maximum number of searches exceeded limit.\nPlease retry after ${resetTime} secondes later`);
+}
+
+function search_repo(isNewSearch, isFirstLoad) {
     const searchTag =  document.querySelector('input[name="tags"]');
     const searchTagValue = JSON.parse(searchTag.value);
     const perPage = isFirstLoad ? 10 : 100;
     const ghoToken = getCookie('gho_token');
-    const headers = isWithToken ? {"Authorization": `token ${ghoToken}`} : null;
+    const noTokenResult = check_search_api();
+    const noTokenResetTime = noTokenResult.diffSeconds;
+    const noTokenRemaining = noTokenResult.remaining;
+    let headers = null;
+
+    if (noTokenRemaining == 0) {
+        if (!ghoToken){
+            alert("Please retry after login");
+            return;
+        }
+        const tokenResult = check_search_api(ghoToken);
+        const tokenResetTime = tokenResult.diffSeconds;
+        const tokenRemaining = tokenResult.remaining;
+        if (tokenRemaining > 0) {
+            headers = {"Authorization": `token ${ghoToken}`};
+        } else {
+            alert_search_reset_time(noTokenResetTime, tokenResetTime);
+            return;
+        }
+    }
+
     let apiQuery = `?page=${currentPage}&per_page=${perPage}&q=`;
     for (let i of searchTagValue) {
         apiQuery += `topic:${i.value}+`;
@@ -109,12 +153,7 @@ function search_repo(isNewSearch, isWithToken, isFirstLoad) {
             toggleLoading(false);
         }
         , error: function (data) {
-          if (isWithToken) {
-            alert("Please refresh page or try after few minutes");
-          } else {
-            search_repo(isNewSearch, true, isFirstLoad);
-          }
-          toggleLoading(false);
+            toggleLoading(false);
         }
     });
 }
