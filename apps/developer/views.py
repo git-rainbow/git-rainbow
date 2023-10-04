@@ -242,27 +242,14 @@ def git_rainbow_svg(request, github_id):
         if new_github_user.github_id != github_id:
             new_github_user.delete()
 
-    analysis_data = AnalysisData.objects.filter(github_id=github_user).first()
-
-    if analysis_data:
-        tech_card_data = json.loads(analysis_data.tech_card_data.replace("'", '"')) if analysis_data.tech_card_data else []
-        calendar_data = json.loads(analysis_data.git_calendar_data.replace("'", '"')) if analysis_data.git_calendar_data else {}
-    else:
-        user_data = {"github_id": github_id, "tech_stack": True}
-        core_response = core_repo_list(user_data, github_user.status)
-        github_user.status = core_response['status']
-        github_user.save()
-        if core_response['status'] == 'fail':
-            return redirect(f'/{github_id}')
-        tech_card_data = core_response.get('tech_card_data')
-        calendar_data = core_response.get('calendar_data')
-        if not tech_card_data:
-            return redirect(f'/{github_id}')
-        AnalysisData.objects.create(
-            github_id=github_user,
-            git_calendar_data=calendar_data,
-            tech_card_data=tech_card_data
-        )
+    year_ago = (timezone.now() - relativedelta(years=1)).replace(hour=0, minute=0, second=0)
+    github_calendar_list = list(get_calendar_model(github_id).objects.filter(author_date__gte=year_ago).values('tech_name', 'author_date', 'lines'))
+    profile_data = get_profile_data(github_calendar_list, github_user)
+    tech_card_data = profile_data['tech_card_data']
+    calendar_data = defaultdict(lambda: defaultdict(int))
+    for data_dict in github_calendar_list:
+        converted_date = data_dict['author_date'].strftime('%Y-%m-%d')
+        calendar_data[converted_date][data_dict['tech_name']] += data_dict['lines']
 
     status, svg_inner_html = generate_github_calendar(calendar_data)
     if status == False:
