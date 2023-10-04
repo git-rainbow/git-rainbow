@@ -734,6 +734,24 @@ function toggle_arrow(arg) {
     arrow_type_btn.classList.toggle("turn-half");
 }
 
-function commit_hash_toggle_arrow(repo_url){
+function commit_hash_toggle_arrow(repo_url) {
     document.getElementById(repo_url).classList.toggle("turn-half");
+}
+
+function get_out_group() {
+    const current_path = location.pathname;
+    let getOutConfirm = confirm("Would you get out of this group?");
+    if (!getOutConfirm) {
+        return;
+    }
+
+    $.ajax({
+        url: `${current_path}/get-out`
+        ,method: 'GET'
+        ,async: false
+        ,success: function (data) {
+            if (data.status == 'fail') alert(data.reason);
+            location.reload();
+        }
+    });
 }

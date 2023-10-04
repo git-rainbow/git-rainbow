@@ -462,3 +462,16 @@ def delete_group_repo(request, group_id):
     group_repo_list = group.grouprepo_set.filter(id__in=repo_id_list)
     group_repo_list.delete()
     return JsonResponse({"status":"success"})
+
+
+def get_out_group(request, group_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({"status": "fail", "reason": "Not logined user"})
+
+    github_user = GithubUser.objects.filter(github_id=request.user.github_id).first()
+    user_group = github_user.group_set.filter(id=group_id).first()
+    if not user_group:
+        return JsonResponse({"status": "fail", "reason":"You are not in this group"})
+
+    user_group.github_users.remove(github_user)
+    return JsonResponse({"status":"success"})

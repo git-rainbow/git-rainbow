@@ -212,5 +212,10 @@
   {% include 'charts.html' %}
   {% include 'group_ranking.html' %}
   {% include 'token_modals.html' %}
+  {% if is_joined %}
+    <button onclick="get_out_group()" class="bg-white w-full border border-gray-500 rounded-md flex items-center justify-center px-4 text-center mt-3" style="color: #2977de; height: 40px;">
+      {% trans "Get out of this group" %}
+    </button>
+  {% endif %}
 </div>
 {% endblock content %}
