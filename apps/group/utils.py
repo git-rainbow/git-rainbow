@@ -10,8 +10,9 @@ from django.db.models import Sum, Case, When, Value, F, FloatField
 from django.db.models.functions import TruncDate
 from django.utils import timezone
 
-from apps.tech_stack.models import TopTech, get_calendar_model, CodeCrazy
 from apps.tech_stack.utils import github_repo_list
+from apps.tech_stack.models import TopTech, get_calendar_model, CodeCrazy, GithubRepo
+
 from config.local_settings import CORE_URL
 from utils.github_calendar_colors.github_calendar_colors import github_calendar_colors
 
@@ -175,6 +176,16 @@ def core_user_analysis(github_user):
         return {"status": "progress", "session_key": github_user.session_key}
 
     elif core_status == 'done':
+        update_user_repo_list = []
+        user_repo_list = list(GithubRepo.objects.filter(github_id_id__in=core_response['is_reachable_data'].keys()))
+        for repo_obj in user_repo_list:
+            try:
+                repo_obj.is_reachable = core_response['is_reachable_data'][repo_obj.github_id_id][repo_obj.repo_url]
+                update_user_repo_list.append(repo_obj)
+            except:
+                continue
+        GithubRepo.objects.bulk_update(update_user_repo_list, ['is_reachable'])
+
         calendar_model = get_calendar_model(github_id)
         calendar_model.objects.all().delete()
         save_git_calendar_data(core_response['calendar_data'])

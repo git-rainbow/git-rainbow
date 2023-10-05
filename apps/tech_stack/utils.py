@@ -65,7 +65,12 @@ def github_repo_list(user_data, session_key):
                     'branch': repo['main_branch'],
                     'description': repo['description'],
                     'added_type': 'Auto',
-                    'is_private': repo['is_private']
+                    'is_private': repo['is_private'],
+                    'is_reachable': True,
                 }
             )
+        repo_url_set = set(repo['repo_url'] for repo in repo_dict_list)
+        user_all_repo_set = set(GithubRepo.objects.filter(github_id_id=user_data['github_id']).values_list('repo_url', flat=True))
+        is_unreachable_set = user_all_repo_set - repo_url_set
+        GithubRepo.objects.filter(github_id_id=user_data['github_id'], repo_url__in=is_unreachable_set).update(**{'is_reachable': False})
     return {'status': 'success'}
