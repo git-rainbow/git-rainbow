@@ -11,7 +11,7 @@ from django.db.models.functions import TruncDate
 from django.utils import timezone
 
 from apps.tech_stack.models import TopTech, get_calendar_model, CodeCrazy
-from apps.tech_stack.utils import core_repo_list
+from apps.tech_stack.utils import github_repo_list
 from config.local_settings import CORE_URL
 from utils.github_calendar_colors.github_calendar_colors import github_calendar_colors
 
@@ -144,7 +144,7 @@ def core_user_analysis(github_user):
         github_user.status = 'progress'
         github_user.save()
         user_data = {"github_id": github_id, "tech_stack": True}
-        repo_list_reponse = core_repo_list(user_data, session_key)
+        repo_list_reponse = github_repo_list(user_data, session_key)
         repo_list_status = repo_list_reponse['status']
         if repo_list_status == 'fail':
             github_user.status = repo_list_status

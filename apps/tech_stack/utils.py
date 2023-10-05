@@ -50,7 +50,7 @@ def make_calendar_data(tech_files):
     return calendar_data
 
 
-def core_repo_list(user_data, session_key):
+def github_repo_list(user_data, session_key):
     repo_list_result = repo_list(user_data['github_id'], user_data.get('ghp_token'))
     if repo_list_result.get('status') == 'fail':
         return repo_list_result
