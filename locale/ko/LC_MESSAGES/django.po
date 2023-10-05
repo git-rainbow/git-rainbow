@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-25 06:53+0000\n"
+"POT-Creation-Date: 2023-10-05 04:31+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -93,7 +93,7 @@ msgstr "TOP 3 는 누구 ?"
 #: templates/intro.html:46 templates/min_git_rainbow.html:12
 #: templates/ranking.html:43 templates/ranking.html:68
 #: templates/ranking.html:146 templates/ranking_all.html:36
-#: templates/ranking_info.html:95
+#: templates/ranking_info.html:109
 msgid "Code Crazy"
 msgstr "코드 크레이지"
 
@@ -181,11 +181,11 @@ msgstr "Git 저장소"
 msgid "Update"
 msgstr "업데이트"
 
-#: templates/min_git_rainbow.html:133
+#: templates/min_git_rainbow.html:136
 msgid "Tech activity"
 msgstr "기술 활동"
 
-#: templates/min_git_rainbow.html:138
+#: templates/min_git_rainbow.html:141
 msgid "Show more activity"
 msgstr "활동 더 보기"
 
@@ -209,7 +209,7 @@ msgstr "그룹명"
 msgid "Description"
 msgstr "설명"
 
-#: templates/new_group.html:55 templates/token_modals.html:94
+#: templates/new_group.html:55 templates/token_modals.html:100
 msgid "Type"
 msgstr "유형"
 
@@ -261,7 +261,7 @@ msgstr "코딩 라인수"
 msgid "Major"
 msgstr "주요기술"
 
-#: templates/ranking_all.html:53 templates/ranking_info.html:113
+#: templates/ranking_all.html:53 templates/ranking_info.html:127
 msgid "Show more ranking"
 msgstr "코드 크레이지 랭킹 더보기"
 
@@ -285,6 +285,14 @@ msgstr "기술스택 수"
 msgid "Languages"
 msgstr "언어 수"
 
+#: templates/ranking_info.html:73
+msgid "Level up ! your code crazy ranking"
+msgstr "나의 코드 크레이지 랭킹을 올려보세요 !"
+
+#: templates/ranking_info.html:82
+msgid "Ranking of GitHub users who code hard"
+msgstr "꾸준히 많이 작업한 GitHub 개발자 순위"
+
 #: templates/search_repo.html:14
 msgid "What kind of code do you need ?"
 msgstr "어떤 소스코드가 필요하신가요 ?"
@@ -301,17 +309,13 @@ msgstr "React, Component 등 기술키워드로 쉽게 찾을 수 있습니다!"
 msgid "\"Search a tech name\""
 msgstr "\"기술명 검색하기\""
 
-#: templates/tech_side.html:19
+#: templates/tech_side.html:18
 msgid "Show groups of all"
 msgstr "모든 그룹 보기"
 
-#: templates/tech_side.html:21
+#: templates/tech_side.html:22
 msgid "Show code crazy rank of all"
 msgstr "코드 크레이지 전체 랭킹"
-
-#: templates/tech_side.html:23
-msgid "Search source code"
-msgstr ""
 
 #: templates/toggle_login.html:10
 msgid "Logout"
@@ -345,22 +349,22 @@ msgstr "\"Git 저장소 URL\""
 msgid "Add"
 msgstr "추가하기"
 
-#: templates/token_modals.html:83
+#: templates/token_modals.html:84
 msgid "All repositories"
 msgstr "모든 저장소"
 
-#: templates/token_modals.html:92
+#: templates/token_modals.html:98
 msgid "Git project name"
 msgstr "Git 프로젝트명"
 
-#: templates/token_modals.html:93
+#: templates/token_modals.html:99
 msgid "Git repository URL"
 msgstr "Git 저장소 URL"
 
-#: templates/token_modals.html:95
+#: templates/token_modals.html:101
 msgid "Status"
 msgstr "상태"
 
-#: templates/token_modals.html:96
+#: templates/token_modals.html:102
 msgid "Is private"
 msgstr "개인 저장소"

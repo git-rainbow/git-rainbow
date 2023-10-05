@@ -67,6 +67,20 @@
           </div>
           <!-- Card -->
         </div>
+
+        <!-- Introduction image for Code Crazy Ranking -->
+        <div class="my-6 mt-5 font-bold" style="font-size:2.2rem;text-align:center">
+          {% trans "Level up ! your code crazy ranking" %}
+        </div>
+
+        <div class="my-5 mx-3 bg-white">
+          <img class="mr-8" src="/static/img/code_crazy_intro.png">
+        </div>
+
+        <!-- Ranking examples -->
+        <div class="my-6 mt-5 font-bold" style="font-size:2.2rem;text-align:center">
+          {% trans "Ranking of GitHub users who code hard" %}
+        </div>
         <div class="mt-5" style="width: 720px; margin:auto">
           <!-- Selected Tech & Top3 Group Start -->
           {% for tech_name, tech_rank_data in rank_data.items %}
@@ -114,10 +128,6 @@
           </div>
         </div>
 
-        <!-- Introduction image for Code Crazy Ranking -->
-        <div class="my-5 mx-3 bg-white">
-          <img class="mr-8" src="/static/img/code_crazy_intro.png">
-        </div>
 
       </div>
     </div>
