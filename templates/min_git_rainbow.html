@@ -80,7 +80,7 @@
           {% elif request.user.github_id == github_user.github_id %}
             @click="openModal"
           {% else %}
-            onclick="alert(`{% trans 'You can use this service only if it is your own Github ID' %}`)"
+            onclick="alert(`{% trans 'You can use this service only if it is your own GitHub ID' %}`)"
           {% endif %}
           >
             <span class="font-semibold" style="color:#4e4e4e">{% trans "Git repository" %}</span>

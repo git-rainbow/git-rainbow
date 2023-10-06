@@ -71,8 +71,8 @@ msgid "Analysis failed"
 msgstr "분석이 실패했습니다."
 
 #: static/js/tech_stack.js:156
-msgid "Please check Github ID"
-msgstr "Github ID를 체크해주세요"
+msgid "Please check GitHub ID"
+msgstr "GitHub ID를 체크해주세요"
 
 #: static/js/tech_stack.js:169
 msgid "Please input personal GitHub ID"
@@ -80,7 +80,7 @@ msgstr "유저를 입력해주세요"
 
 #: static/js/tech_stack.js:172
 msgid "Please check your GitHub ID"
-msgstr "Github ID를 확인해주세요"
+msgstr "GitHub ID를 확인해주세요"
 
 #: static/js/tech_stack.js:198
 msgid "Copied!"
@@ -95,7 +95,7 @@ msgid "How much crazy about coding in the last year (%)"
 msgstr "최근 1년간 코딩에 미쳐있는 정도 (%)"
 
 #: static/js/tech_stack.js:289
-msgid "Github profile page"
+msgid "GitHub profile page"
 msgstr "GitHub 프로필 페이지"
 
 #: static/js/tech_stack.js:290
