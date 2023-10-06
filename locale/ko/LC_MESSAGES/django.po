@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-30 01:42+0000\n"
+"POT-Creation-Date: 2023-10-30 02:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,6 +21,38 @@ msgstr ""
 #: templates/exception_page.html:24
 msgid "go back"
 msgstr "돌아가기"
+
+#: templates/group_info.html:17
+msgid "GitHub team project analysis"
+msgstr "Git 프로젝트명"
+
+#: templates/group_info.html:18
+msgid "with friends, co-workers, fellows"
+msgstr "친구,동료,지인과 함께 코딩해요"
+
+#: templates/group_info.html:21
+msgid "Analze GitHub project, how crazy about coding on techstacks"
+msgstr "기술스택별로 코딩에 얼마나 미쳐있는지 분석해보세요"
+
+#: templates/group_info.html:26
+msgid "My crazy ranking in GitHub team projects ?"
+msgstr "GitHub 팀 프로젝트에서 나의 크레이지 랭킹은 ?"
+
+#: templates/group_info.html:29
+msgid "See Top3 of code crazy in your team's work, projects"
+msgstr "팀 프로젝트 안에서 코딩에 미쳐있는 Top3 를 확인해보세요!"
+
+#: templates/group_info.html:35
+msgid "Be a Diligent Developer"
+msgstr "누가누가 꾸준하게 코딩했나 ?"
+
+#: templates/group_info.html:38
+msgid "Let's code consistently to achieve your team's goals"
+msgstr "팀 프로젝트 목표달성을 위해서 꾸준하게 코딩해봐요!"
+
+#: templates/group_info.html:39
+msgid "with hourly, weekly, monthly activities(commits, lines)"
+msgstr "시간,주간,월간 활동내역(commits, lines)을 볼 수 있어요"
 
 #: templates/group_list.html:17
 msgid "Group Coding"
