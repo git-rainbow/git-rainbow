@@ -1,3 +1,4 @@
+import concurrent
 import json
 from collections import defaultdict
 from io import StringIO
@@ -89,28 +90,38 @@ def core_group_analysis(repo_dict_list, session_key):
     return core_response
 
 
+def get_user_crazy_data(github_id, year_ago):
+    return list(
+        get_calendar_model(github_id).objects.filter(
+            author_date__gte=year_ago, tech_name__in=github_calendar_colors.keys()
+        ).values(
+            'github_id', 'tech_name'
+        ).annotate(
+            date_without_time=TruncDate('author_date'),
+            day_lines=Sum('lines'),
+            tech_code_crazy=Case(
+                When(day_lines__range=[300, 1000], then=(3 + 0.001 * (F('day_lines') - 300))),
+                When(day_lines__gt=1000, then=Value(3.7)),
+                default=F('day_lines') * 0.01,
+                output_field=FloatField()
+            ),
+        ))
+
+
 def update_code_crazy(github_id_list):
     today = timezone.now()
     year_ago = (today - relativedelta(years=1)).replace(hour=0, minute=0, second=0)
     six_months_ago = year_ago + relativedelta(months=6)
     all_calendar_data_list = []
-    for github_id in github_id_list:
-        all_calendar_data_list.extend(list(
-            get_calendar_model(github_id).objects.filter(
-                author_date__gte=year_ago, tech_name__in=github_calendar_colors.keys()
-            ).values(
-                'github_id', 'tech_name'
-            ).annotate(
-                date_without_time=TruncDate('author_date'),
-                day_lines=Sum('lines'),
-                tech_code_crazy=Case(
-                    When(day_lines__range=[300, 1000], then=(3 + 0.001 * (F('day_lines') - 300))),
-                    When(day_lines__gt=1000, then=Value(3.7)),
-                    default=F('day_lines') * 0.01,
-                    output_field=FloatField()
-                ),
-            )
-        ))
+    with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
+        futures = [executor.submit(get_user_crazy_data, github_id, year_ago) for github_id in github_id_list]
+
+        for future in concurrent.futures.as_completed(futures):
+            try:
+                all_calendar_data_list.extend(future.result())
+            except Exception as e:
+                print(f"error update_code_crazy() occurred: {str(e)}")
+
     user_code_crazy_dict = defaultdict(lambda: defaultdict(lambda: {'total_lines': 0, "tech_code_crazy": 0, "old_code_crazy": 0}))
     for joined_data in all_calendar_data_list:
         github_id = joined_data['github_id']
