@@ -17,7 +17,7 @@ class page_request_middleware:
         request_type = None
         if accessed_url == '/':
             request_type = 'index'
-        elif accessed_url.startswith('/ranking'):
+        elif accessed_url.startswith('/ranking/'):
             tech_name = accessed_url[1:].split('/')[1]
             if tech_name == 'info' or tech_name == 'all':
                 request_type = 'ranking'
