@@ -35,6 +35,14 @@ class GithubRepo(models.Model):
     is_reachable = models.BooleanField(default=True, null=True)
     is_private = models.BooleanField(default=False, null=True)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['github_id', 'repo_url'],
+                name='unique repo_url'
+            )
+        ]
+
 
 class AnalysisData(models.Model):
     github_id = models.OneToOneField('GithubUser', on_delete=models.CASCADE)
