@@ -1,5 +1,5 @@
 FROM python:3.9
-
+RUN ln -snf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
 RUN mkdir /usr/src/app
 WORKDIR /usr/src/app
 COPY . .
