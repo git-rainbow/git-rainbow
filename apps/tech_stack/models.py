@@ -104,6 +104,6 @@ class CodeCrazy(models.Model):
     github_id = models.ForeignKey("GithubUser", on_delete=models.CASCADE)
     tech_name = models.CharField(max_length=50, null=True)
     code_crazy = models.FloatField()
-    total_lines = models.IntegerField()
+    total_lines = models.BigIntegerField()
     old_code_crazy = models.FloatField(default=0)
     updated_at = models.DateTimeField(auto_now=True)
