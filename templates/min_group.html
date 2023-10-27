@@ -126,9 +126,11 @@
 
     <!-- TackStack Graph Box (Start) -->
     <div id="graph_box" class="mt-2 flex-1 h-full bg-white rounded-lg shadow-xs p-6 relative">
+    {% if group_rank_data|length > 8 %}
       <svg class="calendar-member-btn" onclick="toggle_arrow('calendar-member')" xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="gray" class="mt-2 bi bi-caret-down-fill" viewBox="0 0 16 16">
         <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"></path>
       </svg>
+    {% endif %}
       <!-- Members start-->
       <div class="flex mb-3 calendar-member-box calendar-member flex-wrap">
         {% for data in group_rank_data %}
@@ -152,9 +154,11 @@
       <!-- Members end-->
 
       <!-- Tech Cards Start -->
+    {% if group_tech_card|length > 8 %}
       <svg class="calendar-tech-btn" onclick="toggle_arrow('calendar-tech')" xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="gray" class="mt-2 bi bi-caret-down-fill" viewBox="0 0 16 16">
         <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"></path>
       </svg>
+    {% endif %}
       <div class="flex mb-3 calendar-tech-box calendar-tech flex-wrap">
         {% for tech_card in group_tech_card %}
           <div class="tech_card" tech_name='{{ tech_card.name }}' onclick="highlight_group_card_tech(event, '{{ tech_card.name }}', '{{ tech_card.color }}')" selected="false" style="cursor: pointer;">
