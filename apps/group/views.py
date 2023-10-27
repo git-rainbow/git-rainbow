@@ -338,21 +338,6 @@ def create_group(request):
             return JsonResponse(repo_res)
         group_repo_list.append(repo_res['repo_info'])
 
-    file_storage_path = f'media/img/{github_id}/{group_name}'
-    if not os.path.exists(file_storage_path):
-        os.makedirs(file_storage_path)
-    if data.get('is_random_img') == 'true':
-        temp_file_path = urlparse(data.get('group_img')).path[1:]
-        file_name = temp_file_path.split("/")[-1]
-        image_path = f'/img/{github_id}/{group_name}/{file_name}'
-        shutil.copy(temp_file_path, file_storage_path)
-    else:
-        image_path = f'/img/{github_id}/{group_name}/{request.FILES.get("group_img")}'
-        with open(f'media/{image_path}', 'wb') as image_file:
-            for chunk in request.FILES.get('group_img').chunks():
-                image_file.write(chunk)
-    shutil.rmtree(f'media/temp/{github_id}')
-
     group_data = {
         'owner': request.user,
         'name': group_name,
@@ -361,6 +346,20 @@ def create_group(request):
         'join_code': join_code if is_private else None
     }
     new_group = Group.objects.create(**group_data)
+    file_storage_path = f'media/img/{new_group.id}'
+    if not os.path.exists(file_storage_path):
+        os.makedirs(file_storage_path)
+    if data.get('is_random_img') == 'true':
+        temp_file_path = urlparse(data.get('group_img')).path[1:]
+        file_name = temp_file_path.split("/")[-1]
+        image_path = f'/img/{new_group.id}/{file_name}'
+        shutil.copy(temp_file_path, file_storage_path)
+    else:
+        image_path = f'/img/{new_group.id}/{request.FILES.get("group_img")}'
+        with open(f'media/{image_path}', 'wb') as image_file:
+            for chunk in request.FILES.get('group_img').chunks():
+                image_file.write(chunk)
+    shutil.rmtree(f'media/temp/{github_id}')
     new_group.img.name = image_path
     new_group.save()
     owner_github_user = GithubUser.objects.get(github_id=github_id)
