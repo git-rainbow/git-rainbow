@@ -23,6 +23,7 @@ from apps.tech_stack.models import TechStack, GithubUser, GithubCalendar, Github
 from apps.group.models import Group, GroupRepo, Topic
 
 from apps.users.models import User
+from config.settings import BASE_DIR
 from utils.github_api.github_api import github_rest_api
 from utils.github_calendar_colors.github_calendar_colors import github_calendar_colors
 from utils.utils import get_token
@@ -296,7 +297,12 @@ def refresh_img(request, is_func=None):
 def remove_group(request, group_id):
     group_list = Group.objects.filter(owner=request.user).values_list('id', flat=True)
     if group_id in group_list:
-        Group.objects.filter(id=group_id).delete()
+        delete_group = Group.objects.filter(id=group_id).first()
+        file_path = f'{str(BASE_DIR)}/media{str(delete_group.img)}'
+        directory_path = os.path.dirname(file_path)
+        shutil.rmtree(directory_path)
+        print(f"Removed: {directory_path}")
+        delete_group.delete()
         return JsonResponse({'status': 'completed'})
 
     return JsonResponse({'status': 'permission denied'})
