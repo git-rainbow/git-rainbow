@@ -42,9 +42,11 @@ class page_request_middleware:
             if request.user.is_authenticated:
                 user = request.user
             if user is None:
+                # User.objects.get(github_id='-anonymous').id == 6
+                # -anonymous's user ID is 6
                 info_obj, _ = ClientInfo.objects.get_or_create(
                     client_ip=client_ip,
-                    user__isnull=True
+                    user_id=6
                 )
             else:
                 info_obj, _ = ClientInfo.objects.get_or_create(
