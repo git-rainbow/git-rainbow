@@ -141,7 +141,7 @@
                 <td class="w-full">
                   <img class="object-cover w-full h-full rounded-full mx-auto mb-2 mt-2" src="{{ rank_avatar_url_dict|get_item:data.github_id }}" style="width:64px;height:64px">
                   <div class="mb-2 px-2" style="text-align: center; display: flex; flex-direction: column;">
-                    {{ data.github_id }}
+                    <p style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; word-break: break-all; width: 100px;">{{ data.github_id }}</p>
                     <span class="badge badge-danger px-1 py-1" style="font-size: .75rem; text-align: center; margin: 0 auto; margin-top: 8px;">{{ data.int_code_crazy }}%</span>
                   </div>
                 </td>
@@ -171,7 +171,7 @@
                     </div>
                     <img src="/static/img/{{ tech_card.file }}.png" onerror="this.onerror=null; this.src='/static/img/none3.png';" class="mx-auto mb-2">
                     <div class="mb-2 px-2" style="text-align: center; display: flex; flex-direction: column;">
-                      {{ tech_card.name }}
+                      <p style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; word-break: break-all; width: 100px;">{{ tech_card.name }}</p>
                       <span class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full" style="font-size: .75rem; text-align: center; margin: 0 auto; margin-top: 8px;">
                         {{ tech_card.percent }}%
                       </span>
