@@ -1,7 +1,7 @@
-{% load static custom_tags humanize %}
+{% load static custom_tags i18n humanize %}
 <div class="flex mt-5 mb-3" style="justify-content: space-between;">
-  <span class="font-bold" style="font-size: 20px;"> 코드 크레이지 랭킹</span>
-  <p class="text-sm pt-3">참여 개발자 수: {{ group_rank_data|length }}</p>
+  <span class="font-bold" style="font-size: 20px;">{% trans "Crazy Ranking" %}</span>
+  <p class="text-sm pt-3">{% trans "Members" %}: {{ group_rank_data|length }}</p>
 </div>
 <div class="overflow-hidden rounded-lg shadow-xs" style="margin-left: auto !important;">
   <div class="w-full overflow-x-auto">
@@ -9,18 +9,18 @@
       <thead>
         <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800" style="border: 0 solid #d5d6d7!important;">
           <th id="rank_rank" onmousemove="show_desc(event)" onmouseleave="show_desc(event)" class="px-4 py-3 text-center">
-            순위
+            {% trans "RANK" %}
           </th>
           <th class="px-4 py-3 text-center" style="width:150px">GITHUB ID</th>
           <th></th>
           <th id="rank_code_crazy" onmousemove="show_desc(event)" onmouseleave="show_desc(event)" class="px-4 py-3 text-center">
-            코드 크레이지
+            {% trans "Code Crazy" %}
           </th>
           <th id="rank_code_lines" onmousemove="show_desc(event);" onmouseleave="show_desc(event)" class="px-4 text-center">
-            코딩 라인수
+            {% trans "Code Lines" %}
           </th>
           <th id="rank_major" onmousemove="show_desc(event);" onmouseleave="show_desc(event)" class="px-4 text-center">
-            주요기술
+            {% trans "Major" %}
           </th>
         </tr>
       </thead>
