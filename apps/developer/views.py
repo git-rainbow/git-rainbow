@@ -378,19 +378,27 @@ def save_github_calendar_data(git_calendar_data, github_user):
             git_calendar_data_bulk.append(github_calendar)
     GithubCalendar.objects.bulk_create(git_calendar_data_bulk)
 
-def __ranking_all():
+
+def __ranking_all(page):
     tech_side = draw_tech_side()
     sorted_github_calendar_colors = {tech_dict['tech_name']:{'tech_color': tech_dict['tech_color'], 'logo_path':tech_dict['logo_path']} for tech_dict_list in tech_side.values() for tech_dict in tech_dict_list}
-    user_tech_data_list = list(CodeCrazy.objects.filter(tech_name__in=sorted_github_calendar_colors.keys()).order_by('tech_name', '-code_crazy'))
+    tech_cnt = len(sorted_github_calendar_colors)
+    start_index = (page - 1) * 10
+    end_index = page * 10
+    if end_index > tech_cnt:
+        start_index = (tech_cnt//10) * 10
+        user_tech_data_list = list(CodeCrazy.objects.filter(tech_name__in=list(sorted_github_calendar_colors.keys())[start_index:]).values('github_id_id', 'tech_name', 'total_lines', 'code_crazy').order_by('tech_name', '-code_crazy'))
+    else:
+        user_tech_data_list = list(CodeCrazy.objects.filter(tech_name__in=list(sorted_github_calendar_colors.keys())[start_index:end_index]).values('github_id_id', 'tech_name', 'total_lines', 'code_crazy').order_by('tech_name', '-code_crazy'))
 
-    user_code_crazy_list = []
+    user_code_crazy_dict = defaultdict(lambda: [])
     for user_data in user_tech_data_list:
-        user_code_crazy_list.append({
-            'github_id': user_data.github_id_id,
-            'tech_name': user_data.tech_name,
-            'total_lines': user_data.total_lines,
-            "tech_code_crazy": user_data.code_crazy,
-            "int_code_crazy": int(user_data.code_crazy),
+        user_code_crazy_dict[user_data['tech_name'].lower()].append({
+            'github_id': user_data['github_id_id'],
+            'tech_name': user_data['tech_name'],
+            'total_lines': user_data['total_lines'],
+            "tech_code_crazy": user_data['code_crazy'],
+            "int_code_crazy": int(user_data['code_crazy']),
         })
 
     RANK_COUNT_TO_SHOW = 3
@@ -398,7 +406,7 @@ def __ranking_all():
     ranker_github_id_set = set()
     for tech, tech_data in sorted_github_calendar_colors.items():
         tech_name = tech.lower()
-        tech_rank_data = [i for i in user_code_crazy_list if i['tech_name'].lower() == tech_name]
+        tech_rank_data = user_code_crazy_dict[tech_name]
         tech_rank_data.sort(key=lambda x: x['tech_code_crazy'], reverse=True)
         top3_data = tech_rank_data[0:RANK_COUNT_TO_SHOW]
         user_avg_lines = sum(i['total_lines'] for i in top3_data)/RANK_COUNT_TO_SHOW
@@ -425,12 +433,15 @@ def __ranking_all():
 
 
 def ranking_all(request):
-    context = __ranking_all()
+    page = int(request.GET.get('page', 1))
+    if page <= 0:
+        page = 1
+    context = __ranking_all(page)
     return render(request, 'ranking_all.html', context=context)
 
 
 def ranking_info(request):
-    context = __ranking_all()
+    context = __ranking_all(1)
     i = iter(context['rank_data'])
     tech = next(i)
     tech2 = next(i)
