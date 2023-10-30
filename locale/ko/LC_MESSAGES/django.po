@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-05 04:31+0000\n"
+"POT-Creation-Date: 2023-10-30 01:42+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,6 +34,34 @@ msgstr "\"그룹 검색\""
 msgid "people"
 msgstr "명"
 
+#: templates/group_ranking.html:3 templates/header.html:29
+#: templates/index.html:68
+msgid "Crazy Ranking"
+msgstr "크레이지 랭킹"
+
+#: templates/group_ranking.html:4
+msgid "Members"
+msgstr "참여 개발자 수"
+
+#: templates/group_ranking.html:12 templates/ranking.html:141
+msgid "RANK"
+msgstr "순위"
+
+#: templates/group_ranking.html:17 templates/intro.html:46
+#: templates/min_git_rainbow.html:12 templates/ranking.html:43
+#: templates/ranking.html:68 templates/ranking.html:146
+#: templates/ranking_all.html:36 templates/ranking_info.html:111
+msgid "Code Crazy"
+msgstr "코드 크레이지"
+
+#: templates/group_ranking.html:20 templates/ranking.html:149
+msgid "Code Lines"
+msgstr "코딩 라인수"
+
+#: templates/group_ranking.html:23 templates/ranking.html:152
+msgid "Major"
+msgstr "주요기술"
+
 #: templates/header.html:19 templates/index.html:59
 msgid "Analyze"
 msgstr "분석하기"
@@ -41,10 +69,6 @@ msgstr "분석하기"
 #: templates/header.html:27 templates/index.html:66
 msgid "Admin"
 msgstr "관리자"
-
-#: templates/header.html:29 templates/index.html:68
-msgid "Crazy Ranking"
-msgstr "크레이지 랭킹"
 
 #: templates/header.html:30 templates/index.html:69
 msgid "Code Search"
@@ -89,13 +113,6 @@ msgstr "기술스택 랭킹"
 #: templates/intro.html:45
 msgid "Who are TOP 3 ?"
 msgstr "TOP 3 는 누구 ?"
-
-#: templates/intro.html:46 templates/min_git_rainbow.html:12
-#: templates/ranking.html:43 templates/ranking.html:68
-#: templates/ranking.html:146 templates/ranking_all.html:36
-#: templates/ranking_info.html:109
-msgid "Code Crazy"
-msgstr "코드 크레이지"
 
 #: templates/intro.html:47
 msgid "(How crazy about coding)"
@@ -181,11 +198,11 @@ msgstr "Git 저장소"
 msgid "Update"
 msgstr "업데이트"
 
-#: templates/min_git_rainbow.html:136
+#: templates/min_git_rainbow.html:138 templates/min_group.html:196
 msgid "Tech activity"
 msgstr "기술 활동"
 
-#: templates/min_git_rainbow.html:141
+#: templates/min_git_rainbow.html:143 templates/min_group.html:203
 msgid "Show more activity"
 msgstr "활동 더 보기"
 
@@ -249,47 +266,35 @@ msgstr "개발자 수"
 msgid "does not exsit in this tech ranking"
 msgstr "이(가) 이 기술 랭킹에 존재하지 않습니다"
 
-#: templates/ranking.html:141
-msgid "RANK"
-msgstr "순위"
-
-#: templates/ranking.html:149
-msgid "Code Lines"
-msgstr "코딩 라인수"
-
-#: templates/ranking.html:152
-msgid "Major"
-msgstr "주요기술"
-
-#: templates/ranking_all.html:53 templates/ranking_info.html:127
+#: templates/ranking_all.html:53 templates/ranking_info.html:129
 msgid "Show more ranking"
 msgstr "코드 크레이지 랭킹 더보기"
 
-#: templates/ranking_info.html:13
+#: templates/ranking_info.html:14
 msgid "Code Crazy, see your rank !!"
 msgstr "코딩에 미쳐있는 랭킹을 확인하세요 !!"
 
-#: templates/ranking_info.html:15
+#: templates/ranking_info.html:16
 msgid "What tech stack are you crazy about ?"
 msgstr "어떤 기술스택에 관심 있나요 ?"
 
-#: templates/ranking_info.html:27
+#: templates/ranking_info.html:28
 msgid "Developers"
 msgstr "개발자 수"
 
-#: templates/ranking_info.html:44
+#: templates/ranking_info.html:45
 msgid "Tech Stacks"
 msgstr "기술스택 수"
 
-#: templates/ranking_info.html:61
+#: templates/ranking_info.html:62
 msgid "Languages"
 msgstr "언어 수"
 
-#: templates/ranking_info.html:73
+#: templates/ranking_info.html:75
 msgid "Level up ! your code crazy ranking"
 msgstr "나의 코드 크레이지 랭킹을 올려보세요 !"
 
-#: templates/ranking_info.html:82
+#: templates/ranking_info.html:84
 msgid "Ranking of GitHub users who code hard"
 msgstr "꾸준히 많이 작업한 GitHub 개발자 순위"
 
