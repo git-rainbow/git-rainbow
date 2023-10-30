@@ -24,7 +24,7 @@ msgstr "돌아가기"
 
 #: templates/group_info.html:17
 msgid "GitHub team project analysis"
-msgstr "Git 프로젝트명"
+msgstr "GitHub 프로젝트(그룹코딩) 분석"
 
 #: templates/group_info.html:18
 msgid "with friends, co-workers, fellows"
