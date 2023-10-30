@@ -132,7 +132,7 @@ msgstr "GitHub 활동분석"
 
 #: templates/intro.html:9
 msgid "Enter GitHub ID and"
-msgstr "단한번의 GitHub ID 입력만으로"
+msgstr "단 한 번의 GitHub ID 입력만으로"
 
 #: templates/intro.html:10
 msgid "get your Git-Rainbow calendar."
@@ -147,8 +147,8 @@ msgid "Notion RESUME"
 msgstr "Notion 이력서"
 
 #: templates/intro.html:27
-msgid "Copy-paste Git-Rainbow calendar"
-msgstr "Git-Rainbow 캘린더를 복사붙혀넣기 하고"
+msgid "Copy-paste Git-Rainbow calendar(svg)"
+msgstr "Git-Rainbow 캘린더(svg)를 복사붙여넣기 하고"
 
 #: templates/intro.html:28
 msgid "into your README or RESUME"
