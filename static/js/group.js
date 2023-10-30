@@ -601,12 +601,15 @@ function highlight_group_member(event) {
     const tech_card_list = document.querySelectorAll(".tech_card");
     const target = event.currentTarget;
     let is_target_selected = target.getAttribute('selected');
+
     if (is_target_selected=='false') {
         target.setAttribute('selected', 'true');
-        target.setAttribute('style', `border: 2px ${group_color_obj[target.getAttribute('github_id')]} solid;`);
+        img = target.getElementsByTagName('img')[0]
+        img.setAttribute('style', `border: 8px ${group_color_obj[target.getAttribute('github_id')]} solid;width:64px;height:64px;`);
     } else {
         target.setAttribute('selected', 'false');
-        target.setAttribute('style', 'border: none;');
+        img = target.getElementsByTagName('img')[0]
+        img.setAttribute('style', 'border: none;width:64px;height:64px;');
     }
     let selected_list = Array.from(member_card_list).map(card => {
         if (card.getAttribute('selected') == 'true'){
