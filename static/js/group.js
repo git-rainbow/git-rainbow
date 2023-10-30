@@ -437,7 +437,7 @@ function show_group_total_lines(commit_data, is_reset=false, specific_tech){
                         commit_cnt += commit_hash.length
                         commit_data_tags += `<div class="mt-2 flex">
                                         <a class="text-blue-500 mr-3"
-                                          href="${slice_repo_url}">${name_with_owner.slice(1)}</a>
+                                          href="${slice_repo_url}" target="_blank">${name_with_owner.slice(1)}</a>
                                         <p class="text-gray-400">${commit_hash.length} commits</p>
                                        </div>`
                     })
@@ -468,7 +468,7 @@ function show_group_total_lines(commit_data, is_reset=false, specific_tech){
                     commit_cnt += commit_hash.length
                     commit_data_tags += `<div class="mt-2 flex">
                                     <a class="text-blue-500 mr-3"
-                                      href="${slice_repo_url}">${name_with_owner.slice(1)}</a>
+                                      href="${slice_repo_url}" target="_blank">${name_with_owner.slice(1)}</a>
                                     <p class="text-gray-400">${commit_hash.length} commits</p>
                                    </div>`
                 })
