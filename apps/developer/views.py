@@ -244,8 +244,7 @@ def git_rainbow_svg(request, github_id):
 
     year_ago = (timezone.now() - relativedelta(years=1)).replace(hour=0, minute=0, second=0)
     github_calendar_list = list(get_calendar_model(github_id).objects.filter(author_date__gte=year_ago).values('tech_name', 'author_date', 'lines'))
-    profile_data = get_profile_data(github_calendar_list, github_user)
-    tech_card_data = profile_data['tech_card_data']
+    tech_card_data = make_group_tech_card(github_calendar_list)
     calendar_data = defaultdict(lambda: defaultdict(int))
     for data_dict in github_calendar_list:
         converted_date = data_dict['author_date'].strftime('%Y-%m-%d')
