@@ -387,13 +387,14 @@ def __ranking_all(page):
     end_index = page * 10
     if end_index > tech_cnt:
         start_index = (tech_cnt//10) * 10
-        user_tech_data_list = list(CodeCrazy.objects.filter(tech_name__in=list(sorted_github_calendar_colors.keys())[start_index:]).values('github_id_id', 'tech_name', 'total_lines', 'code_crazy').order_by('tech_name', '-code_crazy'))
+        tech_name_list = list(sorted_github_calendar_colors.keys())[start_index:]
     else:
-        user_tech_data_list = list(CodeCrazy.objects.filter(tech_name__in=list(sorted_github_calendar_colors.keys())[start_index:end_index]).values('github_id_id', 'tech_name', 'total_lines', 'code_crazy').order_by('tech_name', '-code_crazy'))
+        tech_name_list = list(sorted_github_calendar_colors.keys())[start_index:end_index]
+    user_tech_data_list = list(CodeCrazy.objects.filter(tech_name__in=tech_name_list).values('github_id_id', 'tech_name', 'total_lines', 'code_crazy').order_by('tech_name', '-code_crazy'))
 
     user_code_crazy_dict = defaultdict(lambda: [])
     for user_data in user_tech_data_list:
-        user_code_crazy_dict[user_data['tech_name'].lower()].append({
+        user_code_crazy_dict[user_data['tech_name']].append({
             'github_id': user_data['github_id_id'],
             'tech_name': user_data['tech_name'],
             'total_lines': user_data['total_lines'],
@@ -404,12 +405,10 @@ def __ranking_all(page):
     RANK_COUNT_TO_SHOW = 3
     rank_data = dict()
     ranker_github_id_set = set()
-    for tech, tech_data in sorted_github_calendar_colors.items():
-        tech_name = tech.lower()
-        tech_rank_data = user_code_crazy_dict[tech_name]
-        tech_rank_data.sort(key=lambda x: x['tech_code_crazy'], reverse=True)
-        top3_data = tech_rank_data[0:RANK_COUNT_TO_SHOW]
-        user_avg_lines = sum(i['total_lines'] for i in top3_data)/RANK_COUNT_TO_SHOW
+    for tech_name in tech_name_list:
+        user_code_crazy_dict[tech_name].sort(key=lambda x: x['tech_code_crazy'], reverse=True)
+        top3_data = user_code_crazy_dict[tech_name][0:RANK_COUNT_TO_SHOW]
+        user_avg_lines = sum(i['total_lines'] for i in top3_data) / RANK_COUNT_TO_SHOW
         for ranker in top3_data:
             ranker_github_id_set.add(ranker['github_id'])
             code_line_percent = round(ranker['total_lines'] / user_avg_lines * 100, 2)
@@ -418,8 +417,9 @@ def __ranking_all(page):
             elif code_line_percent > 95:
                 code_line_percent = 95
             ranker['code_line_percent'] = code_line_percent
+        tech_data = sorted_github_calendar_colors[tech_name]
+        rank_data[tech_name] = {'color': tech_data['tech_color'], 'logo_path': tech_data['logo_path'], 'top3_data': top3_data}
 
-        rank_data[tech] = {'color': tech_data['tech_color'], 'logo_path':tech_data['logo_path'], 'top3_data':top3_data}
     ranker_github_data_list = GithubUser.objects.values('github_id', 'avatar_url', 'toptech__tech_name').filter(github_id__in=ranker_github_id_set)
     rank_avatar_url_dict = {ranker['github_id']: ranker['avatar_url'] for ranker in ranker_github_data_list}
     ranker_toptech_dict = {ranker['github_id']: str(ranker['toptech__tech_name']) for ranker in ranker_github_data_list}
@@ -437,6 +437,8 @@ def ranking_all(request):
     if page <= 0:
         page = 1
     context = __ranking_all(page)
+    if page != 1:
+        return JsonResponse(context)
     return render(request, 'ranking_all.html', context=context)
 
 

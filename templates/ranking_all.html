@@ -10,46 +10,48 @@
         </div>
         <div style="width: 720px;">
           <!-- Selected Tech & Top3 Group Start -->
-          {% for tech_name, tech_rank_data in rank_data.items %}
-            <div class="grid gap-4 pt-3 pb-3 pl-3 mb-3 tech-rankings {% if forloop.counter > 10 %}hidden{% endif %}" style="grid-template-columns: 0.6fr 1fr 1fr 1fr; background-color: #EEEEEE;">
-              <!-- Selected Tech Card -->
-              <div onclick="window.open('/ranking/{{tech_name}}', '_blank')" class="flex mb-3 bg-white rounded-lg shadow-xs dark:bg-gray-800 mr-2"
-                 style="height: 190px;width: 126px;align-items: center;flex-direction: column; cursor:pointer;">
-                <div class="w-full inline-block">
-                  <div div class="tech_color mt-2 mr-2"
-                     style="background-color: {{ tech_rank_data.color }}; float: right; display: block;"></div>
+          <div id="rank_card">
+            {% for tech_name, tech_rank_data in rank_data.items %}
+              <div class="grid gap-4 pt-3 pb-3 pl-3 mb-3 tech-rankings {% if forloop.counter > 10 %}hidden{% endif %}" style="grid-template-columns: 0.6fr 1fr 1fr 1fr; background-color: #EEEEEE;">
+                <!-- Selected Tech Card -->
+                <div onclick="window.open('/ranking/{{tech_name}}', '_blank')" class="flex mb-3 bg-white rounded-lg shadow-xs dark:bg-gray-800 mr-2"
+                   style="height: 190px;width: 126px;align-items: center;flex-direction: column; cursor:pointer;">
+                  <div class="w-full inline-block">
+                    <div div class="tech_color mt-2 mr-2"
+                       style="background-color: {{ tech_rank_data.color }}; float: right; display: block;"></div>
+                  </div>
+                  <img class="mx-auto mb-2" src="{{ tech_rank_data.logo_path }}" style="margin-top: 25px;">
+                  <p class="mx-auto mb-2 text-sm" id="tech_title">{{ tech_name }}</p>
                 </div>
-                <img class="mx-auto mb-2" src="{{ tech_rank_data.logo_path }}" style="margin-top: 25px;">
-                <p class="mx-auto mb-2 text-sm" id="tech_title">{{ tech_name }}</p>
-              </div>
-              {% for top3 in tech_rank_data.top3_data %}
-              <div onclick="window.open('/{{top3.github_id}}', '_blank')" class="flex bg-white rounded-lg shadow-xs dark:bg-gray-800"
-                  style="height: 257px;width: 180px;align-items: center;flex-direction: column; cursor:pointer;">
-                <div class="flex mt-1">
-                  <img style="width:30px;height:30px;" src="{% get_static_prefix %}img/rank_{{ forloop.counter }}.png">
-                  <p class="font-semibold ranking-ellipsis flex" style="font-size:15px; align-content: flex-start;">Top {{ forloop.counter }}</p>
-                </div>
-                <img class="object-cover w-full h-full rounded-full mt-1" src="{{ rank_avatar_url_dict|get_item:top3.github_id }}" style="width:64px;height:64px">
-                <p class="mx-auto mt-2 mb-3 font-semibold ranking-ellipsis" style="font-size:15px"><a href="/{{top3.github_id}}" target="_blank">{{ top3.github_id }}</a></p>
-                <button type="button" class="btn btn-danger font-semibold mt-2 mb-1" title="{{ top3.tech_code_crazy }}%"
-                  style="color:rgb(200,30,30);background-color:rgb(253,232,232);border-color:rgb(253,232,232); font-size: 70%; padding: 2%; width: 70%;">
-                  {% trans "Code Crazy" %} <span class="badge badge-danger" style="font-size:100%;margin-left:4px; top: 1px;">{{ top3.int_code_crazy }}%</span>
-                </button>
-                <div class="rounded-full mt-2 mb-1" style="background-color:lightgray; width: 70%;">
-                  <div
-                    class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
-                    style="width: {{ top3.code_line_percent }}%; background-color: {{ tech_rank_data.color }}"><p style="color:white">{{ top3.total_lines|intcomma }}</p>
+                {% for top3 in tech_rank_data.top3_data %}
+                <div onclick="window.open('/{{top3.github_id}}', '_blank')" class="flex bg-white rounded-lg shadow-xs dark:bg-gray-800"
+                    style="height: 257px;width: 180px;align-items: center;flex-direction: column; cursor:pointer;">
+                  <div class="flex mt-1">
+                    <img style="width:30px;height:30px;" src="{% get_static_prefix %}img/rank_{{ forloop.counter }}.png">
+                    <p class="font-semibold ranking-ellipsis flex" style="font-size:15px; align-content: flex-start;">Top {{ forloop.counter }}</p>
+                  </div>
+                  <img class="object-cover w-full h-full rounded-full mt-1" src="{{ rank_avatar_url_dict|get_item:top3.github_id }}" style="width:64px;height:64px">
+                  <p class="mx-auto mt-2 mb-3 font-semibold ranking-ellipsis" style="font-size:15px"><a href="/{{top3.github_id}}" target="_blank">{{ top3.github_id }}</a></p>
+                  <button type="button" class="btn btn-danger font-semibold mt-2 mb-1" title="{{ top3.tech_code_crazy }}%"
+                    style="color:rgb(200,30,30);background-color:rgb(253,232,232);border-color:rgb(253,232,232); font-size: 70%; padding: 2%; width: 70%;">
+                    {% trans "Code Crazy" %} <span class="badge badge-danger" style="font-size:100%;margin-left:4px; top: 1px;">{{ top3.int_code_crazy }}%</span>
+                  </button>
+                  <div class="rounded-full mt-2 mb-1" style="background-color:lightgray; width: 70%;">
+                    <div
+                      class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
+                      style="width: {{ top3.code_line_percent }}%; background-color: {{ tech_rank_data.color }}"><p style="color:white">{{ top3.total_lines|intcomma }}</p>
+                    </div>
+                  </div>
+                  <div class="flex mt-2 mb-1" style="align-items: center;flex-direction: row; justify-content: space-around; width: 50%;">
+                    <img style="width:30px;height:30px;" src="{% get_static_prefix %}img/{{ ranker_toptech_dict|get_item:top3.github_id|replace_special_char|lower }}.png">
+                    <p class="text-xs text-gray-600">{{ ranker_toptech_dict|get_item:top3.github_id }}</p>
                   </div>
                 </div>
-                <div class="flex mt-2 mb-1" style="align-items: center;flex-direction: row; justify-content: space-around; width: 50%;">
-                  <img style="width:30px;height:30px;" src="{% get_static_prefix %}img/{{ ranker_toptech_dict|get_item:top3.github_id|replace_special_char|lower }}.png">
-                  <p class="text-xs text-gray-600">{{ ranker_toptech_dict|get_item:top3.github_id }}</p>
-                </div>
+                {% endfor %}
               </div>
-              {% endfor %}
-            </div>
-          {% endfor %}
-          <div onclick="show_more_ranking(event)" class="flex items-center justify-center mt-2 ml-2 bg-white rounded-lg shadow-xs dark:bg-gray-800 pointer font-bold" style="width: 98%; height: 35px;">
+            {% endfor %}
+          </div>
+          <div onclick="show_more_ranking(2)" id="more_btn" class="flex items-center justify-center mt-2 ml-2 bg-white rounded-lg shadow-xs dark:bg-gray-800 pointer font-bold" style="width: 98%; height: 35px;">
             {% trans "Show more ranking" %}
           </div>
         </div>

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-30 07:32+0000\n"
+"POT-Creation-Date: 2023-10-31 10:20+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -94,7 +94,7 @@ msgstr "순위"
 #: templates/group_ranking.html:17 templates/intro.html:46
 #: templates/min_git_rainbow.html:12 templates/ranking.html:43
 #: templates/ranking.html:68 templates/ranking.html:146
-#: templates/ranking_all.html:36 templates/ranking_info.html:111
+#: templates/ranking_all.html:37 templates/ranking_info.html:111
 msgid "Code Crazy"
 msgstr "코드 크레이지"
 
@@ -314,7 +314,7 @@ msgstr "개발자 수"
 msgid "does not exsit in this tech ranking"
 msgstr "이(가) 이 기술 랭킹에 존재하지 않습니다"
 
-#: templates/ranking_all.html:53 templates/ranking_info.html:129
+#: templates/ranking_all.html:55 templates/ranking_info.html:129
 msgid "Show more ranking"
 msgstr "코드 크레이지 랭킹 더보기"
 

@@ -221,19 +221,67 @@ function show_desc(event){
     desc_box.setAttribute('style', `left: ${event.pageX-desc_box.clientWidth/2}px; top: ${event.pageY-desc_box.clientHeight-20}px`);
 }
 
-function show_more_ranking(event){
-    let hidden_tech_rankings = document.querySelectorAll(".tech-rankings.hidden");
-    let count = 0;
-    for (let i=0; i < hidden_tech_rankings.length; i++){
-        hidden_tech_rankings[i].classList.remove('hidden');
-        count ++;
-        if (count == 10){
-            break;
+function show_more_ranking(page){
+    $.ajax({
+        url: `/ranking/all?page=`+page
+        ,method: 'GET'
+        ,async: true
+        ,success: function (data) {
+            page += 1
+            let rank_data = data.rank_data;
+            let rank_avatar_url_dict = data.rank_avatar_url_dict;
+            let ranker_toptech_dict = data.ranker_toptech_dict;
+            let new_tech_rank_tag = '';
+            for (let tech_name in rank_data) {
+                let tech_data = rank_data[tech_name]
+                new_tech_rank_tag += `
+                <div class="grid gap-4 pt-3 pb-3 pl-3 mb-3 tech-rankings" style="grid-template-columns: 0.6fr 1fr 1fr 1fr; background-color: #EEEEEE;">
+                    <div onclick="window.open('/ranking/${tech_name}', '_blank')" class="flex mb-3 bg-white rounded-lg shadow-xs dark:bg-gray-800 mr-2"
+                       style="height: 190px;width: 126px;align-items: center;flex-direction: column; cursor:pointer;">
+                      <div class="w-full inline-block">
+                        <div div class="tech_color mt-2 mr-2"
+                           style="background-color: ${tech_data.color}; float: right; display: block;"></div>
+                      </div>
+                      <img class="mx-auto mb-2" src="${tech_data.logo_path}" style="margin-top: 25px;">
+                      <p class="mx-auto mb-2 text-sm" id="tech_title">${tech_name}</p>
+                    </div>
+                    `
+
+                let top3_ranker_data_list = tech_data.top3_data;
+                top3_ranker_data_list.forEach(function(ranker, index) {
+                    let rank = index + 1;
+                    new_tech_rank_tag += `
+                <div onclick="window.open('/${ranker.github_id}', '_blank')" class="flex bg-white rounded-lg shadow-xs dark:bg-gray-800"
+                    style="height: 257px;width: 180px;align-items: center;flex-direction: column; cursor:pointer;">
+                  <div class="flex mt-1">
+                    <img style="width:30px;height:30px;" src="/static/img/rank_${rank}.png">
+                    <p class="font-semibold ranking-ellipsis flex" style="font-size:15px; align-content: flex-start;">Top ${rank}</p>
+                  </div>
+                  <img class="object-cover w-full h-full rounded-full mt-1" src="${rank_avatar_url_dict[ranker.github_id]}" style="width:64px;height:64px">
+                  <p class="mx-auto mt-2 mb-3 font-semibold ranking-ellipsis" style="font-size:15px"><a href="/${ranker.github_id}" target="_blank">${ranker.github_id}</a></p>
+                  <button type="button" class="btn btn-danger font-semibold mt-2 mb-1" title="${ranker.tech_code_crazy}%"
+                    style="color:rgb(200,30,30);background-color:rgb(253,232,232);border-color:rgb(253,232,232); font-size: 70%; padding: 2%; width: 70%;">
+                    ${gettext("Code Crazy")} <span class="badge badge-danger" style="font-size:100%;margin-left:4px; top: 1px;">${ranker.int_code_crazy}%</span>
+                  </button>
+                  <div class="rounded-full mt-2 mb-1" style="background-color:lightgray; width: 70%;">
+                    <div
+                      class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
+                      style="width: ${ranker.code_line_percent }}%; background-color: ${tech_data.color}"><p style="color:white">${ranker.total_lines.toLocaleString()}</p>
+                    </div>
+                  </div>
+                  <div class="flex mt-2 mb-1" style="align-items: center;flex-direction: row; justify-content: space-around; width: 50%;">
+                    <img style="width:30px;height:30px;" src="/static/img/${ranker_toptech_dict[ranker.github_id].toLowerCase()}.png">
+                    <p class="text-xs text-gray-600">${ranker_toptech_dict[ranker.github_id]}</p>
+                  </div>
+                </div>
+                `;
+                });
+                new_tech_rank_tag += `</div>`;
+            }
+            $('#rank_card').append(new_tech_rank_tag);
+            document.getElementById('more_btn').setAttribute('onclick',`show_more_ranking(${page})`);
         }
-    }
-    if(document.querySelectorAll(".tech-rankings.hidden").length==0){
-        event.currentTarget.classList.add('hidden');
-    };
+    });
 }
 
 
