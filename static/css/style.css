@@ -2840,3 +2840,8 @@ section {
     padding: 5px;
     margin: 2px;
 }
+
+summary::marker {
+    display: none;
+    content: "";
+}

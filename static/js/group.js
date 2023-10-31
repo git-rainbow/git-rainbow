@@ -430,18 +430,31 @@ function show_group_total_lines(commit_data, is_reset=false, specific_tech){
                 let repo_cnt = 0;
                 let commit_cnt = 0;
                 let commit_data_tags = ``;
-                    Object.entries(tech_commit_data.commit_repo).forEach(function ([repo_url, commit_hash]) {
-                        let slice_repo_url = repo_url.slice(0,-4)
-                        let name_with_owner = new URL(slice_repo_url).pathname
-                        repo_cnt += 1
-                        commit_cnt += commit_hash.length
-                        commit_data_tags += `<div class="mt-2 flex">
-                                        <a class="text-blue-500 mr-3"
-                                          href="${slice_repo_url}" target="_blank">${name_with_owner.slice(1)}</a>
-                                        <p class="text-gray-400">${commit_hash.length} commits</p>
-                                       </div>`
+                Object.entries(tech_commit_data.commit_repo).forEach(function ([repo_url, commit_hash]) {
+                    let slice_repo_url = repo_url.slice(0,-4)
+                    let name_with_owner = new URL(slice_repo_url).pathname
+                    repo_cnt += 1
+                    commit_cnt += commit_hash.length
+                    commit_data_tags += `<div class="mt-2 flex">
+                                    <a class="text-blue-500 mr-3"
+                                      href="${slice_repo_url}" target="_blank">${name_with_owner.slice(1)}</a>
+                                    <p class="text-gray-400 mr-2">${commit_hash.length} commits</p>
+                                    <details>
+                                    <summary style="outline: none;"><svg class="" id="${repo_url}" onclick="commit_hash_toggle_arrow('${repo_url}')" xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="gray" viewBox="0 0 13 13">
+                                          <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"></path>
+                                        </svg></summary>
+                                    <ul style="list-style:none;">`
+                    commit_hash.forEach(function (data) {
+                        commit_data_tags +=
+                            `<li><a target="_blank" href="${slice_repo_url+'/commit/'+data.commit_hash}">${data.commit_hash.slice(0,7)}</a></li>
+                            `
                     })
-                    tech_info += `
+                    commit_data_tags +=`</ul>
+                                       </details>
+                                      </div>
+                                     </div>`
+                })
+                tech_info += `
                     <span class="ml-2">Created ${commit_cnt} commits in ${repo_cnt} repositories</span>
                   </div>
                   <div class="ml-4">` + commit_data_tags +
@@ -466,11 +479,24 @@ function show_group_total_lines(commit_data, is_reset=false, specific_tech){
                     let name_with_owner = new URL(slice_repo_url).pathname
                     repo_cnt += 1
                     commit_cnt += commit_hash.length
-                    commit_data_tags += `<div class="mt-2 flex">
+                    commit_data_tags += `<div class="mt-2 flex align-center">
                                     <a class="text-blue-500 mr-3"
                                       href="${slice_repo_url}" target="_blank">${name_with_owner.slice(1)}</a>
-                                    <p class="text-gray-400">${commit_hash.length} commits</p>
-                                   </div>`
+                                    <p class="text-gray-400 mr-2">${commit_hash.length} commits</p>
+                                    <details>
+                                    <summary style="outline: none;"><svg class="" id="${repo_url}" onclick="commit_hash_toggle_arrow('${repo_url}')" xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="gray" viewBox="0 0 13 13">
+                                          <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"></path>
+                                        </svg></summary>
+                                    <ul style="list-style:none;">`
+                                        commit_hash.forEach(function (data) {
+                        commit_data_tags +=
+                            `<li><a target="_blank" href="${slice_repo_url+'/commit/'+data.commit_hash}">${data.commit_hash.slice(0,7)}</a></li>
+                            `
+                    })
+                    commit_data_tags +=`</ul>
+                                       </details>
+                                      </div>
+                                     </div>`
                 })
                 tech_info += `
                 <div class="ml-4 mb-4">
@@ -706,4 +732,8 @@ function toggle_arrow(arg) {
     const arrow_type_btn = document.querySelector(`.${arg}-btn`);
     arrow_type.classList.toggle(`${arg}-box`);
     arrow_type_btn.classList.toggle("turn-half");
+}
+
+function commit_hash_toggle_arrow(repo_url){
+    document.getElementById(repo_url).classList.toggle("turn-half");
 }
