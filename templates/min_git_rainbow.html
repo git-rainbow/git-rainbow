@@ -29,46 +29,12 @@
         </div>
       </div>
     </div>
-    {% if top3_tech_data %}
-      <div style="width: 35%;">
-        <h1 class="font-bold mb-3" style="font-size: 1rem;">{% trans "My Ranking" %}</h1>
-        <div class="mt-2">
-          {% for tech_data in top3_tech_data %}
-            <div onclick="find_ranking_user(event, '{{github_user.github_id}}', '{{tech_data.name}}')" class="flex mt-2 bg-white rounded-lg shadow-xs dark:bg-gray-800" style="justify-content: space-between; padding: 1%; cursor:pointer;">
-              <div class="flex align-center">
-                <img style="width: 3.5rem; height: 3.5rem;" src="{% get_static_prefix %}img/{{ tech_data.file | replace_special_char }}.png" onerror="this.onerror=null; this.src='/static/img/none3.png';">
-                <span class="ml-4 font-bold" style="font-size: 1rem;">{{ tech_data.name }}</span>
-              </div>
-              <div class="flex" style="align-items: center; justify-content: center; width: 38%;">
-                <div class="flex" style="flex-direction: column; align-items: center; justify-content: center;">
-                  <span class="font-bold" style="font-size: 1rem;">{{ tech_data.rank.rank }}</span>
-                  <h5 class="font-bold" style="color: #D5D8DD">rank</h5>
-                </div>
-                <div class="flex ml-3" style="flex-direction: column;">
-                  <div class="flex" style="align-items: center; justify-content: center;">
-                    {% if tech_data.rank.change_rank > 0 %}
-                      <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="red" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
-                        <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-                      </svg>
-                    {% elif tech_data.rank.change_rank < 0 %}
-                      <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="blue" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                        <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                      </svg>
-                    {% else %}
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#96C362" class="bi bi-circle-fill" viewBox="0 0 16 16" style="margin-left: 6px; margin-right: 7px;">
-                        <circle cx="8" cy="8" r="8"/>
-                      </svg>
-                    {% endif %}
-                    <span class="text-xs">{{ tech_data.rank.change_rank }}</span>
-                  </div>
-                  <span style="color: #A3A19C; font-size: 0.6rem;">(Top {{ tech_data.rank_percent }}%)</span>
-                </div>
-              </div>
-            </div>
-          {% endfor %}
-        </div>
+    <div id="top3_rank" style="width: 35%;">
+      <div style="display: flex; flex-direction: column; margin-top: 80px; margin-left: 50px;">
+        <div class="spinner-border" style="width: 70px; height: 70px; margin: 0 auto;"></div>
+        <span style="text-align: center; margin-top: 15px;">Loading</span>
       </div>
-    {% endif %}
+    </div>
   </div>
   <div class="w-full mb-8 md:w-full scroll" style="max-width:1100px">
     <div style="display:flex; justify-content: space-between;">

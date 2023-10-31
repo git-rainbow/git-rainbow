@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-31 10:22+0900\n"
+"POT-Creation-Date: 2023-10-31 17:16+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -149,6 +149,10 @@ msgstr "해당 GitHub 유저의 메인 기술 (주요 기술)"
 msgid "It is automatically updated every 1 day of the month"
 msgstr "매주 월요일 마다 전체 순위를 갱신합니다."
 
-#: static/js/tech_stack.js:263
+#: static/js/tech_stack.js:264
 msgid "Code Crazy"
 msgstr "코드 크레이지"
+
+#: static/js/tech_stack.js:362
+msgid "My Ranking"
+msgstr "나의 랭킹"

@@ -25,6 +25,7 @@ urlpatterns = [
     path('<str:github_id>/delete/repo', views.delete_repo_url),
     path('<str:github_id>/update', views.update_git_rainbow),
     path('<str:github_id>/get', views.get_user_calendar),
+    path('<str:github_id>/top3', views.get_user_top3_rank_data),
     path('<str:github_id>/exists', views.find_user_page),
     path('<str:github_id>/svg', views.git_rainbow_svg),
     path('ranking/info', views.ranking_info),

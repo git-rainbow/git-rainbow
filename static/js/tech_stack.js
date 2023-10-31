@@ -349,3 +349,62 @@ function delete_repos() {
         }
     });
 }
+
+function tech_ranking(github_id){
+    $.ajax({
+        url: `/${github_id}/top3`
+        ,method: 'POST'
+        ,async: true
+        ,success: function (data) {
+            if (data.status == 'success'){
+                let top3_tech_data = data.top3_tech_data
+                let rank_tags = `
+                            <h1 class="font-bold mb-3" style="font-size: 1rem;">${gettext('My Ranking')}</h1>
+                            <div class="mt-2">`
+                top3_tech_data.forEach(rank_data => {
+                    let tech_name = rank_data.name;
+                        rank_tags += `
+                        <div onclick="find_ranking_user(event, ${github_id}, ${tech_name})" class="flex mt-2 bg-white rounded-lg shadow-xs dark:bg-gray-800" style="justify-content: space-between; padding: 1%; cursor:pointer;">
+                          <div class="flex align-center">
+                            <img style="width: 3.5rem; height: 3.5rem;" src="/static/img/${rank_data.file}.png" onerror="this.onerror=null; this.src='/static/img/none3.png';">
+                            <span class="ml-4 font-bold" style="font-size: 1rem;">${tech_name}</span>
+                          </div>
+                          <div class="flex" style="align-items: center; justify-content: center; width: 38%;">
+                            <div class="flex" style="flex-direction: column; align-items: center; justify-content: center;">
+                              <span class="font-bold" style="font-size: 1rem;">${rank_data.rank.rank}</span>
+                              <h5 class="font-bold" style="color: #D5D8DD">rank</h5>
+                            </div>
+                            <div class="flex ml-3" style="flex-direction: column;">
+                              <div class="flex" style="align-items: center; justify-content: center;">`
+                    let change_rank = rank_data.rank.change_rank;
+                    if (change_rank > 0){
+                        rank_tags +=
+                            `<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="red" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+                              <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+                             </svg>`
+                    } else if (change_rank < 0) {
+                        rank_tags +=
+                        `<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="blue" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                          <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                        </svg>`
+                    } else {
+                        rank_tags +=
+                        `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#96C362" class="bi bi-circle-fill" viewBox="0 0 16 16" style="margin-left: 6px; margin-right: 7px;">
+                           <circle cx="8" cy="8" r="8"/>
+                         </svg>`
+                    }
+                    rank_tags +=
+                        `<span class="text-xs">${change_rank}</span>
+                        </div>
+                       <span style="color: #A3A19C; font-size: 0.6rem;">(Top ${rank_data.rank_percent}%)</span>
+                      </div>
+                    </div>
+                   </div>`
+                });
+                rank_tags += `</div>`
+                $('#top3_rank').empty()
+                $('#top3_rank').append(rank_tags)
+            }
+        }
+    });
+}

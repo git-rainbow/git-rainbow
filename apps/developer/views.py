@@ -99,15 +99,27 @@ def get_user_calendar(request, github_id):
     return JsonResponse({"status": "success", "calendar_data": calendar_data})
 
 
-def get_profile_data(github_calendar_list, github_user):
+def get_user_top3_rank_data(request, github_id):
+    github_user = GithubUser.objects.filter(github_id=github_id).first()
+    if not github_user:
+        return JsonResponse({'status': 'fail', 'reason': 'does not exist github user'})
+    year_ago = (timezone.now() - relativedelta(years=1)).replace(hour=0, minute=0, second=0)
+    github_calendar_list = list(get_calendar_model(github_id).objects.filter(author_date__gte=year_ago).values(
+        'tech_name', 'author_date', 'lines'))
     if github_calendar_list:
         tech_card_data = make_group_tech_card(github_calendar_list)
         top3_tech_data = make_top3_tech_date(tech_card_data, github_user)
+        return JsonResponse({'status': 'success', 'top3_tech_data': top3_tech_data})
+    return JsonResponse({'status': 'success', 'top3_tech_data': []})
+
+
+def get_profile_data(github_calendar_list, github_user):
+    if github_calendar_list:
+        tech_card_data = make_group_tech_card(github_calendar_list)
         code_crazy, int_code_crazy = make_user_code_crazy(github_user.github_id)
         context = {
             'github_user': github_user,
             'tech_card_data': tech_card_data,
-            'top3_tech_data': top3_tech_data,
             'int_code_crazy': int_code_crazy,
             'code_crazy': code_crazy,
         }
@@ -139,7 +151,8 @@ def git_rainbow(request, github_id):
             new_github_user.delete()
 
     year_ago = (timezone.now() - relativedelta(years=1)).replace(hour=0, minute=0, second=0)
-    github_calendar_list = list(get_calendar_model(github_id).objects.filter(author_date__gte=year_ago).values('tech_name', 'author_date', 'lines'))
+    github_calendar_list = list(get_calendar_model(github_id).objects.filter(author_date__gte=year_ago).values(
+        'tech_name', 'author_date', 'lines'))
     if request.GET.get('update') == 'True' or not github_calendar_list:
         core_response = core_user_analysis(github_user)
         if core_response.get("repo_list_status") == 'fail':
