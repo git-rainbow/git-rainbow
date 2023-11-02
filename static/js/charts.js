@@ -87,6 +87,7 @@ function get_datasets(calendar_data, category, group_color_obj, member_list=null
     }
     return datasets;
 }
+const yAxisLabel = {display: true, text: 'Lines'};
 
 function get_grass_datasets(calendar_data, member_list=null) {
     let grass_data = {};
@@ -146,7 +147,8 @@ function draw_monthly_graph(datasets) {
                     stacked: true,
                 },
                 y: {
-                    stacked: true
+                    stacked: true,
+                    title: yAxisLabel,
                 }
             },
         }
@@ -175,7 +177,12 @@ function draw_weekly_graph(datasets) {
                 legend: {
                     display: false
                 },
-            }
+            },
+            scales: {
+                y: {
+                    title: yAxisLabel,
+                }
+            },
         },
     };
     const lineCtx = document.getElementById('lines');
@@ -204,7 +211,11 @@ function draw_hourly_graph(datasets) {
             scales: {
                 x: {
                     min: 0,
-                    max: 24
+                    max: 24,
+                    title: {display: true, text: "o'clock"},
+                },
+                y: {
+                    title: yAxisLabel,
                 }
             }
         },
