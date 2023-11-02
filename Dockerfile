@@ -23,4 +23,6 @@ RUN apt-get clean \
 
 RUN django-admin compilemessages
 
+RUN python3 ./utils/github_calendar_colors/img2base64.py
+
 CMD ["python3", "-m", "gunicorn", "--bind", ":8000", "--workers", "2", "config.wsgi:application"]

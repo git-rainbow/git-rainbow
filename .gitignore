@@ -412,3 +412,6 @@ pyrightconfig.json
 
 #channel API
 static/js/channelAPI.js
+
+# base64 img
+apps/tech_stack/tech_img_base64.py
