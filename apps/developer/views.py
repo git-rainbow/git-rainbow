@@ -499,7 +499,7 @@ def ranking_tech_stack(request, tech_name):
     page_rank_data = paginator.get_page(page_number)
     context = {
         'tech_side': draw_tech_side(),
-        'tech_name': tech_name,
+        'tech_name': current_tech.tech_name,
         'tech_color': current_tech.tech_color,
         'logo_path': current_tech.logo_path,
         'top_ranker': now_ranker_data[:3],
