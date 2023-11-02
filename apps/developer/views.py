@@ -291,7 +291,7 @@ def update_tech_stack_table(tech_set: set):
 
 
 def make_ranker_data(tech_name):
-    user_tech_data_list = list(CodeCrazy.objects.select_related('github_id', 'github_id__toptech').filter(tech_name=tech_name))
+    user_tech_data_list = list(CodeCrazy.objects.select_related('github_id', 'github_id__toptech').filter(tech_name__iexact=tech_name))
     github_id_set = {tech_data.github_id_id for tech_data in user_tech_data_list}
     total_lines = sum([tech_data.total_lines for tech_data in user_tech_data_list])
     total_ranker_count = len(github_id_set) if github_id_set else 1
