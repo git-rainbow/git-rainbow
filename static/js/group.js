@@ -755,3 +755,42 @@ function get_out_group() {
         }
     });
 }
+
+function kick_out_members(group_id) {
+    const kick_out_list = Array.from(
+        document.querySelectorAll(".kick_out_modal_list"))
+        .filter(each => each.checked)
+        .map(each => each.getAttribute('github_id')
+    );
+
+    if (kick_out_list.length == 0) {
+        alert("There is no checked member.");
+        return;
+    }
+
+    const data = {'group_id':group_id, 'kick_out_list': JSON.stringify(kick_out_list)};
+
+    $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+
+    $.ajax({
+        url: '/group/kick-out-members'
+        ,method: 'POST'
+        ,async: false
+        , data: data
+        ,success: function (data) {
+            let status = data.status
+            if (status == 'fail') {
+                alert(data.reason);
+            } else {
+                alert('That members are kicked out from this group.');
+                location.reload();
+            }
+        }
+    });
+}

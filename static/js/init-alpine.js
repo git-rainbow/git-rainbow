@@ -49,15 +49,21 @@ function data() {
     },
     // Modal
     isModalOpen: false,
+    isKickOutModalOpen: false,
     isEmailModalOpen: false,
     isProjectModalOpen: false,
     trapCleanup: null,
+    trapKickOutCleanup: null,
     trapEmailCleanup: null,
     trapProjectCleanup: null,
     openModal() {
       event.stopPropagation();
       this.isModalOpen = true
       this.trapCleanup = focusTrap(document.querySelector('#modal'))
+    },
+    openKickOutModal() {
+        this.isKickOutModalOpen = true
+        this.trapKickOutCleanup = focusTrap(document.querySelector('#kicking_out_modal'))
     },
     openEmailModal() {
       this.isEmailModalOpen = true
@@ -70,6 +76,10 @@ function data() {
     closeModal() {
       this.isModalOpen = false
       this.trapCleanup()
+    },
+    closeKickOutModal() {
+        this.isKickOutModalOpen = false
+        this.trapKickOutCleanup()
     },
     closeEmailModal() {
       this.isEmailModalOpen = false

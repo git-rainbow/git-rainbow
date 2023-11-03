@@ -13,5 +13,6 @@ urlpatterns = [
     path('group/<int:group_id>/get-out', views.get_out_group),
     path('group/<int:group_id>/save/repo', views.update_group_repo),
     path('group/<int:group_id>/delete/repo', views.delete_group_repo),
-    path('group/graph-data', views.group_graph)
+    path('group/graph-data', views.group_graph),
+    path('group/kick-out-members', views.kick_out_members),
 ]

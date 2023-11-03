@@ -478,3 +478,22 @@ def get_out_group(request, group_id):
 
     user_group.github_users.remove(github_user)
     return JsonResponse({"status":"success"})
+
+
+@login_required(login_url='/login/github')
+def kick_out_members(request):
+    if request.method != 'POST':
+        return JsonResponse({"status": "fail", "reason": "Not allowed method"})
+
+    data = request.POST
+    group_id = data.get('group_id')
+    group = Group.objects.filter(id=group_id).first()
+    if not group:
+        return JsonResponse({"status":"fail", "reason": "That group does not exist"})
+
+    if request.user != group.owner:
+        return JsonResponse({"status":"fail", "reason": "You are not owner of this group"})
+
+    kick_out_list = json.loads(data.get('kick_out_list'))
+    group.github_users.remove(*kick_out_list)
+    return JsonResponse({"status":"success"})

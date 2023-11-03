@@ -1,0 +1,106 @@
+{% load i18n custom_tags %}
+<div
+  x-show="isKickOutModalOpen"
+  x-transition:enter="transition ease-out duration-150"
+  x-transition:enter-start="opacity-0"
+  x-transition:enter-end="opacity-100"
+  x-transition:leave="transition ease-in duration-150"
+  x-transition:leave-start="opacity-100"
+  x-transition:leave-end="opacity-0"
+  class="fixed inset-0 z-30 flex items-end bg-black bg-opacity-50 sm:items-center sm:justify-center"
+  id="modal_container"
+>
+  <div
+    x-show="isKickOutModalOpen"
+    x-transition:enter="transition ease-out duration-150"
+    x-transition:enter-start="opacity-0 transform translate-y-1/2"
+    x-transition:enter-end="opacity-100"
+    x-transition:leave="transition ease-in duration-150"
+    x-transition:leave-start="opacity-100"
+    x-transition:leave-end="opacity-0  transform translate-y-1/2"
+    @click.away="closeKickOutModal"
+    @keydown.escape="closeKickOutModal"
+    class="px-6 py-4 bg-white rounded-t-lg dark:bg-gray-800 sm:rounded-lg sm:m-4"
+    role="dialog"
+    id="kick_out_modal"
+    style="width: 860px; max-height: 600px; overflow: scroll"
+  >
+    <!-- Remove header if you don't want a close icon. Use modal body to place modal tile. -->
+    <header class="flex justify-end">
+      <button
+        id="close_btn"
+        class="inline-flex items-center justify-center w-6 h-6 text-gray-400 transition-colors duration-150 rounded dark:hover:text-gray-200 hover: hover:text-gray-700"
+        aria-label="close"
+        @click="closeKickOutModal"
+      >
+        <svg
+          class="w-4 h-4"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+          role="img"
+          aria-hidden="true"
+        >
+          <path
+            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+            clip-rule="evenodd"
+            fill-rule="evenodd"
+          ></path>
+        </svg>
+      </button>
+    </header>
+    <!-- Modal body -->
+    <div class="mt-4 mb-6">
+      <p class="mb-2 text-2xl font-semibold text-gray-700 dark:text-gray-300">Members</p>
+      <div style="display: flex; justify-content: end; margin-bottom: 5px;">
+        <button onclick="kick_out_members('{{ group.id }}')" class="ml-1 p-2 font-medium leading-5 text-center transition-colors duration-150 border border-transparent" style="background-color: #ffc6d1;border-radius: 10px; height: 50px; width:125px;" >Kick out</button>
+      </div>
+      <div>
+      <table class="w-full whitespace-no-wrap">
+        <thead>
+          <tr
+            class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800"
+            style="border: 0 solid #d5d6d7!important;">
+            <th class="px-4 py-3 text-center">No.</th>
+            <th></th>
+            <th class="px-4 py-3 text-center">GitHub ID</th>
+            <th></th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+          {% for github_user in group.github_users.all %}
+          <tr class="user_tr text-gray-700 dark:text-gray-400" style="border: 0.5 solid #d5d6d7!important;">
+            <td style="width:20px;border:none!important; text-align: center;">
+              <p class="font-bold text-sm text-gray-600 dark:text-gray-400">
+                {{ forloop.counter }}
+              </p>
+            </td>
+            <td class="text-sm text-center" style="border:none!important">
+              <input type="checkbox" class="kick_out_modal_list" github_id="{{ github_user.github_id }}" class="mr-2" {% if group.owner.github_id == github_user.github_id %}disabled{% endif %}>
+            </td>
+            <td class="px-3 py-3" style="width:150px;border:none!important">
+              <div class="flex items-center text-sm">
+                <!-- Avatar with inset shadow -->
+                <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block" style="min-width:32px;">
+                  <img class="object-cover w-full h-full rounded-full"
+                      src="{{ github_user.avatar_url }}" loading="lazy">
+                  <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
+                </div>
+                <div class="ranking-ellipsis">
+                  <a class="font-semibold" href="/{{ github_user.github_id }}" target="_blank">{{ github_user.github_id }}</a>
+                </div>
+              </div>
+            </td>
+            <td style="width:150px;border:none"></td>
+            <td style="width:150px;border:none"></td>
+            <td style="width:150px;border:none"></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End of modal backdrop -->

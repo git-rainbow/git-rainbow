@@ -39,9 +39,16 @@
       <div class="mt-2 mb-2" style="max-width:400px">
         <div class="flex" style="justify-content: space-between;">
           <span class="text-gray-500 mt-2 text-lg">Members ({{group.github_users.all.count}} people)</span>
-          <svg class="mini-member-btn" onclick="toggle_arrow('mini-member')" xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="gray" class="mt-2 bi bi-caret-down-fill" viewBox="0 0 16 16">
-            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"></path>
-          </svg>
+          <div class="flex pointer">
+            {% if request.user.is_authenticated and group.owner.github_id == request.user.github_id %}
+            <div @click="openKickOutModal" class="mr-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-settings"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+            </div>
+            {% endif %}
+            <svg class="mini-member-btn" onclick="toggle_arrow('mini-member')" xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="gray" class="mt-2 bi bi-caret-down-fill" viewBox="0 0 16 16">
+              <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"></path>
+            </svg>
+          </div>
         </div>
         <div class="flex mt-2 bg-white rounded-lg shadow-xs dark:bg-gray-800" style="justify-content: space-between; padding: 1%; cursor:pointer; max-width:400px;">
           <div class="flex flex-wrap align-center mini-member mini-member-box">
@@ -212,6 +219,7 @@
   {% include 'charts.html' %}
   {% include 'group_ranking.html' %}
   {% include 'token_modals.html' %}
+  {% include 'kick_out_modals.html' %}
   {% if is_joined %}
     <button onclick="get_out_group()" class="bg-white w-full border border-gray-500 rounded-md flex items-center justify-center px-4 text-center mt-3" style="color: #2977de; height: 40px;">
       {% trans "Get out of this group" %}
