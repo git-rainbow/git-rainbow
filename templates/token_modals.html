@@ -26,7 +26,11 @@
     style="width: 860px;"
   >
     <!-- Remove header if you don't want a close icon. Use modal body to place modal tile. -->
-    <header class="flex justify-end">
+    <header class="flex" style="justify-content: space-between;">
+      <!-- Modal title -->
+      <p class="mb-2 text-2xl font-semibold text-gray-700 dark:text-gray-300">
+        {% trans "Git repositories" %}
+      </p>
       <button
         id="close_btn"
         class="inline-flex items-center justify-center w-6 h-6 text-gray-400 transition-colors duration-150 rounded dark:hover:text-gray-200 hover: hover:text-gray-700"
@@ -50,10 +54,6 @@
     </header>
     <!-- Modal body -->
     <div class="mt-4 mb-6">
-      <!-- Modal title -->
-      <p class="mb-2 text-2xl font-semibold text-gray-700 dark:text-gray-300">
-        {% trans "Git repositories" %}
-      </p>
       {% if not is_joined %}
         <p class="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-300">
           {% trans "Using token" %}

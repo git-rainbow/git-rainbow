@@ -26,7 +26,8 @@
     style="width: 860px; max-height: 600px; overflow: scroll"
   >
     <!-- Remove header if you don't want a close icon. Use modal body to place modal tile. -->
-    <header class="flex justify-end">
+    <header class="flex" style="justify-content: space-between;">
+      <p class="mb-2 text-2xl font-semibold text-gray-700 dark:text-gray-300">Members</p>
       <button
         id="close_btn"
         class="inline-flex items-center justify-center w-6 h-6 text-gray-400 transition-colors duration-150 rounded dark:hover:text-gray-200 hover: hover:text-gray-700"
@@ -50,7 +51,6 @@
     </header>
     <!-- Modal body -->
     <div class="mt-4 mb-6">
-      <p class="mb-2 text-2xl font-semibold text-gray-700 dark:text-gray-300">Members</p>
       <div style="display: flex; justify-content: end; margin-bottom: 5px;">
         <button onclick="kick_out_members('{{ group.id }}')" class="ml-1 p-2 font-medium leading-5 text-center transition-colors duration-150 border border-transparent" style="background-color: #ffc6d1;border-radius: 10px; height: 50px; width:125px;" >Kick out</button>
       </div>
