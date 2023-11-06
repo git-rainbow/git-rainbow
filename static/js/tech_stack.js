@@ -359,12 +359,12 @@ function tech_ranking(github_id){
             if (data.status == 'success'){
                 let top3_tech_data = data.top3_tech_data
                 let rank_tags = `
-                            <h1 class="font-bold mb-3" style="font-size: 1rem;">${gettext('My Ranking')}</h1>
-                            <div class="mt-2">`
+                            <h1 class="font-bold" style="font-size: 1rem;">${gettext('My Ranking')}</h1>
+                            <div class="">`
                 top3_tech_data.forEach(rank_data => {
                     let tech_name = rank_data.name;
                         rank_tags += `
-                        <div onclick="find_ranking_user(event, ${github_id}, ${tech_name})" class="flex mt-2 bg-white rounded-lg shadow-xs dark:bg-gray-800" style="justify-content: space-between; padding: 1%; cursor:pointer;">
+                        <div onclick="find_ranking_user(event, '${github_id}', '${tech_name}')" class="flex mt-2 bg-white rounded-lg shadow-xs dark:bg-gray-800" style="justify-content: space-between; padding: 1%; cursor:pointer;">
                           <div class="flex align-center">
                             <img style="width: 3.5rem; height: 3.5rem;" src="/static/img/${rank_data.file}.png" onerror="this.onerror=null; this.src='/static/img/none3.png';">
                             <span class="ml-4 font-bold" style="font-size: 1rem;">${tech_name}</span>

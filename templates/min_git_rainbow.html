@@ -29,12 +29,36 @@
         </div>
       </div>
     </div>
-    <div id="top3_rank" style="width: 35%;">
-      <div style="display: flex; flex-direction: column; margin-top: 80px; margin-left: 50px;">
-        <div class="spinner-border" style="width: 70px; height: 70px; margin: 0 auto;"></div>
-        <span style="text-align: center; margin-top: 15px;">Loading</span>
-      </div>
+  <div id="top3_rank" style="width: 35%;">
+    <div style="display: flex; align-items: center; text-align: center;">
+      <h1 class="font-bold" style="font-size: 1rem;">나의 랭킹</h1>
+      <div class="spinner-border" style="width: 15px; height: 15px; margin-left: 10px; opacity:0.3;"></div>
     </div>
+    <div class="mt-2">
+      {% for tech_data in tech_card_data %}
+        {% if forloop.counter <= 3 %}
+          <div onclick="find_ranking_user(event, '{{ github_user.github_id }}', '{{tech_data.name}}')" class="flex mt-2 bg-white rounded-lg shadow-xs dark:bg-gray-800" style="justify-content: space-between; padding: 1%; cursor:pointer;">
+            <div class="flex align-center">
+              <img style="width: 3.5rem; height: 3.5rem;" src="{% get_static_prefix %}img/{{ tech_data.file | replace_special_char }}.png" onerror="this.onerror=null; this.src='/static/img/none3.png';">
+              <span class="ml-4 font-bold" style="font-size: 1rem;">{{tech_data.name}}</span>
+            </div>
+            <div class="flex" style="align-items: center; justify-content: center; width: 38%;">
+              <div class="flex" style="flex-direction: column; align-items: center; justify-content: center;">
+                <span class="font-bold" style="font-size: 1rem;"></span>
+                <h5 class="font-bold" style="color: #D5D8DD"></h5>
+              </div>
+              <div class="flex ml-3" style="flex-direction: column;">
+                <div class="flex" style="align-items: center; justify-content: center;">
+                  <span class="text-xs"></span>
+                </div>
+                <span style="color: #A3A19C; font-size: 0.6rem;"></span>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
   </div>
   <div class="w-full mb-8 md:w-full scroll" style="max-width:1100px">
     <div style="display:flex; justify-content: space-between;">
