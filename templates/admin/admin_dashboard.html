@@ -69,12 +69,41 @@
             </svg>
           </div>
           <div>
-            <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-              {{ request_type }}
-            </p>
-            <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
-              {{ data.unique_cnt }} / {{ data.count }}
-            </p>
+            <div>
+              <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
+                {{ request_type }}
+              </p>
+            </div>
+            <div>
+              <table class="w-full whitespace-no-wrap">
+                  <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+                    <tr class="user_tr text-gray-700 dark:text-gray-400" style="border: 0.5 solid #d5d6d7!important;">
+                      <td style="width:50px; text-align: center; padding:5px;">
+                        <p class="font-bold text-sm text-green-500 dark:text-green-500">
+                          unique
+                        </p>
+                      </td>
+                      <td style="width:50px; text-align: center; padding:5px;">
+                        <p class="font-bold text-sm text-green-500 dark:text-green-500">
+                          {{ data.unique_cnt }}
+                        </p>
+                      </td>
+                    </tr>
+                    <tr class="user_tr text-gray-700 dark:text-gray-400" style="border: 0.5 solid #d5d6d7!important;">
+                      <td style="width:50px; text-align: center; padding:5px;">
+                        <p class="font-bold text-sm text-gray-600 dark:text-gray-400">
+                          total
+                        </p>
+                      </td>
+                      <td style="width:50px; text-align: center; padding:5px;">
+                        <p class="font-bold text-sm text-gray-600 dark:text-gray-400">
+                          {{ data.count }}
+                        </p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+            </div>
           </div>
         </div>
       {% endfor %}
