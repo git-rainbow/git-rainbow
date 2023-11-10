@@ -85,9 +85,9 @@ function save_public_repo(){
     });
 }
 
-function _analyze_developer(data) {
+function _analyze_developer(send_data) {
     let waiting = true;
-    const github_id = data['github_id'];
+    const github_id = send_data['github_id'];
     $.ajaxSetup({
         beforeSend: function (xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -98,21 +98,26 @@ function _analyze_developer(data) {
     $.ajax({
         url: `/${github_id}/update`
         ,method: 'POST'
-        ,data: data
+        ,data: send_data
         ,async: false
         ,success: function (data) {
             if (data.status == 'completed') {
-                waiting = false;
-                // Don't change template in ranking page - start
-                const ranking_regex = /^\/ranking(\/[^/]+)?$/;
-                if (ranking_regex.test(location.pathname)){
-                    return waiting;
+                if (send_data['action']){
+                    waiting = false;
+                    // Don't change template in ranking page - start
+                    const ranking_regex = /^\/ranking(\/[^/]+)?$/;
+                    if (ranking_regex.test(location.pathname)){
+                        return waiting;
+                    }
+                    // Don't change template in ranking page - finish
+                    $("#under_header").html(data.content);
+                    draw_user_graph(github_id);
+                    tech_ranking(github_id);
+                } else {
+                    location.reload();
                 }
-                // Don't change template in ranking page - finish
-                $("#under_header").html(data.content);
-                draw_user_graph(github_id);
-                tech_ranking(github_id);
-            } else if(data.status == 'fail') {
+            }
+             else if(data.status == 'fail') {
                 waiting = false;
                 alert(`status: fail, reaseon: ${data.reason}`);
             }
