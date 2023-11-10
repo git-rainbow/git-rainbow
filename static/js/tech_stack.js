@@ -32,15 +32,7 @@ function analyze_developer(github_id, action, is_with_token) {
     if (updateBtn){
         updateBtn.classList.add("rotate-img");
     }
-    var interval = setInterval(function () {
-        let waiting = _analyze_developer(data);
-        if (waiting == false) {
-            clearInterval(interval);
-            if (updateBtn){
-                updateBtn.classList.remove("rotate-img");
-            }
-        }
-    }, 3000);
+    _analyze_developer(data)
 }
 
 
@@ -99,7 +91,7 @@ function _analyze_developer(send_data) {
         url: `/${github_id}/update`
         ,method: 'POST'
         ,data: send_data
-        ,async: false
+        ,async: true
         ,success: function (data) {
             if (data.status == 'completed') {
                 if (send_data['action']){
@@ -116,10 +108,13 @@ function _analyze_developer(send_data) {
                 } else {
                     location.reload();
                 }
-            }
-             else if(data.status == 'fail') {
+            } else if(data.status == 'fail') {
                 waiting = false;
                 alert(`status: fail, reaseon: ${data.reason}`);
+            } else {
+                 setTimeout(function() {
+                    _analyze_developer(send_data);
+                    }, 3000);
             }
         },
         error: function (data) {
@@ -127,7 +122,6 @@ function _analyze_developer(send_data) {
             alert(gettext("error occured"));
         }
     });
-    return waiting;
 }
 
 function check_analysis_updating(github_id, status){
