@@ -1,7 +1,17 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-  <h1 class="mb-4 mt-3 ml-4 text-xl font-bold text-gray-600 dark:text-gray-300">Dashboard</h1>
+  <div class="flex justify-between p-3">
+    <h1 class="mb-4 mt-3 ml-4 text-xl font-bold text-gray-600 dark:text-gray-300">Dashboard</h1>
+    <select onchange="select_period()" name="period" id="period">
+      <option value="all">All</option>
+      <option {% if period == 1 %}selected{% endif %} value=1>1 day</option>
+      <option {% if period == 7 %}selected{% endif %} value=7>1 week</option>
+      <option {% if period == 30 %}selected{% endif %} value=30>1 month</option>
+      <option {% if period == 180 %}selected{% endif %} value=180>6 months</option>
+      <option {% if period == 365 %}selected{% endif %} value=365>1 year</option>
+    </select>
+  </div>
   <div style="padding-left: 3%; padding-right: 3%;">
     <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
       <!-- Card -->

@@ -7,6 +7,7 @@ from apps.tech_stack.models import GithubUser, TechStack
 from apps.users.models import User
 
 from collections import defaultdict
+from datetime import date, timedelta
 
 
 def admin_page(request):
@@ -30,7 +31,15 @@ def admin_page(request):
         lower_tech_name = tech.lower()
         lower_tech_name_list.append(lower_tech_name)
         request_type_list.append(f'ranking/{lower_tech_name}')
-    page_request_data = PageRequest.objects.filter(request_type__in=request_type_list).values('request_type', 'date', 'count').annotate(
+    period = request.GET.get('period')
+    if not period or period == 'all':
+        page_request_queryset = PageRequest.objects.filter(request_type__in=request_type_list)
+    else:
+        period = int(period)
+        end_date = date.today()
+        start_date = end_date - timedelta(days=period)
+        page_request_queryset = PageRequest.objects.filter(request_type__in=request_type_list, date__range=(start_date, end_date))
+    page_request_data = page_request_queryset.values('request_type', 'date', 'count').annotate(
         unique_cnt=Count('access_client')
     )
     access_data = defaultdict(lambda: {'count': 0, 'unique_cnt': 0, 'access_user_data': [], 'logo_path': None})
@@ -60,5 +69,6 @@ def admin_page(request):
         'all_new_member': all_new_member,
         'all_new_member_cnt': all_new_member_cnt,
         'access_data': dict(access_data),
+        'period': period,
     }
     return render(request, 'admin/admin_dashboard.html', context)

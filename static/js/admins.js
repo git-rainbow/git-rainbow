@@ -17,3 +17,8 @@ function display_select_area(category){
     let area = document.getElementById(category);
     area.classList.remove('hidden');
 }
+
+function select_period () {
+    const selectedPeriod = document.querySelector("#period").value;
+    location.href = `/admins/visitors?period=${selectedPeriod}`;
+}
