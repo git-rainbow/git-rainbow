@@ -3,7 +3,7 @@
 {% block content %}
   <div class="flex justify-between p-3">
     <h1 class="mb-4 mt-3 ml-4 text-xl font-bold text-gray-600 dark:text-gray-300">Dashboard</h1>
-    <select onchange="select_period()" name="period" id="period">
+    <select class="block mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 form-select focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray" onchange="select_period()" name="period" id="period">
       <option value="all">All</option>
       <option {% if period == 1 %}selected{% endif %} value=1>1 day</option>
       <option {% if period == 7 %}selected{% endif %} value=7>1 week</option>
